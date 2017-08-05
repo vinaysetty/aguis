@@ -46,30 +46,42 @@ class CourseForm<T> extends React.Component<ICourseFormProps<T>, ICourseFormStat
         };
     }
 
+    public renderProviderSelection() {
+        if (this.props.providers.length > 1) {
+            const providers = this.props.providers.map((provider) => {
+                return <label className="radio-inline">
+                    <input type="radio"
+                        name="provider"
+                        value={provider}
+                        defaultChecked={this.props.courseData
+                            && this.props.courseData.provider === provider ? true : false}
+                        onClick={(e) => this.getOrganizations(e, this.updateOrganisationDivs)}
+                    />{provider}
+                </label>;
+            });
+            return (
+                <div className="form-group">
+                    <label className="control-label col-sm-2">Provider:</label>
+                    <div className="col-sm-10">
+                        {providers}
+                    </div>
+                </div>
+            );
+        }
+        this.getOrganizations2(this.props.providers[0], this.updateOrganisationDivs);
+        return <div />;
+    }
+
     public render() {
         const getTitleText: string = this.props.courseData ? "Edit Course" : "Create New Course";
-        const providers = this.props.providers.map((provider) => {
-            return <label className="radio-inline">
-                <input type="radio"
-                    name="provider"
-                    value={provider}
-                    defaultChecked={this.props.courseData
-                        && this.props.courseData.provider === provider ? true : false}
-                    onClick={(e) => this.getOrganizations(e, this.updateOrganisationDivs)}
-                />{provider}
-            </label>;
-        });
+        const providers = this.renderProviderSelection();
+
         return (
             <div>
                 <h1>{getTitleText}</h1>
                 <form className={this.props.className ? this.props.className : ""}
                     onSubmit={(e) => this.handleFormSubmit(e)}>
-                    <div className="form-group">
-                        <label className="control-label col-sm-2">Provider:</label>
-                        <div className="col-sm-10">
-                            {providers}
-                        </div>
-                    </div>
+                    {providers}
                     <div className="form-group" id="organisation-container">
                         {this.state.organisations}
                     </div>
@@ -185,7 +197,17 @@ class CourseForm<T> extends React.Component<ICourseFormProps<T>, ICourseFormStat
         pRes.then((orgs: IOrganization[]) => {
             callback.call(this, orgs);
         });
+    }
 
+    private getOrganizations2(pvdr: string, callback: any): void {
+        this.setState({
+            provider: pvdr,
+        });
+
+        const pRes = this.props.courseMan.getDirectories(pvdr);
+        pRes.then((orgs: IOrganization[]) => {
+            callback.call(this, orgs);
+        });
     }
 
     private updateOrganisationDivs(orgs: IOrganization[]): void {
@@ -206,7 +228,6 @@ class CourseForm<T> extends React.Component<ICourseFormProps<T>, ICourseFormStat
                     <input type="radio" />
                 </button>,
             );
-
         }
 
         let orgMsg: JSX.Element;
