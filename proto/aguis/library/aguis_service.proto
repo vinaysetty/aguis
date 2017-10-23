@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package library;
+
+message Enrollment {
+    uint64 id = 1;
+    uint64 courseid = 2;
+    uint64 userid = 3;
+    uint64 groupid = 4;
+    uint32 status = 5;
+}
+
+message User {
+    uint64 id = 1;
+    bool isadmin = 2;
+    string name = 3;
+    string studentid = 4;
+    string email = 5;
+    string avatarurl = 6;
+
+    repeated Enrollment Enrollments = 7;
+}
+
+message UsersResponse {
+    repeated User Users = 1;
+}
+
+message Void {}
+
+message GetUserRequest {
+    uint64 id = 1;
+}
+
+message UpdateUserRequest {
+    User User = 1;
+}
+
+message Assignment {
+    uint64 id = 1;
+    uint64 courseid = 2;
+    string name = 3;
+    string language = 4;
+
+}
+
+message Group {
+
+}
+
+message Course {
+    uint64 id = 1;
+    string name = 2;
+    string code = 3;
+    uint32 year = 4;
+    string tag = 5;
+    string provider = 6;
+    uint64 directoryid = 7;
+    int32 enrolled = 8;
+    repeated Assignment assignments = 9;
+    repeated Group groups = 10;
+}
+
+message Courses {
+    repeated Course Courses = 1;
+}
+
+
+service AutograderService {
+    rpc GetUser (GetUserRequest) returns (User) {}
+    rpc GetUsers (Void) returns (UsersResponse) {}
+    rpc UpdateUser(UpdateUserRequest) returns (User) {}
+    rpc GetCourses(Void) returns (Courses) {}
+}

@@ -28,7 +28,7 @@ interface IDummyUser extends IUser {
  * The TempDataProvider is a fake implemetation of the backend
  * to be able to simulate the backend for easier developtment
  */
-export class TempDataProvider implements IUserProvider, ICourseProvider {
+export class TempDataProvider {
 
     private localUsers: IMap<IDummyUser>;
     private localAssignments: IMap<IAssignment>;

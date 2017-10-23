@@ -29,25 +29,32 @@ import {
 } from "../managers";
 import { IMap, mapify } from "../map";
 import { ILogger } from "./LogManager";
-
+import {GrpcHelper} from "./GrpcHelper";
+import {User, Course} from "../../_proto/aguis/library/aguis_service_pb"
 import { combinePath } from "../NavigationHelper";
 
 export class ServerProvider implements IUserProvider, ICourseProvider {
     private helper: HttpHelper;
     private logger: ILogger;
+    private grpcHelper: GrpcHelper;
 
-    constructor(helper: HttpHelper, logger: ILogger) {
+    constructor(helper: HttpHelper,grpc: GrpcHelper, logger: ILogger) {
         this.helper = helper;
         this.logger = logger;
+        this.grpcHelper = grpc;
     }
 
     public async getCourses(): Promise<ICourse[]> {
-        const result = await this.helper.get<any>("courses");
-        if (result.statusCode !== 200 || !result.data) {
+        // const result = await this.helper.get<any>("courses");
+        const result = await this.grpcHelper.getCourses();
+        if (result.statusCode !== 0 || !result.data) {
             this.handleError(result, "getCourses");
             return [];
         }
-        return result.data;
+        const data = result.data.getCoursesList().map((course) => {
+            return this.toICourse(course);
+        });
+        return data;
         // const data = JSON.parse(JSON.stringify(result.data).toLowerCase()) as ICourse[];
         // return mapify(result.data, (ele) => ele.id);
         // throw new Error("Method not implemented.");
@@ -290,20 +297,31 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
         throw new Error("tryLogin This could be removed since there is no normal login.");
     }
 
+    public async grpcLogin(id: number): Promise<IUser | null> {
+        const result = await this.grpcHelper.getUser(id);
+        if (result.statusCode == 0 && result.data) {
+            return this.toIUser(result.data);
+        }
+        return null
+    }
+
     public async logout(user: IUser): Promise<boolean> {
         window.location.assign("/logout");
         return true;
     }
 
     public async getAllUser(): Promise<IUser[]> {
-        const result = await this.helper.get<IUser[]>("users");
-        if (result.statusCode !== 302 || !result.data) {
+        const result = await this.grpcHelper.getUsers();
+        if (result.statusCode !== 0 || !result.data) {
             this.handleError(result, "getAllUser");
             return [];
         }
-        const newArray = result.data.map<IUser>((ele) => this.makeUserInfo(ele));
-        // return mapify(newArray, (ele) => ele.id);
-        return newArray;
+
+        const data = result.data.getUsersList().map((user) => {
+            return this.toIUser(user);
+        });
+        const newArray = data.map<IUser>((ele) => this.makeUserInfo(ele));
+        return newArray
     }
 
     public async tryRemoteLogin(provider: string): Promise<IUser | null> {
@@ -316,8 +334,8 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     }
 
     public async changeAdminRole(user: IUser): Promise<boolean> {
-        const result = await this.helper.patch<{ isadmin: boolean }, {}>("/users/" + user.id + "", { isadmin: true });
-        if (result.statusCode < 400) {
+        const result = await this.grpcHelper.updateUser(user, true);
+        if (result.statusCode !== 0) {
             return false;
         } else {
             this.handleError(result, "changeAdminRole");
@@ -327,8 +345,15 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
 
     public async updateUser(user: IUser): Promise<boolean> {
         // TODO: make actuall implementation
-        const result = await this.helper.patch<{ isadmin: boolean }, {}>("/users/" + user.id + "", user);
-        if (result.statusCode < 400) {
+        // const result = await this.helper.patch<{ isadmin: boolean }, {}>("/users/" + user.id + "", user);
+        // if (result.statusCode < 400) {
+        //     return false;
+        // } else {
+        //     this.handleError(result, "updateUser");
+        // }
+        // return true;
+        const result = await this.grpcHelper.updateUser(user);
+        if (result.statusCode !== 0) {
             return false;
         } else {
             this.handleError(result, "updateUser");
@@ -397,6 +422,31 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
             error.data = JSON.parse(JSON.stringify(result.data)) as any;
         }
         return error;
+    }
+    // this method convert a grpc User to IUSer
+    private toIUser(user: User): IUser {
+        return {
+            id: user.getId(),
+            name: user.getName(),
+            avatarurl: user.getAvatarurl(),
+            email: user.getEmail(),
+            studentid: user.getStudentid(),
+            isadmin: user.getIsadmin(),
+        } as IUser
+    }
+
+    // this method convert a grpc Course to ICourse
+    private toICourse(course: Course): ICourse {
+        return {
+            id: course.getId(),
+            name: course.getName(),
+            code: course.getCode(),
+            tag: course.getTag(),
+            year: course.getYear(),
+            provider: course.getProvider(),
+            directoryid: course.getDirectoryid(),
+
+        } as ICourse
     }
 
 }

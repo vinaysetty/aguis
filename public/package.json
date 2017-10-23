@@ -4,20 +4,34 @@
   "description": "React Components for the Autograder Project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate_cert": "cd ../misc ./gen_cert.sh",
+    "build:proto": "cd ../ && ./protogen.sh",
+    "get_go_deps": "cd ../ && ./get_go_deps.sh",
+    "webpack-dev:tls": "cd ts && export USE_TLS=true && webpack-dev-server --colors --watch --hot --inline --port 8082 --host 0.0.0.0 --output-public-path=https://localhost:8082/build/ --https --cert=../../misc/localhost.crt --key=../../misc/localhost.key",
+    "webpack-dev": "webpack-dev-server --colors --watch --hot --inline --port 8080 --output-public-path=http://localhost:8080/dist/",
+    "start:tls": "npm run build:proto && concurrently --kill-others \"go run ../main.go --enable_tls=true\" \"npm run webpack-dev:tls\"",
+    "start": "npm run build:proto && concurrently --kill-others \"npm run webpack-dev\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/react": "^15.0.37",
-    "@types/react-dom": "^15.5.1",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "@types/google-protobuf": "^3.2.7",
+    "@types/react": "^15.6.4",
+    "@types/react-dom": "^15.5.6",
+    "google-protobuf": "^3.4.0",
+    "grpc-web-client": "^0.3.1",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2"
   },
   "devDependencies": {
-    "awesome-typescript-loader": "^3.2.1",
-    "source-map-loader": "^0.2.1",
-    "typescript": "^2.4.1"
+    "awesome-typescript-loader": "^3.2.3",
+    "concurrently": "^3.4.0",
+    "source-map-loader": "^0.2.2",
+    "ts-protoc-gen": "0.3.2",
+    "typescript": "^2.5.3",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.9.2"
   },
   "repository": {
     "type": "git",

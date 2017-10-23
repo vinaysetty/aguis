@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { NavBar, Row } from "./components";
-import { CourseManager, ILink, INavEvent, NavigationManager, TempDataProvider, UserManager } from "./managers";
+import { CourseManager, GrpcHelper, ILink, INavEvent, NavigationManager, TempDataProvider, UserManager } from "./managers";
 
 import { ErrorPage } from "./pages/ErrorPage";
 import { HelpPage } from "./pages/HelpPage";
@@ -29,6 +29,7 @@ import { UserProfile } from "./components/forms/UserProfile";
 import { UserPage } from "./pages/UserPage";
 
 import { AddMenu } from "./components/navigation/AddMenu";
+import {grpc} from "grpc-web-client";
 
 interface IAutoGraderState {
     activePage?: ViewPage;
@@ -125,6 +126,9 @@ class AutoGrader extends React.Component<IAutoGraderProps, IAutoGraderState> {
             return basis;
         }
         return [
+            //{ name: "Courses", uri: "app/student/", active: false },
+            //{ name: "Teacher", uri: "app/teacher/", active: false },
+            { name: "Admin", uri: "app/admin", active: false },
             { name: "Help", uri: "app/help", active: false },
         ];
     }
@@ -291,40 +295,23 @@ class AutoGrader extends React.Component<IAutoGraderProps, IAutoGraderState> {
  * @description The main entry point for the application. No other code should be executet outside this function
  */
 async function main(): Promise<void> {
-    const DEBUG_BROWSER = "DEBUG_BROWSER";
-    const DEBUG_SERVER = "DEBUG_SERVER";
-
-    let curRunning: string;
-    curRunning = DEBUG_SERVER;
-
-    if (window.location.host.match("localhost")
-        || localStorage.getItem("debug")) {
-        curRunning = DEBUG_BROWSER;
-    }
-
-    const tempData = new TempDataProvider();
-
     let userMan: UserManager;
     let courseMan: CourseManager;
     const logMan = new LogManager();
     const navMan: NavigationManager = new NavigationManager(history, logMan.createLogger("NavigationManager"));
 
-    if (curRunning === DEBUG_SERVER) {
-        const httpHelper = new HttpHelper("/api/v1");
-        const serverData = new ServerProvider(httpHelper, logMan.createLogger("ServerProvider"));
+    const httpHelper = new HttpHelper("/api/v1");
+    const grcpHelper = new GrpcHelper();
+    const serverData = new ServerProvider(httpHelper, grcpHelper, logMan.createLogger("ServerProvider"));
 
-        userMan = new UserManager(serverData, logMan.createLogger("UserManager"));
-        courseMan = new CourseManager(serverData, logMan.createLogger("CourseManager"));
-    } else {
-        userMan = new UserManager(tempData, logMan.createLogger("UserManager"));
-        courseMan = new CourseManager(tempData, logMan.createLogger("CourseManager"));
+    userMan = new UserManager(serverData, logMan.createLogger("UserManager"));
+    courseMan = new CourseManager(serverData, logMan.createLogger("CourseManager"));
 
-        const user = await userMan.tryLogin("test@testersen.no", "1234");
-    }
+    const user = await userMan.grpcLogin(1);
 
     await userMan.checkUserLoggedIn();
 
-    (window as any).debugData = { tempData, userMan, courseMan, navMan, logMan };
+    (window as any).debugData = {userMan, courseMan, navMan, logMan };
 
     navMan.setDefaultPath("app/home");
     const all: Array<Promise<void>> = [];

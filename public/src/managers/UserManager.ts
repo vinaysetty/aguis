@@ -8,6 +8,7 @@ export interface IUserProvider {
     logout(user: IUser): Promise<boolean>;
     getAllUser(): Promise<IUser[]>;
     tryRemoteLogin(provider: string): Promise<IUser | null>;
+    grpcLogin(id: number): Promise<IUser | null>;
     changeAdminRole(user: IUser): Promise<boolean>;
     getLoggedInUser(): Promise<IUser | null>;
     updateUser(user: IUser): Promise<boolean>;
@@ -82,6 +83,16 @@ export class UserManager {
         return result;
     }
 
+    // TODO: Fake login for testing GRPC
+    public async grpcLogin(id: number): Promise<IUser | null> {
+        const result: IUser | null = await this.userProvider.grpcLogin(id);
+        if(result) {
+            this.currentUser = result;
+            this.onLogin({target: this, user: this.currentUser});
+        }
+        return result
+    }
+
     /**
      * logout from the current logged in session
      */
@@ -148,7 +159,9 @@ export class UserManager {
      * Communicates with the backend to see if there is a logged inn user
      */
     public async checkUserLoggedIn(): Promise<boolean> {
-        const user = await this.userProvider.getLoggedInUser();
+        // TODO: Grpc fake login check
+        // const user = await this.userProvider.getLoggedInUser();
+        const user = await this.userProvider.grpcLogin(1);
         this.currentUser = user;
         if (user) {
             return true;

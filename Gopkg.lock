@@ -52,7 +52,7 @@
 [[projects]]
   branch = "master"
   name = "github.com/golang/protobuf"
-  packages = ["proto"]
+  packages = ["proto","ptypes","ptypes/any","ptypes/duration","ptypes/timestamp"]
   revision = "748d386b5c1ea99658fd69fe9f03991ce86a90c1"
 
 [[projects]]
@@ -92,6 +92,12 @@
   version = "v1.1"
 
 [[projects]]
+  name = "github.com/improbable-eng/grpc-web"
+  packages = ["go/grpcweb"]
+  revision = "7174732598544bdecfa12fb81ca2f1601cf1b587"
+  version = "0.3.0-beta"
+
+[[projects]]
   name = "github.com/jinzhu/gorm"
   packages = [".","dialects/sqlite"]
   revision = "5174cc5c242a728b435ea2be8a2f7f998e15429b"
@@ -124,7 +130,7 @@
 [[projects]]
   branch = "master"
   name = "github.com/markbates/goth"
-  packages = [".","gothic","providers/github","providers/gitlab"]
+  packages = [".","gothic","providers/github"]
   revision = "c55b917ee947a46c06d65de2cb1b8896ec19a1a2"
 
 [[projects]]
@@ -162,6 +168,12 @@
   packages = ["."]
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
   version = "v0.8.0"
+
+[[projects]]
+  name = "github.com/rs/cors"
+  packages = ["."]
+  revision = "7af7a1e09ba336d2ea14b1ce73bf693c6837dbf6"
+  version = "v1.2"
 
 [[projects]]
   name = "github.com/sirupsen/logrus"
@@ -202,7 +214,7 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["context","context/ctxhttp","proxy"]
+  packages = ["context","context/ctxhttp","http2","http2/hpack","idna","internal/timeseries","lex/httplex","proxy","trace"]
   revision = "f5079bd7f6f74e23c4d65efa0f4ce14cbd6a3c0f"
 
 [[projects]]
@@ -218,10 +230,28 @@
   revision = "d6c3f2be455466eedffcfc91793e2c808b7a7410"
 
 [[projects]]
+  branch = "master"
+  name = "golang.org/x/text"
+  packages = ["collate","collate/build","internal/colltab","internal/gen","internal/tag","internal/triegen","internal/ucd","language","secure/bidirule","transform","unicode/bidi","unicode/cldr","unicode/norm","unicode/rangetable"]
+  revision = "1cbadb444a806fd9430d14ad08967ed91da4fa0a"
+
+[[projects]]
   name = "google.golang.org/appengine"
   packages = [".","internal","internal/app_identity","internal/base","internal/datastore","internal/log","internal/modules","internal/remote_api","internal/urlfetch","urlfetch"]
   revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
   version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "google.golang.org/genproto"
+  packages = ["googleapis/rpc/status"]
+  revision = "595979c8a7bf586b2d293fb42246bf91a0b893d9"
+
+[[projects]]
+  name = "google.golang.org/grpc"
+  packages = [".","codes","connectivity","credentials","grpclb/grpc_lb_v1/messages","grpclog","internal","keepalive","metadata","naming","peer","stats","status","tap","transport"]
+  revision = "f92cdcd7dcdc69e81b2d7b338479a19a8723cfa3"
+  version = "v1.6.0"
 
 [[projects]]
   name = "gopkg.in/go-playground/webhooks.v3"
@@ -238,6 +268,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "18680a48f6c007d721c881bea3260012c4142c00bb94614c31217d89a3bca532"
+  inputs-digest = "2127fa13fc32d4b3c3ba341580a09faddee3f7cc43e17cc5e6849038a7b1245f"
   solver-name = "gps-cdcl"
   solver-version = 1
