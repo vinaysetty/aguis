@@ -4,7 +4,7 @@ import (
 	"flag"
 	"github.com/autograde/aguis/database"
 	"github.com/autograde/aguis/logger"
-	library "github.com/autograde/aguis/proto/_proto/aguis/library"
+	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
 	"github.com/autograde/aguis/web"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -21,7 +21,7 @@ type autograderService struct {
 	db *database.GormDB
 }
 
-func (s *autograderService) GetUser(ctx context.Context, userQuery *library.GetUserRequest) (*library.User, error) {
+func (s *autograderService) GetUser(ctx context.Context, userQuery *pb.GetRecordRequest) (*pb.User, error) {
 	SetGrpcHeaderAndTrailer(ctx)
 	user, err := web.GetUser(userQuery, s.db)
 	if err != nil {
@@ -30,7 +30,7 @@ func (s *autograderService) GetUser(ctx context.Context, userQuery *library.GetU
 	return user, nil
 }
 
-func (s *autograderService) GetUsers(ctx context.Context, query *library.Void) (*library.UsersResponse, error) {
+func (s *autograderService) GetUsers(ctx context.Context, query *pb.Void) (*pb.UsersResponse, error) {
 	users, err := web.GetUsers(s.db)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (s *autograderService) GetUsers(ctx context.Context, query *library.Void) (
 	return users, nil
 }
 
-func (s *autograderService) UpdateUser(ctx context.Context, u *library.UpdateUserRequest) (*library.User, error) {
+func (s *autograderService) UpdateUser(ctx context.Context, u *pb.UpdateUserRequest) (*pb.User, error) {
 	SetGrpcHeaderAndTrailer(ctx)
 	user, err := web.UpdateUser(u, s.db)
 	if err != nil {
@@ -47,13 +47,41 @@ func (s *autograderService) UpdateUser(ctx context.Context, u *library.UpdateUse
 	return user, nil
 }
 
-func (s *autograderService) GetCourses(ctx context.Context, q *library.Void) (*library.Courses, error) {
+func (s *autograderService) GetCourse(ctx context.Context, query *pb.GetRecordRequest) (*pb.Course, error) {
+	SetGrpcHeaderAndTrailer(ctx)
+	course, err := web.GetCourse(query, s.db)
+	if err != nil {
+		return nil, err
+	}
+	return course, nil
+}
+
+func (s *autograderService) GetCoursesWithEnrollment(
+	ctx context.Context, request *pb.CoursesWithEnrollmentRequest) (*pb.Courses, error) {
+	SetGrpcHeaderAndTrailer(ctx)
+	courses, err := web.ListCoursesWithEnrollment(request, s.db)
+	if err != nil {
+		return nil, err
+	}
+	return courses, nil
+}
+
+func (s *autograderService) GetCourses(ctx context.Context, q *pb.Void) (*pb.Courses, error) {
 	SetGrpcHeaderAndTrailer(ctx)
 	courses, err := web.ListCourses(s.db)
 	if err != nil {
 		return nil, err
 	}
 	return courses, nil
+}
+
+func (s *autograderService) GetAssignments(ctx context.Context, cid *pb.GetRecordRequest) (*pb.Assignments, error)  {
+	SetGrpcHeaderAndTrailer(ctx);
+	assignments, err := web.ListAssignments(cid, s.db)
+	if err != nil {
+		return nil, err
+	}
+	return assignments, nil
 }
 
 func main() {
@@ -91,7 +119,7 @@ func main() {
 	}()
 
 	grpcServer := grpc.NewServer()
-	library.RegisterAutograderServiceServer(grpcServer, &autograderService{db: db})
+	pb.RegisterAutograderServiceServer(grpcServer, &autograderService{db: db})
 
 	wrappedServer := grpcweb.WrapServer(grpcServer)
 	handler := func(resp http.ResponseWriter, req *http.Request) {

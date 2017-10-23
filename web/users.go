@@ -3,7 +3,7 @@ package web
 import (
 	"github.com/autograde/aguis/database"
 	"github.com/autograde/aguis/models"
-	library "github.com/autograde/aguis/proto/_proto/aguis/library"
+	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
 	"github.com/jinzhu/gorm"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -29,7 +29,7 @@ type UpdateUserRequest struct {
 //}
 //
 // GetUser returns information about the provided user id.
-func GetUser(query *library.GetUserRequest, db database.Database) (*library.User, error) {
+func GetUser(query *pb.GetRecordRequest, db database.Database) (*pb.User, error) {
 	user, err := db.GetUser(query.Id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -42,9 +42,9 @@ func GetUser(query *library.GetUserRequest, db database.Database) (*library.User
 }
 
 // GetUsers returns all the users in the database.
-func GetUsers(db database.Database) (*library.UsersResponse, error) {
+func GetUsers(db database.Database) (*pb.UsersResponse, error) {
 
-	var results []*library.User
+	var results []*pb.User
 	users, err := db.GetUsers()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -55,11 +55,11 @@ func GetUsers(db database.Database) (*library.UsersResponse, error) {
 	for _, u := range users {
 		results = append(results, toProtoUser(u))
 	}
-	return &library.UsersResponse{Users: results}, nil
+	return &pb.UsersResponse{Users: results}, nil
 }
 
 // UpdateUser promotes a user to an administrator
-func UpdateUser(userReq *library.UpdateUserRequest, db database.Database) (*library.User, error) {
+func UpdateUser(userReq *pb.UpdateUserRequest, db database.Database) (*pb.User, error) {
 	user, err := db.GetUser(userReq.User.Id)
 	if err != nil {
 		return nil, err
@@ -107,8 +107,8 @@ func UpdateUser(userReq *library.UpdateUserRequest, db database.Database) (*libr
 //	}
 //}
 
-func toProtoUser(user *models.User) *library.User {
-	pu := &library.User{
+func toProtoUser(user *models.User) *pb.User {
+	pu := &pb.User{
 		Id:        user.ID,
 		Name:      user.Name,
 		Email:     user.Email,

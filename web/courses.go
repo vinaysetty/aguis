@@ -1,8 +1,6 @@
 package web
 
 import (
-	//"context"
-	//"net/http"
 	"time"
 
 	//"github.com/autograde/aguis/ci"
@@ -13,7 +11,10 @@ import (
 	//"github.com/autograde/aguis/scm"
 	//"github.com/jinzhu/gorm"
 	//"github.com/sirupsen/logrus"
-	library "github.com/autograde/aguis/proto/_proto/aguis/library"
+	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
+	"github.com/jinzhu/gorm"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // MaxWait is the maximum time a request is allowed to stay open before
@@ -69,8 +70,8 @@ type UpdateGroupRequest struct {
 }
 
 // ListCourses returns a JSON object containing all the courses in the database.
-func ListCourses(db database.Database) (*library.Courses, error) {
-	var results []*library.Course
+func ListCourses(db database.Database) (*pb.Courses, error) {
+	var results []*pb.Course
 	courses, err := db.GetCourses()
 	if err != nil {
 		return nil, err
@@ -78,45 +79,42 @@ func ListCourses(db database.Database) (*library.Courses, error) {
 	for _, course := range courses {
 		results = append(results, toProtoCourse(course))
 	}
-	return &library.Courses{Courses: results}, nil
+	return &pb.Courses{Courses: results}, nil
 }
 
 // ListCoursesWithEnrollment lists all existing courses with the provided users
 // enrollment status.
 // If status query param is provided, lists only courses of the student filtered by the query param.
-//func ListCoursesWithEnrollment(db database.Database) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		id, err := parseUint(c.Param("uid"))
-//		if err != nil {
-//			return err
-//		}
-//		statuses, err := parseEnrollmentStatus(c.QueryParam("status"))
-//		if err != nil {
-//			return err
-//		}
-//
-//		courses, err := db.GetCoursesByUser(id, statuses...)
-//		if err != nil {
-//			return err
-//		}
-//		return c.JSONPretty(http.StatusOK, courses, "\t")
-//	}
-//}
+func ListCoursesWithEnrollment(request *pb.CoursesWithEnrollmentRequest, db database.Database) (*pb.Courses, error) {
+	var results []*pb.Course
+	id := request.Userid
+	statuses, err := parseEnrollmentStatus(request.State)
+	if err != nil {
+		return nil, err
+	}
+
+	courses, err := db.GetCoursesByUser(id, statuses...)
+	if err != nil {
+		return nil, err
+	}
+	for _, course := range courses {
+		results = append(results, toProtoCourse(course))
+	}
+	return &pb.Courses{Courses: results}, nil
+}
 
 // ListAssignments lists the assignments for the provided course.
-//func ListAssignments(db database.Database) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		id, err := parseUint(c.Param("cid"))
-//		if err != nil {
-//			return err
-//		}
-//		assignments, err := db.GetAssignmentsByCourse(id)
-//		if err != nil {
-//			return err
-//		}
-//		return c.JSONPretty(http.StatusOK, assignments, "\t")
-//	}
-//}
+func ListAssignments(request *pb.GetRecordRequest, db database.Database) (*pb.Assignments, error) {
+	var results []*pb.Assignment
+	assignments, err := db.GetAssignmentsByCourse(request.Id)
+	if err != nil {
+		return nil, err
+	}
+	for _, asg := range assignments {
+		results = append(results, toProtoAssignment(asg))
+	}
+	return &pb.Assignments{Assignments: results}, nil
+}
 
 // Default repository names.
 const (
@@ -363,25 +361,18 @@ type BaseHookOptions struct {
 //}
 
 // GetCourse find course by id and return JSON object.
-//func GetCourse(db database.Database) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		id, err := parseUint(c.Param("cid"))
-//		if err != nil {
-//			return err
-//		}
-//
-//		course, err := db.GetCourse(id)
-//		if err != nil {
-//			if err == gorm.ErrRecordNotFound {
-//				return c.NoContent(http.StatusNotFound)
-//			}
-//			return err
-//
-//		}
-//
-//		return c.JSONPretty(http.StatusOK, course, "\t")
-//	}
-//}
+func GetCourse(query *pb.GetRecordRequest, db database.Database) (*pb.Course, error) {
+	course, err := db.GetCourse(query.Id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, status.Errorf(codes.NotFound, "Course not found")
+		}
+		return nil, err
+
+	}
+
+	return toProtoCourse(course), nil
+}
 
 // RefreshCourse refreshes the information to a course
 //func RefreshCourse(logger logrus.FieldLogger, db database.Database) echo.HandlerFunc {
@@ -827,8 +818,8 @@ func createAssignment(request *yamlparser.NewAssignmentRequest, course *models.C
 //}
 
 // convert a model Course to proto Course
-func toProtoCourse(course *models.Course) *library.Course {
-	pc := &library.Course{
+func toProtoCourse(course *models.Course) *pb.Course {
+	pc := &pb.Course{
 		Id:          course.ID,
 		Name:        course.Name,
 		Code:        course.Code,
@@ -837,5 +828,37 @@ func toProtoCourse(course *models.Course) *library.Course {
 		Year:        uint32(course.Year),
 		Directoryid: course.DirectoryID,
 	}
+	if course.Enrolled >= 0 {
+		pc.Enrolled = int32(course.Enrolled)
+	}
 	return pc
+}
+
+// convert a model Assignment to proto Assignment
+func toProtoAssignment(asg *models.Assignment) *pb.Assignment {
+	pa := &pb.Assignment{
+		Id:          asg.ID,
+		Name:        asg.Name,
+		Courseid:    asg.CourseID,
+		Language:    asg.Language,
+		Autoapprove: asg.AutoApprove,
+		Deadline:    asg.Deadline.Format("2006-01-02 15:04:05"),
+		Order:       uint32(asg.Order),
+		Submission:  toProtoSubmission(asg.Submission),
+	}
+	return pa
+}
+
+func toProtoSubmission(submission *models.Submission) *pb.Submission {
+	ps := &pb.Submission{
+		Id:           submission.ID,
+		Userid:       submission.UserID,
+		Assignmentid: submission.AssignmentID,
+		Groupid:      submission.GroupID,
+		Buildinfo:    submission.BuildInfo,
+		Score:        uint32(submission.Score),
+		Scoreobjects: submission.ScoreObjects,
+		Commithash:   submission.CommitHash,
+	}
+	return ps
 }

@@ -18,7 +18,7 @@ message User {
     string email = 5;
     string avatarurl = 6;
 
-    repeated Enrollment Enrollments = 7;
+    repeated Enrollment enrollments = 7;
 }
 
 message UsersResponse {
@@ -27,7 +27,8 @@ message UsersResponse {
 
 message Void {}
 
-message GetUserRequest {
+// GetRecordRecord can be used for all type of single record request like User, Course etc
+message GetRecordRequest {
     uint64 id = 1;
 }
 
@@ -40,7 +41,26 @@ message Assignment {
     uint64 courseid = 2;
     string name = 3;
     string language = 4;
+    string deadline = 5;
+    bool autoapprove = 6;
+    uint32 order = 7;
+    Submission submission = 8;
 
+}
+
+message Submission {
+    uint64 id = 1;
+    uint64 assignmentid = 2;
+    uint64 userid = 3;
+    uint64 groupid = 4;
+    uint32 score = 5;
+    string scoreobjects = 6;
+    string buildinfo = 7;
+    string commithash = 8;
+}
+
+message Assignments {
+    repeated Assignment assignments = 1;
 }
 
 message Group {
@@ -64,10 +84,19 @@ message Courses {
     repeated Course Courses = 1;
 }
 
+message CoursesWithEnrollmentRequest {
+    uint64 userid = 1;
+    string state = 2;
+}
+
 
 service AutograderService {
-    rpc GetUser (GetUserRequest) returns (User) {}
+    rpc GetUser (GetRecordRequest) returns (User) {}
     rpc GetUsers (Void) returns (UsersResponse) {}
     rpc UpdateUser(UpdateUserRequest) returns (User) {}
+
+    rpc GetCourse(GetRecordRequest) returns (Course) {}
     rpc GetCourses(Void) returns (Courses) {}
+    rpc GetCoursesWithEnrollment(CoursesWithEnrollmentRequest) returns (Courses) {}
+    rpc GetAssignments(GetRecordRequest) returns (Assignments) {}
 }
