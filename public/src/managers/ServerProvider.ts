@@ -30,7 +30,7 @@ import {
 import { IMap, mapify } from "../map";
 import { ILogger } from "./LogManager";
 import {GrpcHelper} from "./GrpcHelper";
-import {User, Course} from "../../_proto/aguis/library/aguis_service_pb"
+import {User, Course, Assignment} from "../../_proto/aguis/library/aguis_service_pb"
 import { combinePath } from "../NavigationHelper";
 
 export class ServerProvider implements IUserProvider, ICourseProvider {
@@ -62,20 +62,22 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
 
     public async getCoursesFor(user: IUser, state?: CourseUserState[]): Promise<ICourseEnrollemtnt[]> {
         // TODO: Fix to use correct url request
-        const status = state ? "?status=" + courseUserStateToString(state) : "";
-        const result = await this.helper.get<ICourseWithEnrollStatus[]>("/users/" + user.id + "/courses" + status);
-        if (result.statusCode !== 200 || !result.data) {
+        const status = state ? courseUserStateToString(state) : "";
+        // const result = await this.helper.get<ICourseWithEnrollStatus[]>("/users/" + user.id + "/courses" + status);
+        const result = await this.grpcHelper.getCoursesWithEnrollment(user.id, status);
+        if (result.statusCode !== 0 || !result.data) {
             this.handleError(result, "getCoursesFor");
             return [];
         }
 
         const arr: ICourseEnrollemtnt[] = [];
-        result.data.forEach((ele) => {
-            const enroll = ele.enrolled as number >= 0 ? ele.enrolled : undefined;
+        result.data.getCoursesList().forEach((ele) => {
+            const course = this.toICourse(ele)
+            const enroll = ele.getEnrolled() as number >= 0 ? ele.getEnrolled() : undefined;
             arr.push({
-                course: ele as ICourse,
+                course: course,
                 status: enroll,
-                courseid: ele.id,
+                courseid: course.id,
                 userid: user.id,
                 user,
             });
@@ -102,14 +104,22 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     }
 
     public async getAssignments(courseId: number): Promise<IMap<IAssignment>> {
-        const result = await this.helper.get<any>("courses/" + courseId.toString() + "/assignments");
-
-        if (result.statusCode !== 200 || !result.data) {
+        // const result = await this.helper.get<any>("courses/" + courseId.toString() + "/assignments");
+        const result = await this.grpcHelper.getAssignments(courseId);
+        console.log("assignment = ", result);
+        if (result.statusCode !== 0 || !result.data) {
             console.log(result);
             this.handleError(result, "getAssignments");
             throw new Error("Problem with the request");
         }
-        return mapify(result.data as IAssignment[], (ele) => {
+        const assignments: IAssignment[] = [];
+        result.data.getAssignmentsList().forEach((ele) => {
+            const asg = this.toIAssignment(ele);
+            assignments.push(asg);
+        });
+
+
+        return mapify(assignments, (ele) => {
             ele.deadline = new Date(2017, 7, 18);
             return ele.id;
         });
@@ -153,12 +163,14 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     }
 
     public async getCourse(id: number): Promise<ICourse | null> {
-        const result = await this.helper.get<any>("courses/" + id);
-        if (result.statusCode !== 200 || !result.data) {
+        // const result = await this.helper.get<any>("courses/" + id);
+        const result = await this.grpcHelper.getCourse(id);
+        if (result.statusCode !== 0 || !result.data) {
             this.handleError(result, "getCourse");
             return null;
         }
-        return JSON.parse(JSON.stringify(result.data)) as ICourse;
+
+        return this.toICourse(result.data);
     }
 
     public async updateCourse(courseId: number, courseData: ICourse): Promise<IStatusCode | IError> {
@@ -447,6 +459,15 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
             directoryid: course.getDirectoryid(),
 
         } as ICourse
+    }
+
+    // this method convert a grpc Assignment to IAssignment
+    private toIAssignment(assg: Assignment): IAssignment {
+        return {
+            id: assg.getId(),
+            name: assg.getName(),
+            courseid: assg.getCourseid(),
+        } as IAssignment
     }
 
 }

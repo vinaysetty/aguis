@@ -11,7 +11,7 @@ export namespace AutograderService {
     static readonly service = AutograderService;
     static readonly requestStream = false;
     static readonly responseStream = false;
-    static readonly requestType = aguis_library_aguis_service_pb.GetUserRequest;
+    static readonly requestType = aguis_library_aguis_service_pb.GetRecordRequest;
     static readonly responseType = aguis_library_aguis_service_pb.User;
   }
   export class GetUsers {
@@ -30,6 +30,14 @@ export namespace AutograderService {
     static readonly requestType = aguis_library_aguis_service_pb.UpdateUserRequest;
     static readonly responseType = aguis_library_aguis_service_pb.User;
   }
+  export class GetCourse {
+    static readonly methodName = "GetCourse";
+    static readonly service = AutograderService;
+    static readonly requestStream = false;
+    static readonly responseStream = false;
+    static readonly requestType = aguis_library_aguis_service_pb.GetRecordRequest;
+    static readonly responseType = aguis_library_aguis_service_pb.Course;
+  }
   export class GetCourses {
     static readonly methodName = "GetCourses";
     static readonly service = AutograderService;
@@ -37,5 +45,21 @@ export namespace AutograderService {
     static readonly responseStream = false;
     static readonly requestType = aguis_library_aguis_service_pb.Void;
     static readonly responseType = aguis_library_aguis_service_pb.Courses;
+  }
+  export class GetCoursesWithEnrollment {
+    static readonly methodName = "GetCoursesWithEnrollment";
+    static readonly service = AutograderService;
+    static readonly requestStream = false;
+    static readonly responseStream = false;
+    static readonly requestType = aguis_library_aguis_service_pb.CoursesWithEnrollmentRequest;
+    static readonly responseType = aguis_library_aguis_service_pb.Courses;
+  }
+  export class GetAssignments {
+    static readonly methodName = "GetAssignments";
+    static readonly service = AutograderService;
+    static readonly requestStream = false;
+    static readonly responseStream = false;
+    static readonly requestType = aguis_library_aguis_service_pb.GetRecordRequest;
+    static readonly responseType = aguis_library_aguis_service_pb.Assignments;
   }
 }

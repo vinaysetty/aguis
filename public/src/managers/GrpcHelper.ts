@@ -1,7 +1,10 @@
 import {grpc} from "grpc-web-client";
 import {
+    Assignments,
+    Course,
     Courses,
-    GetUserRequest,
+    CoursesWithEnrollmentRequest,
+    GetRecordRequest,
     UpdateUserRequest,
     User,
     UsersResponse,
@@ -27,13 +30,12 @@ export class GrpcHelper {
     }
 
     public getUser(id: number): Promise<IGrpcResult<User>> {
-        const userRequest = new GetUserRequest();
+        const userRequest = new GetRecordRequest();
         userRequest.setId(id);
         return this.grpcUnary<User>(AutograderService.GetUser, userRequest);
     }
 
     public updateUser(user: IUser, isadmin?: boolean): Promise<IGrpcResult<User>> {
-        console.log("update User obj = ", user);
         const u = new User();
         u.setId(user.id);
         u.setAvatarurl(user.avatarurl);
@@ -50,11 +52,29 @@ export class GrpcHelper {
         return this.grpcUnary<User>(AutograderService.UpdateUser, userRequest);
     }
 
+    public getCourse(id: number): Promise<IGrpcResult<Course>> {
+        const query = new GetRecordRequest();
+        query.setId(id);
+        return this.grpcUnary(AutograderService.GetCourse, query);
+    }
+
     public getCourses(): Promise<IGrpcResult<Courses>> {
         const usersRequest = new Void();
         return this.grpcUnary<Courses>(AutograderService.GetCourses, usersRequest);
     }
 
+    public getCoursesWithEnrollment(userid: number, state: string): Promise<IGrpcResult<Courses>> {
+        const courseReq = new CoursesWithEnrollmentRequest();
+        courseReq.setUserid(userid);
+        courseReq.setState(state);
+        return this.grpcUnary<Courses>(AutograderService.GetCoursesWithEnrollment, courseReq);
+    }
+
+    public getAssignments(courseId: number): Promise<IGrpcResult<Assignments>> {
+        const req = new GetRecordRequest();
+        req.setId(courseId);
+        return this.grpcUnary<Assignments>(AutograderService.GetAssignments, req);
+    }
 
     private grpcUnary<TReceive extends Message>(method: any, request: any): Promise<IGrpcResult<TReceive>> {
         const requestPromise = new Promise<IGrpcResult<TReceive>>((resolve, reject) => {

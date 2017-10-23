@@ -60,11 +60,13 @@ export class StudentPage extends ViewPage {
     public async index(navInfo: INavInfo<any>): View {
         await this.setupData();
         if (this.activeCourses) {
+            console.log("Active courses found");
             return (<CoursesOverview
                 courseOverview={this.activeCourses}
                 navMan={this.navMan}
             />);
         }
+        console.log("Active course not found");
         return <h1>404</h1>;
     }
 

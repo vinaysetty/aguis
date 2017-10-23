@@ -10,11 +10,14 @@ var goog = jspb;
 var global = Function('return this')();
 
 goog.exportSymbol('proto.library.Assignment', null, global);
+goog.exportSymbol('proto.library.Assignments', null, global);
 goog.exportSymbol('proto.library.Course', null, global);
 goog.exportSymbol('proto.library.Courses', null, global);
+goog.exportSymbol('proto.library.CoursesWithEnrollmentRequest', null, global);
 goog.exportSymbol('proto.library.Enrollment', null, global);
-goog.exportSymbol('proto.library.GetUserRequest', null, global);
+goog.exportSymbol('proto.library.GetRecordRequest', null, global);
 goog.exportSymbol('proto.library.Group', null, global);
+goog.exportSymbol('proto.library.Submission', null, global);
 goog.exportSymbol('proto.library.UpdateUserRequest', null, global);
 goog.exportSymbol('proto.library.User', null, global);
 goog.exportSymbol('proto.library.UsersResponse', null, global);
@@ -567,7 +570,7 @@ proto.library.User.prototype.setAvatarurl = function(value) {
 
 
 /**
- * repeated Enrollment Enrollments = 7;
+ * repeated Enrollment enrollments = 7;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<!proto.library.Enrollment>}
@@ -892,12 +895,12 @@ proto.library.Void.serializeBinaryToWriter = function(message, writer) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.library.GetUserRequest = function(opt_data) {
+proto.library.GetRecordRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.library.GetUserRequest, jspb.Message);
+goog.inherits(proto.library.GetRecordRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.library.GetUserRequest.displayName = 'proto.library.GetUserRequest';
+  proto.library.GetRecordRequest.displayName = 'proto.library.GetRecordRequest';
 }
 
 
@@ -912,8 +915,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.library.GetUserRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.library.GetUserRequest.toObject(opt_includeInstance, this);
+proto.library.GetRecordRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.library.GetRecordRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -922,10 +925,10 @@ proto.library.GetUserRequest.prototype.toObject = function(opt_includeInstance) 
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.library.GetUserRequest} msg The msg instance to transform.
+ * @param {!proto.library.GetRecordRequest} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.library.GetUserRequest.toObject = function(includeInstance, msg) {
+proto.library.GetRecordRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
@@ -941,23 +944,23 @@ proto.library.GetUserRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.library.GetUserRequest}
+ * @return {!proto.library.GetRecordRequest}
  */
-proto.library.GetUserRequest.deserializeBinary = function(bytes) {
+proto.library.GetRecordRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.library.GetUserRequest;
-  return proto.library.GetUserRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.library.GetRecordRequest;
+  return proto.library.GetRecordRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.library.GetUserRequest} msg The message object to deserialize into.
+ * @param {!proto.library.GetRecordRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.library.GetUserRequest}
+ * @return {!proto.library.GetRecordRequest}
  */
-proto.library.GetUserRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.library.GetRecordRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -981,9 +984,9 @@ proto.library.GetUserRequest.deserializeBinaryFromReader = function(msg, reader)
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.library.GetUserRequest.prototype.serializeBinary = function() {
+proto.library.GetRecordRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.library.GetUserRequest.serializeBinaryToWriter(this, writer);
+  proto.library.GetRecordRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -991,10 +994,10 @@ proto.library.GetUserRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.library.GetUserRequest} message
+ * @param {!proto.library.GetRecordRequest} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.library.GetUserRequest.serializeBinaryToWriter = function(message, writer) {
+proto.library.GetRecordRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId();
   if (f !== 0) {
@@ -1010,13 +1013,13 @@ proto.library.GetUserRequest.serializeBinaryToWriter = function(message, writer)
  * optional uint64 id = 1;
  * @return {number}
  */
-proto.library.GetUserRequest.prototype.getId = function() {
+proto.library.GetRecordRequest.prototype.getId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /** @param {number} value */
-proto.library.GetUserRequest.prototype.setId = function(value) {
+proto.library.GetRecordRequest.prototype.setId = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
@@ -1227,7 +1230,11 @@ proto.library.Assignment.toObject = function(includeInstance, msg) {
     id: jspb.Message.getFieldWithDefault(msg, 1, 0),
     courseid: jspb.Message.getFieldWithDefault(msg, 2, 0),
     name: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    language: jspb.Message.getFieldWithDefault(msg, 4, "")
+    language: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    deadline: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    autoapprove: jspb.Message.getFieldWithDefault(msg, 6, false),
+    order: jspb.Message.getFieldWithDefault(msg, 7, 0),
+    submission: (f = msg.getSubmission()) && proto.library.Submission.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1279,6 +1286,23 @@ proto.library.Assignment.deserializeBinaryFromReader = function(msg, reader) {
     case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setLanguage(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDeadline(value);
+      break;
+    case 6:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setAutoapprove(value);
+      break;
+    case 7:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setOrder(value);
+      break;
+    case 8:
+      var value = new proto.library.Submission;
+      reader.readMessage(value,proto.library.Submission.deserializeBinaryFromReader);
+      msg.setSubmission(value);
       break;
     default:
       reader.skipField();
@@ -1334,6 +1358,35 @@ proto.library.Assignment.serializeBinaryToWriter = function(message, writer) {
     writer.writeString(
       4,
       f
+    );
+  }
+  f = message.getDeadline();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
+  f = message.getAutoapprove();
+  if (f) {
+    writer.writeBool(
+      6,
+      f
+    );
+  }
+  f = message.getOrder();
+  if (f !== 0) {
+    writer.writeUint32(
+      7,
+      f
+    );
+  }
+  f = message.getSubmission();
+  if (f != null) {
+    writer.writeMessage(
+      8,
+      f,
+      proto.library.Submission.serializeBinaryToWriter
     );
   }
 };
@@ -1396,6 +1449,580 @@ proto.library.Assignment.prototype.getLanguage = function() {
 /** @param {string} value */
 proto.library.Assignment.prototype.setLanguage = function(value) {
   jspb.Message.setField(this, 4, value);
+};
+
+
+/**
+ * optional string deadline = 5;
+ * @return {string}
+ */
+proto.library.Assignment.prototype.getDeadline = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/** @param {string} value */
+proto.library.Assignment.prototype.setDeadline = function(value) {
+  jspb.Message.setField(this, 5, value);
+};
+
+
+/**
+ * optional bool autoapprove = 6;
+ * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
+ * You should avoid comparisons like {@code val === true/false} in those cases.
+ * @return {boolean}
+ */
+proto.library.Assignment.prototype.getAutoapprove = function() {
+  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 6, false));
+};
+
+
+/** @param {boolean} value */
+proto.library.Assignment.prototype.setAutoapprove = function(value) {
+  jspb.Message.setField(this, 6, value);
+};
+
+
+/**
+ * optional uint32 order = 7;
+ * @return {number}
+ */
+proto.library.Assignment.prototype.getOrder = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+};
+
+
+/** @param {number} value */
+proto.library.Assignment.prototype.setOrder = function(value) {
+  jspb.Message.setField(this, 7, value);
+};
+
+
+/**
+ * optional Submission submission = 8;
+ * @return {?proto.library.Submission}
+ */
+proto.library.Assignment.prototype.getSubmission = function() {
+  return /** @type{?proto.library.Submission} */ (
+    jspb.Message.getWrapperField(this, proto.library.Submission, 8));
+};
+
+
+/** @param {?proto.library.Submission|undefined} value */
+proto.library.Assignment.prototype.setSubmission = function(value) {
+  jspb.Message.setWrapperField(this, 8, value);
+};
+
+
+proto.library.Assignment.prototype.clearSubmission = function() {
+  this.setSubmission(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.library.Assignment.prototype.hasSubmission = function() {
+  return jspb.Message.getField(this, 8) != null;
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.library.Submission = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.library.Submission, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.library.Submission.displayName = 'proto.library.Submission';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.library.Submission.prototype.toObject = function(opt_includeInstance) {
+  return proto.library.Submission.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.library.Submission} msg The msg instance to transform.
+ * @return {!Object}
+ */
+proto.library.Submission.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    id: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    assignmentid: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    userid: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    groupid: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    score: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    scoreobjects: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    buildinfo: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    commithash: jspb.Message.getFieldWithDefault(msg, 8, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.library.Submission}
+ */
+proto.library.Submission.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.library.Submission;
+  return proto.library.Submission.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.library.Submission} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.library.Submission}
+ */
+proto.library.Submission.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setId(value);
+      break;
+    case 2:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setAssignmentid(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setUserid(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setGroupid(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setScore(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setScoreobjects(value);
+      break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setBuildinfo(value);
+      break;
+    case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCommithash(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.library.Submission.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.library.Submission.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.library.Submission} message
+ * @param {!jspb.BinaryWriter} writer
+ */
+proto.library.Submission.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeUint64(
+      1,
+      f
+    );
+  }
+  f = message.getAssignmentid();
+  if (f !== 0) {
+    writer.writeUint64(
+      2,
+      f
+    );
+  }
+  f = message.getUserid();
+  if (f !== 0) {
+    writer.writeUint64(
+      3,
+      f
+    );
+  }
+  f = message.getGroupid();
+  if (f !== 0) {
+    writer.writeUint64(
+      4,
+      f
+    );
+  }
+  f = message.getScore();
+  if (f !== 0) {
+    writer.writeUint32(
+      5,
+      f
+    );
+  }
+  f = message.getScoreobjects();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
+      f
+    );
+  }
+  f = message.getBuildinfo();
+  if (f.length > 0) {
+    writer.writeString(
+      7,
+      f
+    );
+  }
+  f = message.getCommithash();
+  if (f.length > 0) {
+    writer.writeString(
+      8,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional uint64 id = 1;
+ * @return {number}
+ */
+proto.library.Submission.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/** @param {number} value */
+proto.library.Submission.prototype.setId = function(value) {
+  jspb.Message.setField(this, 1, value);
+};
+
+
+/**
+ * optional uint64 assignmentid = 2;
+ * @return {number}
+ */
+proto.library.Submission.prototype.getAssignmentid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/** @param {number} value */
+proto.library.Submission.prototype.setAssignmentid = function(value) {
+  jspb.Message.setField(this, 2, value);
+};
+
+
+/**
+ * optional uint64 userid = 3;
+ * @return {number}
+ */
+proto.library.Submission.prototype.getUserid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/** @param {number} value */
+proto.library.Submission.prototype.setUserid = function(value) {
+  jspb.Message.setField(this, 3, value);
+};
+
+
+/**
+ * optional uint64 groupid = 4;
+ * @return {number}
+ */
+proto.library.Submission.prototype.getGroupid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/** @param {number} value */
+proto.library.Submission.prototype.setGroupid = function(value) {
+  jspb.Message.setField(this, 4, value);
+};
+
+
+/**
+ * optional uint32 score = 5;
+ * @return {number}
+ */
+proto.library.Submission.prototype.getScore = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/** @param {number} value */
+proto.library.Submission.prototype.setScore = function(value) {
+  jspb.Message.setField(this, 5, value);
+};
+
+
+/**
+ * optional string scoreobjects = 6;
+ * @return {string}
+ */
+proto.library.Submission.prototype.getScoreobjects = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/** @param {string} value */
+proto.library.Submission.prototype.setScoreobjects = function(value) {
+  jspb.Message.setField(this, 6, value);
+};
+
+
+/**
+ * optional string buildinfo = 7;
+ * @return {string}
+ */
+proto.library.Submission.prototype.getBuildinfo = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/** @param {string} value */
+proto.library.Submission.prototype.setBuildinfo = function(value) {
+  jspb.Message.setField(this, 7, value);
+};
+
+
+/**
+ * optional string commithash = 8;
+ * @return {string}
+ */
+proto.library.Submission.prototype.getCommithash = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
+};
+
+
+/** @param {string} value */
+proto.library.Submission.prototype.setCommithash = function(value) {
+  jspb.Message.setField(this, 8, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.library.Assignments = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.library.Assignments.repeatedFields_, null);
+};
+goog.inherits(proto.library.Assignments, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.library.Assignments.displayName = 'proto.library.Assignments';
+}
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.library.Assignments.repeatedFields_ = [1];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.library.Assignments.prototype.toObject = function(opt_includeInstance) {
+  return proto.library.Assignments.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.library.Assignments} msg The msg instance to transform.
+ * @return {!Object}
+ */
+proto.library.Assignments.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    assignmentsList: jspb.Message.toObjectList(msg.getAssignmentsList(),
+    proto.library.Assignment.toObject, includeInstance)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.library.Assignments}
+ */
+proto.library.Assignments.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.library.Assignments;
+  return proto.library.Assignments.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.library.Assignments} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.library.Assignments}
+ */
+proto.library.Assignments.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.library.Assignment;
+      reader.readMessage(value,proto.library.Assignment.deserializeBinaryFromReader);
+      msg.addAssignments(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.library.Assignments.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.library.Assignments.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.library.Assignments} message
+ * @param {!jspb.BinaryWriter} writer
+ */
+proto.library.Assignments.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getAssignmentsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      1,
+      f,
+      proto.library.Assignment.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * repeated Assignment assignments = 1;
+ * If you change this array by adding, removing or replacing elements, or if you
+ * replace the array itself, then you must call the setter to update it.
+ * @return {!Array.<!proto.library.Assignment>}
+ */
+proto.library.Assignments.prototype.getAssignmentsList = function() {
+  return /** @type{!Array.<!proto.library.Assignment>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.library.Assignment, 1));
+};
+
+
+/** @param {!Array.<!proto.library.Assignment>} value */
+proto.library.Assignments.prototype.setAssignmentsList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 1, value);
+};
+
+
+/**
+ * @param {!proto.library.Assignment=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.library.Assignment}
+ */
+proto.library.Assignments.prototype.addAssignments = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.library.Assignment, opt_index);
+};
+
+
+proto.library.Assignments.prototype.clearAssignmentsList = function() {
+  this.setAssignmentsList([]);
 };
 
 
@@ -2110,6 +2737,173 @@ proto.library.Courses.prototype.addCourses = function(opt_value, opt_index) {
 
 proto.library.Courses.prototype.clearCoursesList = function() {
   this.setCoursesList([]);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.library.CoursesWithEnrollmentRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.library.CoursesWithEnrollmentRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.library.CoursesWithEnrollmentRequest.displayName = 'proto.library.CoursesWithEnrollmentRequest';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.library.CoursesWithEnrollmentRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.library.CoursesWithEnrollmentRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.library.CoursesWithEnrollmentRequest} msg The msg instance to transform.
+ * @return {!Object}
+ */
+proto.library.CoursesWithEnrollmentRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    userid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    state: jspb.Message.getFieldWithDefault(msg, 2, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.library.CoursesWithEnrollmentRequest}
+ */
+proto.library.CoursesWithEnrollmentRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.library.CoursesWithEnrollmentRequest;
+  return proto.library.CoursesWithEnrollmentRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.library.CoursesWithEnrollmentRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.library.CoursesWithEnrollmentRequest}
+ */
+proto.library.CoursesWithEnrollmentRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setUserid(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setState(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.library.CoursesWithEnrollmentRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.library.CoursesWithEnrollmentRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.library.CoursesWithEnrollmentRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ */
+proto.library.CoursesWithEnrollmentRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getUserid();
+  if (f !== 0) {
+    writer.writeUint64(
+      1,
+      f
+    );
+  }
+  f = message.getState();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional uint64 userid = 1;
+ * @return {number}
+ */
+proto.library.CoursesWithEnrollmentRequest.prototype.getUserid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/** @param {number} value */
+proto.library.CoursesWithEnrollmentRequest.prototype.setUserid = function(value) {
+  jspb.Message.setField(this, 1, value);
+};
+
+
+/**
+ * optional string state = 2;
+ * @return {string}
+ */
+proto.library.CoursesWithEnrollmentRequest.prototype.getState = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/** @param {string} value */
+proto.library.CoursesWithEnrollmentRequest.prototype.setState = function(value) {
+  jspb.Message.setField(this, 2, value);
 };
 
 

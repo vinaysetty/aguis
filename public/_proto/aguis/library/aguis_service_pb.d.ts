@@ -123,21 +123,21 @@ export namespace Void {
   }
 }
 
-export class GetUserRequest extends jspb.Message {
+export class GetRecordRequest extends jspb.Message {
   getId(): number;
   setId(value: number): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetUserRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: GetUserRequest): GetUserRequest.AsObject;
+  toObject(includeInstance?: boolean): GetRecordRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetRecordRequest): GetRecordRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: GetUserRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetUserRequest;
-  static deserializeBinaryFromReader(message: GetUserRequest, reader: jspb.BinaryReader): GetUserRequest;
+  static serializeBinaryToWriter(message: GetRecordRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetRecordRequest;
+  static deserializeBinaryFromReader(message: GetRecordRequest, reader: jspb.BinaryReader): GetRecordRequest;
 }
 
-export namespace GetUserRequest {
+export namespace GetRecordRequest {
   export type AsObject = {
     id: number,
   }
@@ -178,6 +178,20 @@ export class Assignment extends jspb.Message {
   getLanguage(): string;
   setLanguage(value: string): void;
 
+  getDeadline(): string;
+  setDeadline(value: string): void;
+
+  getAutoapprove(): boolean;
+  setAutoapprove(value: boolean): void;
+
+  getOrder(): number;
+  setOrder(value: number): void;
+
+  hasSubmission(): boolean;
+  clearSubmission(): void;
+  getSubmission(): Submission | undefined;
+  setSubmission(value?: Submission): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Assignment.AsObject;
   static toObject(includeInstance: boolean, msg: Assignment): Assignment.AsObject;
@@ -194,6 +208,80 @@ export namespace Assignment {
     courseid: number,
     name: string,
     language: string,
+    deadline: string,
+    autoapprove: boolean,
+    order: number,
+    submission?: Submission.AsObject,
+  }
+}
+
+export class Submission extends jspb.Message {
+  getId(): number;
+  setId(value: number): void;
+
+  getAssignmentid(): number;
+  setAssignmentid(value: number): void;
+
+  getUserid(): number;
+  setUserid(value: number): void;
+
+  getGroupid(): number;
+  setGroupid(value: number): void;
+
+  getScore(): number;
+  setScore(value: number): void;
+
+  getScoreobjects(): string;
+  setScoreobjects(value: string): void;
+
+  getBuildinfo(): string;
+  setBuildinfo(value: string): void;
+
+  getCommithash(): string;
+  setCommithash(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Submission.AsObject;
+  static toObject(includeInstance: boolean, msg: Submission): Submission.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Submission, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Submission;
+  static deserializeBinaryFromReader(message: Submission, reader: jspb.BinaryReader): Submission;
+}
+
+export namespace Submission {
+  export type AsObject = {
+    id: number,
+    assignmentid: number,
+    userid: number,
+    groupid: number,
+    score: number,
+    scoreobjects: string,
+    buildinfo: string,
+    commithash: string,
+  }
+}
+
+export class Assignments extends jspb.Message {
+  clearAssignmentsList(): void;
+  getAssignmentsList(): Array<Assignment>;
+  setAssignmentsList(value: Array<Assignment>): void;
+  addAssignments(value?: Assignment, index?: number): Assignment;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Assignments.AsObject;
+  static toObject(includeInstance: boolean, msg: Assignments): Assignments.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Assignments, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Assignments;
+  static deserializeBinaryFromReader(message: Assignments, reader: jspb.BinaryReader): Assignments;
+}
+
+export namespace Assignments {
+  export type AsObject = {
+    assignmentsList: Array<Assignment.AsObject>,
   }
 }
 
@@ -292,6 +380,30 @@ export class Courses extends jspb.Message {
 export namespace Courses {
   export type AsObject = {
     coursesList: Array<Course.AsObject>,
+  }
+}
+
+export class CoursesWithEnrollmentRequest extends jspb.Message {
+  getUserid(): number;
+  setUserid(value: number): void;
+
+  getState(): string;
+  setState(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CoursesWithEnrollmentRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CoursesWithEnrollmentRequest): CoursesWithEnrollmentRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: CoursesWithEnrollmentRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CoursesWithEnrollmentRequest;
+  static deserializeBinaryFromReader(message: CoursesWithEnrollmentRequest, reader: jspb.BinaryReader): CoursesWithEnrollmentRequest;
+}
+
+export namespace CoursesWithEnrollmentRequest {
+  export type AsObject = {
+    userid: number,
+    state: string,
   }
 }
 
