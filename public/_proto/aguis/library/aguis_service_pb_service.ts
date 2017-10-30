@@ -51,7 +51,7 @@ export namespace AutograderService {
     static readonly service = AutograderService;
     static readonly requestStream = false;
     static readonly responseStream = false;
-    static readonly requestType = aguis_library_aguis_service_pb.CoursesWithEnrollmentRequest;
+    static readonly requestType = aguis_library_aguis_service_pb.RecordWithStatusRequest;
     static readonly responseType = aguis_library_aguis_service_pb.Courses;
   }
   export class GetAssignments {
@@ -61,5 +61,13 @@ export namespace AutograderService {
     static readonly responseStream = false;
     static readonly requestType = aguis_library_aguis_service_pb.GetRecordRequest;
     static readonly responseType = aguis_library_aguis_service_pb.Assignments;
+  }
+  export class GetEnrollmentsByCourse {
+    static readonly methodName = "GetEnrollmentsByCourse";
+    static readonly service = AutograderService;
+    static readonly requestStream = false;
+    static readonly responseStream = false;
+    static readonly requestType = aguis_library_aguis_service_pb.RecordWithStatusRequest;
+    static readonly responseType = aguis_library_aguis_service_pb.EnrollemntResponse;
   }
 }

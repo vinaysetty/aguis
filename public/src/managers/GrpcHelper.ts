@@ -3,8 +3,9 @@ import {
     Assignments,
     Course,
     Courses,
-    CoursesWithEnrollmentRequest,
+    EnrollemntResponse,
     GetRecordRequest,
+    RecordWithStatusRequest,
     UpdateUserRequest,
     User,
     UsersResponse,
@@ -64,8 +65,8 @@ export class GrpcHelper {
     }
 
     public getCoursesWithEnrollment(userid: number, state: string): Promise<IGrpcResult<Courses>> {
-        const courseReq = new CoursesWithEnrollmentRequest();
-        courseReq.setUserid(userid);
+        const courseReq = new RecordWithStatusRequest();
+        courseReq.setId(userid);
         courseReq.setState(state);
         return this.grpcUnary<Courses>(AutograderService.GetCoursesWithEnrollment, courseReq);
     }
@@ -74,6 +75,13 @@ export class GrpcHelper {
         const req = new GetRecordRequest();
         req.setId(courseId);
         return this.grpcUnary<Assignments>(AutograderService.GetAssignments, req);
+    }
+
+    public getEnrollmentsByCourse(courseid: number, state: string): Promise<IGrpcResult<EnrollemntResponse>> {
+        const req = new RecordWithStatusRequest();
+        req.setId(courseid);
+        req.setState(state);
+        return this.grpcUnary<EnrollemntResponse>(AutograderService.GetEnrollmentsByCourse, req);
     }
 
     private grpcUnary<TReceive extends Message>(method: any, request: any): Promise<IGrpcResult<TReceive>> {

@@ -30,7 +30,7 @@ import {
 import { IMap, mapify } from "../map";
 import { ILogger } from "./LogManager";
 import {GrpcHelper} from "./GrpcHelper";
-import {User, Course, Assignment} from "../../_proto/aguis/library/aguis_service_pb"
+import {Assignment, Course, Enrollment, User} from "../../_proto/aguis/library/aguis_service_pb"
 import { combinePath } from "../NavigationHelper";
 
 export class ServerProvider implements IUserProvider, ICourseProvider {
@@ -72,7 +72,7 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
 
         const arr: ICourseEnrollemtnt[] = [];
         result.data.getCoursesList().forEach((ele) => {
-            const course = this.toICourse(ele)
+            const course = this.toICourse(ele);
             const enroll = ele.getEnrolled() as number >= 0 ? ele.getEnrolled() : undefined;
             arr.push({
                 course: course,
@@ -86,18 +86,19 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     }
 
     public async getUsersForCourse(course: ICourse, state?: CourseUserState[]): Promise<IUserEnrollment[]> {
-        const status = state ? "?status=" + courseUserStateToString(state) : "";
-        const result = await this.helper.get<IEnrollment[]>("/courses/" + course.id + "/users" + status);
-        if (result.statusCode !== 200 || !result.data) {
+        const status = state ? courseUserStateToString(state) : "";
+        const result = await this.grpcHelper.getEnrollmentsByCourse(course.id, status);
+        if (result.statusCode !== 0 || !result.data) {
             this.handleError(result, "getUserForCourse");
             return [];
         }
 
         const arr: IUserEnrollment[] = [];
-        result.data.forEach((ele) => {
-            if (isCourseEnrollment(ele)) {
-                ele.user = this.makeUserInfo(ele.user);
-                arr.push(ele);
+        result.data.getEnrollmentsList().forEach((ele) => {
+            const enroll: IEnrollment = this.toIEnrollment(ele);
+            if (isCourseEnrollment(enroll)) {
+                enroll.user = this.makeUserInfo(enroll.user);
+                arr.push(enroll);
             }
         });
         return arr;
@@ -106,9 +107,7 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     public async getAssignments(courseId: number): Promise<IMap<IAssignment>> {
         // const result = await this.helper.get<any>("courses/" + courseId.toString() + "/assignments");
         const result = await this.grpcHelper.getAssignments(courseId);
-        console.log("assignment = ", result);
         if (result.statusCode !== 0 || !result.data) {
-            console.log(result);
             this.handleError(result, "getAssignments");
             throw new Error("Problem with the request");
         }
@@ -356,18 +355,8 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     }
 
     public async updateUser(user: IUser): Promise<boolean> {
-        // TODO: make actuall implementation
-        // const result = await this.helper.patch<{ isadmin: boolean }, {}>("/users/" + user.id + "", user);
-        // if (result.statusCode < 400) {
-        //     return false;
-        // } else {
-        //     this.handleError(result, "updateUser");
-        // }
-        // return true;
         const result = await this.grpcHelper.updateUser(user);
         if (result.statusCode !== 0) {
-            return false;
-        } else {
             this.handleError(result, "updateUser");
         }
         return true;
@@ -468,6 +457,28 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
             name: assg.getName(),
             courseid: assg.getCourseid(),
         } as IAssignment
+    }
+
+    // this method convert a grpc Enrollment to IEnrollment
+    private toIEnrollment(enrollment: Enrollment): IEnrollment {
+        let ienroll: IEnrollment =  {
+            userid: enrollment.getUserid(),
+            courseid: enrollment.getCourseid(),
+        };
+        if(enrollment.getStatus() !== undefined) {
+            ienroll.status = enrollment.getStatus();
+        }
+
+        const user: User | undefined = enrollment.getUser();
+        if (user !== undefined) {
+            ienroll.user = this.toIUser(user);
+        }
+        const course: Course | undefined = enrollment.getCourse();
+        if (course !== undefined) {
+            ienroll.course = this.toICourse(course);
+        }
+
+        return ienroll as IEnrollment;
     }
 
 }

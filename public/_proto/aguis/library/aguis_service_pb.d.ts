@@ -19,6 +19,21 @@ export class Enrollment extends jspb.Message {
   getStatus(): number;
   setStatus(value: number): void;
 
+  hasUser(): boolean;
+  clearUser(): void;
+  getUser(): User | undefined;
+  setUser(value?: User): void;
+
+  hasCourse(): boolean;
+  clearCourse(): void;
+  getCourse(): Course | undefined;
+  setCourse(value?: Course): void;
+
+  hasGroup(): boolean;
+  clearGroup(): void;
+  getGroup(): Group | undefined;
+  setGroup(value?: Group): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Enrollment.AsObject;
   static toObject(includeInstance: boolean, msg: Enrollment): Enrollment.AsObject;
@@ -36,6 +51,31 @@ export namespace Enrollment {
     userid: number,
     groupid: number,
     status: number,
+    user?: User.AsObject,
+    course?: Course.AsObject,
+    group?: Group.AsObject,
+  }
+}
+
+export class EnrollemntResponse extends jspb.Message {
+  clearEnrollmentsList(): void;
+  getEnrollmentsList(): Array<Enrollment>;
+  setEnrollmentsList(value: Array<Enrollment>): void;
+  addEnrollments(value?: Enrollment, index?: number): Enrollment;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): EnrollemntResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: EnrollemntResponse): EnrollemntResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: EnrollemntResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): EnrollemntResponse;
+  static deserializeBinaryFromReader(message: EnrollemntResponse, reader: jspb.BinaryReader): EnrollemntResponse;
+}
+
+export namespace EnrollemntResponse {
+  export type AsObject = {
+    enrollmentsList: Array<Enrollment.AsObject>,
   }
 }
 
@@ -383,26 +423,26 @@ export namespace Courses {
   }
 }
 
-export class CoursesWithEnrollmentRequest extends jspb.Message {
-  getUserid(): number;
-  setUserid(value: number): void;
+export class RecordWithStatusRequest extends jspb.Message {
+  getId(): number;
+  setId(value: number): void;
 
   getState(): string;
   setState(value: string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): CoursesWithEnrollmentRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: CoursesWithEnrollmentRequest): CoursesWithEnrollmentRequest.AsObject;
+  toObject(includeInstance?: boolean): RecordWithStatusRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: RecordWithStatusRequest): RecordWithStatusRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: CoursesWithEnrollmentRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): CoursesWithEnrollmentRequest;
-  static deserializeBinaryFromReader(message: CoursesWithEnrollmentRequest, reader: jspb.BinaryReader): CoursesWithEnrollmentRequest;
+  static serializeBinaryToWriter(message: RecordWithStatusRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RecordWithStatusRequest;
+  static deserializeBinaryFromReader(message: RecordWithStatusRequest, reader: jspb.BinaryReader): RecordWithStatusRequest;
 }
 
-export namespace CoursesWithEnrollmentRequest {
+export namespace RecordWithStatusRequest {
   export type AsObject = {
-    userid: number,
+    id: number,
     state: string,
   }
 }

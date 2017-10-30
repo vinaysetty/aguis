@@ -85,9 +85,9 @@ func ListCourses(db database.Database) (*pb.Courses, error) {
 // ListCoursesWithEnrollment lists all existing courses with the provided users
 // enrollment status.
 // If status query param is provided, lists only courses of the student filtered by the query param.
-func ListCoursesWithEnrollment(request *pb.CoursesWithEnrollmentRequest, db database.Database) (*pb.Courses, error) {
+func ListCoursesWithEnrollment(request *pb.RecordWithStatusRequest, db database.Database) (*pb.Courses, error) {
 	var results []*pb.Course
-	id := request.Userid
+	id := request.Id
 	statuses, err := parseEnrollmentStatus(request.State)
 	if err != nil {
 		return nil, err
@@ -601,33 +601,30 @@ func createAssignment(request *yamlparser.NewAssignmentRequest, course *models.C
 //}
 
 // GetEnrollmentsByCourse get all enrollments for a course.
-//func GetEnrollmentsByCourse(db database.Database) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		id, err := parseUint(c.Param("cid"))
-//		if err != nil {
-//			return err
-//		}
-//
-//		statuses, err := parseEnrollmentStatus(c.QueryParam("status"))
-//		if err != nil {
-//			return err
-//		}
-//
-//		enrollments, err := db.GetEnrollmentsByCourse(id, statuses...)
-//		if err != nil {
-//			return err
-//		}
-//
-//		for _, enrollment := range enrollments {
-//			enrollment.User, err = db.GetUser(enrollment.UserID)
-//			if err != nil {
-//				return err
-//			}
-//		}
-//
-//		return c.JSONPretty(http.StatusOK, enrollments, "\t")
-//	}
-//}
+func GetEnrollmentsByCourse(request *pb.RecordWithStatusRequest, db database.Database) (*pb.EnrollemntResponse, error) {
+	statuses, err := parseEnrollmentStatus(request.State)
+	if err != nil {
+		return nil, err
+	}
+
+	enrollments, err := db.GetEnrollmentsByCourse(request.Id, statuses...)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, enrollment := range enrollments {
+		enrollment.User, err = db.GetUser(enrollment.UserID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var results []*pb.Enrollment
+	for _, enroll := range enrollments {
+		results = append(results, toProtoEnrollment(enroll))
+	}
+	return &pb.EnrollemntResponse{Enrollments: results}, nil
+}
 
 // NewGroup creates a new group under a course
 //func NewGroup(db database.Database) echo.HandlerFunc {
@@ -861,4 +858,16 @@ func toProtoSubmission(submission *models.Submission) *pb.Submission {
 		Commithash:   submission.CommitHash,
 	}
 	return ps
+}
+
+func toProtoEnrollment(enrollment *models.Enrollment) *pb.Enrollment {
+	pe := &pb.Enrollment{
+		Id:       enrollment.ID,
+		Userid:   enrollment.UserID,
+		Courseid: enrollment.CourseID,
+		Groupid:  enrollment.GroupID,
+		User:     toProtoUser(enrollment.User),
+		Status:   uint32(enrollment.Status),
+	}
+	return pe
 }

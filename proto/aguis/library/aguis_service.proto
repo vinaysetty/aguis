@@ -8,6 +8,13 @@ message Enrollment {
     uint64 userid = 3;
     uint64 groupid = 4;
     uint32 status = 5;
+    User user = 6;
+    Course course = 7;
+    Group group = 8;
+}
+
+message EnrollemntResponse {
+    repeated Enrollment enrollments = 1;
 }
 
 message User {
@@ -84,8 +91,8 @@ message Courses {
     repeated Course Courses = 1;
 }
 
-message CoursesWithEnrollmentRequest {
-    uint64 userid = 1;
+message RecordWithStatusRequest {
+    uint64 id = 1; // id can be User ID or Course ID depending
     string state = 2;
 }
 
@@ -97,6 +104,7 @@ service AutograderService {
 
     rpc GetCourse(GetRecordRequest) returns (Course) {}
     rpc GetCourses(Void) returns (Courses) {}
-    rpc GetCoursesWithEnrollment(CoursesWithEnrollmentRequest) returns (Courses) {}
+    rpc GetCoursesWithEnrollment(RecordWithStatusRequest) returns (Courses) {}
     rpc GetAssignments(GetRecordRequest) returns (Assignments) {}
+    rpc GetEnrollmentsByCourse(RecordWithStatusRequest) returns (EnrollemntResponse) {}
 }
