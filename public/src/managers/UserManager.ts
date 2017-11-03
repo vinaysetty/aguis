@@ -86,11 +86,11 @@ export class UserManager {
     // TODO: Fake login for testing GRPC
     public async grpcLogin(id: number): Promise<IUser | null> {
         const result: IUser | null = await this.userProvider.grpcLogin(id);
-        if(result) {
+        if (result) {
             this.currentUser = result;
             this.onLogin({target: this, user: this.currentUser});
         }
-        return result
+        return result;
     }
 
     /**
@@ -128,7 +128,8 @@ export class UserManager {
      * @returns All users at the backend
      */
     public async getAllUser(): Promise<IUser[]> {
-        return await this.userProvider.getAllUser();
+        const users = await this.userProvider.getAllUser();
+        return users;
     }
 
     /**
@@ -144,7 +145,8 @@ export class UserManager {
      * @param user The user to premote to admin
      */
     public async changeAdminRole(user: IUser): Promise<boolean> {
-        return await this.userProvider.changeAdminRole(user);
+        const result = await this.userProvider.changeAdminRole(user);
+        return result;
     }
 
     /**

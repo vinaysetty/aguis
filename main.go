@@ -19,7 +19,7 @@ func main() {
 
 	var (
 		httpAddr = flag.String("http.addr", ":8090", "HTTP listen address")
-		public   = flag.String("http.public", "public", "directory to server static files from")
+		//public   = flag.String("http.public", "public", "directory to server static files from")
 
 		dbFile = flag.String("database.file", tempFile("ag.db"), "database file")
 
@@ -32,11 +32,6 @@ func main() {
 
 	l := logrus.New()
 	l.Formatter = logger.NewDevFormatter(l.Formatter)
-
-	entryPoint := filepath.Join(*public, "index.html")
-	if !fileExists(entryPoint) {
-		l.WithField("path", entryPoint).Warn("could not find file")
-	}
 
 	db, err := database.NewGormDB("sqlite3", *dbFile, database.Logger{Logger: l})
 	if err != nil {
@@ -70,9 +65,4 @@ func main() {
 
 func tempFile(name string) string {
 	return filepath.Join(os.TempDir(), name)
-}
-
-func fileExists(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil
 }

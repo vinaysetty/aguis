@@ -1,3 +1,4 @@
+import {Message} from "google-protobuf";
 import {grpc} from "grpc-web-client";
 import {
     Assignments,
@@ -9,11 +10,10 @@ import {
     UpdateUserRequest,
     User,
     UsersResponse,
-    Void
-} from "../../_proto/aguis/library/aguis_service_pb"
+    Void,
+} from "../../_proto/aguis/library/aguis_service_pb";
 import {AutograderService} from "../../_proto/aguis/library/aguis_service_pb_service";
 import {IUser} from "../models";
-import {Message} from "google-protobuf"
 
 declare const USE_TLS: boolean;
 const host = USE_TLS ? "https://localhost:8091" : "http://localhost:8090";
@@ -48,7 +48,7 @@ export class GrpcHelper {
         } else {
             u.setIsadmin(user.isadmin);
         }
-        const userRequest = new UpdateUserRequest;
+        const userRequest = new UpdateUserRequest();
         userRequest.setUser(u);
         return this.grpcUnary<User>(AutograderService.UpdateUser, userRequest);
     }
@@ -87,9 +87,9 @@ export class GrpcHelper {
     private grpcUnary<TReceive extends Message>(method: any, request: any): Promise<IGrpcResult<TReceive>> {
         const requestPromise = new Promise<IGrpcResult<TReceive>>((resolve, reject) => {
             grpc.unary(method, {
-                request: request,
-                host: host,
-                onEnd: res => {
+                request,
+                host,
+                onEnd: (res) => {
                     const {status, statusMessage, headers, message, trailers} = res;
                     const temp: IGrpcResult<TReceive> = {
                         data: message as TReceive,
@@ -97,10 +97,10 @@ export class GrpcHelper {
                     };
                     resolve(temp);
 
-                }
+                },
             });
         });
-        return requestPromise
+        return requestPromise;
     }
 
 }

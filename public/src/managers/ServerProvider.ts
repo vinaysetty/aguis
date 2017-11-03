@@ -1,3 +1,4 @@
+import {Assignment, Course, Enrollment, User} from "../../_proto/aguis/library/aguis_service_pb";
 import {
     CourseGroupStatus,
     CourseUserState,
@@ -27,11 +28,11 @@ import {
     IUserEnrollment,
     IUserProvider,
 } from "../managers";
+
 import { IMap, mapify } from "../map";
-import { ILogger } from "./LogManager";
-import {GrpcHelper} from "./GrpcHelper";
-import {Assignment, Course, Enrollment, User} from "../../_proto/aguis/library/aguis_service_pb"
 import { combinePath } from "../NavigationHelper";
+import {GrpcHelper} from "./GrpcHelper";
+import { ILogger } from "./LogManager";
 
 export class ServerProvider implements IUserProvider, ICourseProvider {
     private helper: HttpHelper;
@@ -75,7 +76,7 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
             const course = this.toICourse(ele);
             const enroll = ele.getEnrolled() as number >= 0 ? ele.getEnrolled() : undefined;
             arr.push({
-                course: course,
+                course,
                 status: enroll,
                 courseid: course.id,
                 userid: user.id,
@@ -116,7 +117,6 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
             const asg = this.toIAssignment(ele);
             assignments.push(asg);
         });
-
 
         return mapify(assignments, (ele) => {
             ele.deadline = new Date(2017, 7, 18);
@@ -310,10 +310,10 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
 
     public async grpcLogin(id: number): Promise<IUser | null> {
         const result = await this.grpcHelper.getUser(id);
-        if (result.statusCode == 0 && result.data) {
+        if (result.statusCode === 0 && result.data) {
             return this.toIUser(result.data);
         }
-        return null
+        return null;
     }
 
     public async logout(user: IUser): Promise<boolean> {
@@ -332,7 +332,7 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
             return this.toIUser(user);
         });
         const newArray = data.map<IUser>((ele) => this.makeUserInfo(ele));
-        return newArray
+        return newArray;
     }
 
     public async tryRemoteLogin(provider: string): Promise<IUser | null> {
@@ -446,7 +446,6 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
             year: course.getYear(),
             provider: course.getProvider(),
             directoryid: course.getDirectoryid(),
-
         } as ICourse
     }
 
@@ -461,11 +460,11 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
 
     // this method convert a grpc Enrollment to IEnrollment
     private toIEnrollment(enrollment: Enrollment): IEnrollment {
-        let ienroll: IEnrollment =  {
+        const ienroll: IEnrollment =  {
             userid: enrollment.getUserid(),
             courseid: enrollment.getCourseid(),
         };
-        if(enrollment.getStatus() !== undefined) {
+        if (enrollment.getStatus() !== undefined) {
             ienroll.status = enrollment.getStatus();
         }
 
