@@ -245,12 +245,15 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 
 	api.GET("/user", web.GetSelf())
 
+	// TODO: Implement GraphQL
+	//-----------
 	users := api.Group("/users")
 	users.GET("", web.GetUsers(db))
 	users.GET("/:uid", web.GetUser(db))
 	users.PATCH("/:uid", web.PatchUser(db))
 	users.GET("/:uid/courses", web.ListCoursesWithEnrollment(db))
 	users.GET("/:uid/courses/:cid/group", web.GetGroupByUserAndCourse(db))
+	//-----------
 
 	courses := api.Group("/courses")
 	courses.GET("", web.ListCourses(db))
