@@ -19,9 +19,11 @@ func main() {
 
 	var (
 		httpAddr = flag.String("http.addr", ":8090", "HTTP listen address")
-		//public   = flag.String("http.public", "public", "directory to server static files from")
-
-		dbFile = flag.String("database.file", tempFile("ag.db"), "database file")
+		//public          = flag.String("http.public", "public", "directory to server static files from")
+		dbFile          = flag.String("database.file", tempFile("ag.db"), "database file")
+		enableTls       = flag.Bool("enable_tls", false, "Use TLS - required for HTTP2.")
+		tlsCertFilePath = flag.String("tls_cert_file", "misc/localhost.crt", "Path to the CRT/PEM file.")
+		tlsKeyFilePath  = flag.String("tls_key_file", "misc/localhost.key", "Path to the private key file.")
 
 		//baseURL = flag.String("service.url", "localhost", "service base url")
 
@@ -57,9 +59,19 @@ func main() {
 		Handler: http.HandlerFunc(handler),
 	}
 
-	l.Infof("Starting server. http port: %d", *httpAddr)
-	if err := httpServer.ListenAndServe(); err != nil {
-		l.WithError(err).Fatal("failed starting http server")
+	l.Infof("Starting server. http port: %d, with TLS: %v", *httpAddr, *enableTls)
+	//if err := httpServer.ListenAndServe(); err != nil {
+	//	l.WithError(err).Fatal("failed starting http server")
+	//}
+
+	if *enableTls {
+		if err := httpServer.ListenAndServeTLS(*tlsCertFilePath, *tlsKeyFilePath); err != nil {
+			l.WithError(err).Fatal("failed starting http2 server")
+		}
+	} else {
+		if err := httpServer.ListenAndServe(); err != nil {
+			l.WithError(err).Fatal("failed starting http server")
+		}
 	}
 }
 
