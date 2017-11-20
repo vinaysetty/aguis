@@ -44,8 +44,11 @@ class CourseForm<T> extends React.Component<ICourseFormProps<T>, ICourseFormStat
             code: this.props.courseData ? this.props.courseData.code : "",
             tag: this.props.courseData ? this.props.courseData.tag : "",
             year: this.props.courseData ? this.props.courseData.year.toString() : "",
-            provider: this.props.courseData ? this.props.courseData.provider : "",
-            directoryid: this.props.courseData ? this.props.courseData.directoryid : 0,
+            // TODO remove default github provider name and set 0 to default directory id
+            // provider: this.props.courseData ? this.props.courseData.provider : "",
+            // directoryid: this.props.courseData ? this.props.courseData.directoryid : 0,
+            provider: this.props.courseData ? this.props.courseData.provider : "github",
+            directoryid: this.props.courseData ? this.props.courseData.directoryid : Number(new Date()),
             organisations: null,
             errorFlash: null,
         };
@@ -59,15 +62,15 @@ class CourseForm<T> extends React.Component<ICourseFormProps<T>, ICourseFormStat
                 {this.state.errorFlash}
                 <form className={this.props.className ? this.props.className : ""}
                     onSubmit={(e) => this.handleFormSubmit(e)}>
-                    <div className="form-group">
-                        <label className="control-label col-sm-2">Provider:</label>
-                        <div className="col-sm-10">
-                            {this.renderProviders()}
-                        </div>
-                    </div>
-                    <div className="form-group" id="organisation-container">
-                        {this.state.organisations}
-                    </div>
+                    {/*<div className="form-group">*/}
+                        {/*<label className="control-label col-sm-2">Provider:</label>*/}
+                        {/*<div className="col-sm-10">*/}
+                            {/*{this.renderProviders()}*/}
+                        {/*</div>*/}
+                    {/*</div>*/}
+                    {/*<div className="form-group" id="organisation-container">*/}
+                        {/*{this.state.organisations}*/}
+                    {/*</div>*/}
                     {this.renderFormControler("Course Name:",
                         "Enter course name",
                         "name",
@@ -303,12 +306,12 @@ class CourseForm<T> extends React.Component<ICourseFormProps<T>, ICourseFormStat
         if (this.state.tag === "") {
             errors.push("Semester cannot be blank.");
         }
-        if (this.state.provider === "") {
-            errors.push("Provider cannot be blank.");
-        }
-        if (this.state.directoryid === 0) {
-            errors.push("Organisation cannot be blank.");
-        }
+        // if (this.state.provider === "") {
+        //     errors.push("Provider cannot be blank.");
+        // }
+        // if (this.state.directoryid === 0) {
+        //     errors.push("Organisation cannot be blank.");
+        // }
         const year = parseInt(this.state.year, 10);
         if (this.state.year === "") {
             errors.push("Year cannot be blank.");

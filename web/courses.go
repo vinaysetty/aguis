@@ -136,142 +136,43 @@ type BaseHookOptions struct {
 
 // NewCourse creates a new course and associates it with a directory (organization in github)
 // and creates the repositories for the course.
-//func NewCourse(logger logrus.FieldLogger, db database.Database, bh *BaseHookOptions) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		var cr NewCourseRequest
-//		if err := c.Bind(&cr); err != nil {
-//			return err
-//		}
-//		if !cr.valid() {
-//			return echo.NewHTTPError(http.StatusBadRequest, "invalid payload")
-//		}
-//
-//		if c.Get(cr.Provider) == nil {
-//			return echo.NewHTTPError(http.StatusBadRequest, "provider "+cr.Provider+" not registered")
-//		}
-//		// If type assertions fails, the recover middleware will catch the panic and log a stack trace.
-//		s := c.Get(cr.Provider).(scm.SCM)
-//
-//		ctx, cancel := context.WithTimeout(c.Request().Context(), MaxWait)
-//		defer cancel()
-//
-//		directory, err := s.GetDirectory(ctx, cr.DirectoryID)
-//		if err != nil {
-//			return err
-//		}
-//		repos, err := s.GetRepositories(ctx, directory)
-//		if err != nil {
-//			return err
-//		}
-//		existing := make(map[string]*scm.Repository)
-//		for _, repo := range repos {
-//			existing[repo.Path] = repo
-//		}
-//
-//		var paths = []string{InfoRepo, AssignmentRepo, TestsRepo, SolutionsRepo}
-//		for _, path := range paths {
-//			var repo *scm.Repository
-//			var ok bool
-//			if repo, ok = existing[path]; !ok {
-//				var err error
-//				repo, err = s.CreateRepository(
-//					ctx,
-//					&scm.CreateRepositoryOptions{
-//						Path:      path,
-//						Directory: directory},
-//				)
-//				if err != nil {
-//					logger.WithField("repo", path).WithError(err).Warn("Failed to create repository")
-//					return err
-//				}
-//				logger.WithField("repo", repo).Println("Created new repository")
-//			}
-//
-//			hooks, err := s.ListHooks(ctx, repo)
-//			if err != nil {
-//				logger.WithField("repo", path).WithError(err).Warn("Failed to list hooks for repository")
-//				return err
-//			}
-//			hasAGWebHook := false
-//			for _, hook := range hooks {
-//				logger.WithField("url", hook.URL).WithField("id", hook.ID).WithField("name", hook.Name).Println("Hook for repository")
-//				// TODO this check is specific for the github implementation ; fix this
-//				if hook.Name == "web" {
-//					hasAGWebHook = true
-//					break
-//				}
-//			}
-//
-//			if !hasAGWebHook {
-//				if err := s.CreateHook(ctx, &scm.CreateHookOptions{
-//					URL:        GetEventsURL(bh.BaseURL, cr.Provider),
-//					Secret:     bh.Secret,
-//					Repository: repo,
-//				}); err != nil {
-//					logger.WithField("repo", path).WithError(err).Println("Failed to create webhook for repository")
-//					return err
-//				}
-//
-//				logger.WithField("repo", repo).Println("Created new webhook for repository")
-//			}
-//
-//			var repoType models.RepoType
-//			switch path {
-//			case InfoRepo:
-//				repoType = models.CourseInfoRepo
-//			case AssignmentRepo:
-//				repoType = models.AssignmentsRepo
-//			case TestsRepo:
-//				repoType = models.TestsRepo
-//			case SolutionsRepo:
-//				repoType = models.SolutionsRepo
-//			}
-//
-//			dbRepo := models.Repository{
-//				DirectoryID:  directory.ID,
-//				RepositoryID: repo.ID,
-//				Type:         repoType,
-//			}
-//			if err := db.CreateRepository(&dbRepo); err != nil {
-//				return err
-//			}
-//		}
-//
-//		// TODO CreateCourse and CreateEnrollment should be combined into a method with transactions.
-//		course := models.Course{
-//			Name:        cr.Name,
-//			Code:        cr.Code,
-//			Year:        cr.Year,
-//			Tag:         cr.Tag,
-//			Provider:    cr.Provider,
-//			DirectoryID: directory.ID,
-//		}
-//		if err := db.CreateCourse(&course); err != nil {
-//			if err == database.ErrCourseExists {
-//				return c.JSONPretty(http.StatusBadRequest, err.Error(), "\t")
-//			}
-//			return err
-//		}
-//
-//		// Automatically enroll the teacher creating the course
-//		// If type assertions fails, the recover middleware will catch the panic and log a stack trace.
-//		user := c.Get("user").(*models.User)
-//		if err := db.CreateEnrollment(&models.Enrollment{
-//			UserID:   user.ID,
-//			CourseID: course.ID,
-//		}); err != nil {
-//			if err == gorm.ErrRecordNotFound {
-//				return c.NoContent(http.StatusNotFound)
-//			}
-//			return err
-//		}
-//		if err := db.EnrollTeacher(user.ID, course.ID); err != nil {
-//			return err
-//		}
-//
-//		return c.JSONPretty(http.StatusCreated, &course, "\t")
-//	}
-//}
+func NewCourse(cr *pb.Course, db database.Database) (*pb.Course, error) {
+	// TODO CreateCourse and CreateEnrollment should be combined into a method with transactions.
+	course := models.Course{
+		Name:        cr.Name,
+		Code:        cr.Code,
+		Year:        uint(cr.Year),
+		Tag:         cr.Tag,
+		Provider:    cr.Provider,
+		DirectoryID: cr.Directoryid,
+	}
+	if err := db.CreateCourse(&course); err != nil {
+		if err == database.ErrCourseExists {
+			return nil, status.Errorf(codes.AlreadyExists, err.Error())
+		}
+		return nil, err
+	}
+
+	// Automatically enroll the teacher creating the course
+	// TODO get logged in user in stead of hard coding
+	user, err := db.GetUser(1)
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "login user not found")
+	}
+	if err := db.CreateEnrollment(&models.Enrollment{
+		UserID:   user.ID,
+		CourseID: course.ID,
+	}); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, status.Errorf(codes.NotFound, err.Error())
+		}
+		return nil, err
+	}
+	if err := db.EnrollTeacher(user.ID, course.ID); err != nil {
+		return nil, err
+	}
+	return toProtoCourse(&course), nil
+}
 
 // CreateEnrollment enrolls a user in a course.
 //func CreateEnrollment(db database.Database) echo.HandlerFunc {

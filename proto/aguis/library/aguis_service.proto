@@ -102,6 +102,7 @@ service AutograderService {
     rpc GetUsers (Void) returns (UsersResponse) {}
     rpc UpdateUser(UpdateUserRequest) returns (User) {}
 
+    rpc CreateCourse(Course) returns (Course) {}
     rpc GetCourse(GetRecordRequest) returns (Course) {}
     rpc GetCourses(Void) returns (Courses) {}
     rpc GetCoursesWithEnrollment(RecordWithStatusRequest) returns (Courses) {}

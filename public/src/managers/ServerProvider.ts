@@ -153,12 +153,14 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     }
 
     public async createNewCourse(courseData: INewCourse): Promise<ICourse | IError> {
-        const uri: string = "courses";
-        const result = await this.helper.post<INewCourse, ICourse>(uri, courseData);
-        if (result.statusCode !== 201 || !result.data) {
+        // const uri: string = "courses";
+        // const result = await this.helper.post<INewCourse, ICourse>(uri, courseData);
+        const result = await this.grpcHelper.createCourse(courseData);
+        if (result.statusCode !== 0 || !result.data) {
+            this.handleError(result, "createNewCourse");
             return this.parseError(result);
         }
-        return JSON.parse(JSON.stringify(result.data)) as ICourse;
+        return this.toICourse(result.data);
     }
 
     public async getCourse(id: number): Promise<ICourse | null> {

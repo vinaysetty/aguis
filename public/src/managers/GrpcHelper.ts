@@ -13,7 +13,8 @@ import {
     Void,
 } from "../../_proto/aguis/library/aguis_service_pb";
 import {AutograderService} from "../../_proto/aguis/library/aguis_service_pb_service";
-import {IUser} from "../models";
+import {IUser, ICourse, INewCourse} from "../models";
+import CreateCourse = AutograderService.CreateCourse;
 
 declare const USE_TLS: boolean;
 const host = USE_TLS ? "https://localhost:8091" : "http://localhost:8090";
@@ -53,6 +54,16 @@ export class GrpcHelper {
         return this.grpcUnary<User>(AutograderService.UpdateUser, userRequest);
     }
 
+    public createCourse(course: INewCourse): Promise<IGrpcResult<Course>> {
+        const nc = new Course();
+        nc.setName(course.name);
+        nc.setCode(course.code);
+        nc.setProvider(course.provider);
+        nc.setDirectoryid(course.directoryid);
+        nc.setTag(course.tag);
+        nc.setYear(course.year);
+        return this.grpcUnary<Course>(AutograderService.CreateCourse, nc);
+    }
     public getCourse(id: number): Promise<IGrpcResult<Course>> {
         const query = new GetRecordRequest();
         query.setId(id);
