@@ -1,4 +1,3 @@
-import * as Models from "../models";
 import {
     CourseGroupStatus,
     CourseUserState,
@@ -9,7 +8,8 @@ import {
     ICourseWithEnrollStatus,
     IError,
     INewGroup,
-    IOrganization, IStatusCode,
+    IOrganization,
+    IStatusCode,
     ISubmission,
     IUser,
 } from "../models";
@@ -110,7 +110,7 @@ export class TempDataProvider {
         this.localCourseStudent.push({
             courseId: course.id,
             userid: user.id,
-            state: Models.CourseUserState.pending,
+            state: CourseUserState.pending,
         });
         return true;
     }
@@ -142,7 +142,7 @@ export class TempDataProvider {
         return returnUsers;
     }
 
-    public async getUsersForCourse(course: Models.ICourse, state?: CourseUserState[])
+    public async getUsersForCourse(course: ICourse, state?: CourseUserState[])
         : Promise<IUserEnrollment[]> {
         const courseStds: ICourseUserLink[] =
             await this.getUserLinksForCourse(course, state);
@@ -173,7 +173,7 @@ export class TempDataProvider {
         throw new Error("Method not implemented");
     }
 
-    public async changeUserState(link: ICourseUserLink, state: Models.CourseUserState): Promise<boolean> {
+    public async changeUserState(link: ICourseUserLink, state: CourseUserState): Promise<boolean> {
         link.state = state;
         return true;
     }

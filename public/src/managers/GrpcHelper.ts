@@ -13,7 +13,7 @@ import {
     Void,
 } from "../../_proto/aguis/library/aguis_service_pb";
 import {AutograderService} from "../../_proto/aguis/library/aguis_service_pb_service";
-import {IUser, ICourse, INewCourse} from "../models";
+import {ICourse, INewCourse, IUser} from "../models";
 import CreateCourse = AutograderService.CreateCourse;
 
 declare const USE_TLS: boolean;

@@ -19,7 +19,7 @@
     "@types/google-protobuf": "^3.2.7",
     "@types/react": "^15.6.4",
     "@types/react-dom": "^15.5.6",
-    "google-protobuf": "^3.4.0",
+    "google-protobuf": "^3.5.0",
     "grpc-web-client": "^0.3.1",
     "react": "^15.6.2",
     "react-dom": "^15.6.2"

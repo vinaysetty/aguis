@@ -195,7 +195,7 @@ class CourseForm<T> extends React.Component<ICourseFormProps<T>, ICourseFormStat
             provider: this.state.provider,
             directoryid: this.state.directoryid,
         };
-        return await this.props.courseMan.updateCourse(courseId, courseData);
+        return this.props.courseMan.updateCourse(courseId, courseData);
 
     }
 
@@ -208,7 +208,7 @@ class CourseForm<T> extends React.Component<ICourseFormProps<T>, ICourseFormStat
             provider: this.state.provider,
             directoryid: this.state.directoryid,
         };
-        return await this.props.courseMan.createNewCourse(courseData);
+        return this.props.courseMan.createNewCourse(courseData);
 
     }
 

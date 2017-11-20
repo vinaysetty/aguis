@@ -166,11 +166,11 @@ class GroupForm extends React.Component<IGroupProp, IGroupState> {
     }
 
     private async createGroup(formData: INewGroup): Promise<ICourseGroup | IError> {
-        return await this.props.courseMan.createGroup(formData, this.props.course.id);
+        return this.props.courseMan.createGroup(formData, this.props.course.id);
     }
 
     private async updateGroup(formData: INewGroup, gid: number): Promise<IStatusCode | IError> {
-        return await this.props.courseMan.updateGroup(formData, gid, this.props.course.id);
+        return this.props.courseMan.updateGroup(formData, gid, this.props.course.id);
     }
 
     private handleInputChange(e: React.FormEvent<any>) {

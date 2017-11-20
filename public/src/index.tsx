@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { NavBar, Row } from "./components";
-import { CourseManager, GrpcHelper, ILink, INavEvent, NavigationManager, TempDataProvider, UserManager } from "./managers";
+import { CourseManager, GrpcHelper, ILink, INavEvent, NavigationManager, UserManager } from "./managers";
 
 import { ErrorPage } from "./pages/ErrorPage";
 import { HelpPage } from "./pages/HelpPage";
@@ -25,11 +25,9 @@ import { ILogEntry, LogManager } from "./managers/LogManager";
 
 import { PageInfo } from "./components/information/PageInfo";
 
-import { UserProfile } from "./components/forms/UserProfile";
 import { UserPage } from "./pages/UserPage";
 
 import { AddMenu } from "./components/navigation/AddMenu";
-import {grpc} from "grpc-web-client";
 
 interface IAutoGraderState {
     activePage?: ViewPage;
@@ -126,8 +124,8 @@ class AutoGrader extends React.Component<IAutoGraderProps, IAutoGraderState> {
             return basis;
         }
         return [
-            //{ name: "Courses", uri: "app/student/", active: false },
-            //{ name: "Teacher", uri: "app/teacher/", active: false },
+            // { name: "Courses", uri: "app/student/", active: false },
+            // { name: "Teacher", uri: "app/teacher/", active: false },
             { name: "Admin", uri: "app/admin", active: false },
             { name: "Help", uri: "app/help", active: false },
         ];
@@ -160,7 +158,7 @@ class AutoGrader extends React.Component<IAutoGraderProps, IAutoGraderState> {
 
     private async refreshActivePage(): Promise<JSX.Element> {
         if (this.state.activePage) {
-            return await this.renderTemplate(this.state.activePage, this.state.activePage.template);
+            return this.renderTemplate(this.state.activePage, this.state.activePage.template);
         }
         return <div>404 Error</div>;
     }

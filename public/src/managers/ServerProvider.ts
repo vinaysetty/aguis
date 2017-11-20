@@ -39,7 +39,7 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     private logger: ILogger;
     private grpcHelper: GrpcHelper;
 
-    constructor(helper: HttpHelper,grpc: GrpcHelper, logger: ILogger) {
+    constructor(helper: HttpHelper, grpc: GrpcHelper, logger: ILogger) {
         this.helper = helper;
         this.logger = logger;
         this.grpcHelper = grpc;
@@ -428,19 +428,20 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     }
     // this method convert a grpc User to IUSer
     private toIUser(user: User): IUser {
-        return {
+        const iuser: IUser = {
             id: user.getId(),
             name: user.getName(),
             avatarurl: user.getAvatarurl(),
             email: user.getEmail(),
             studentid: user.getStudentid(),
             isadmin: user.getIsadmin(),
-        } as IUser
+        };
+        return iuser;
     }
 
     // this method convert a grpc Course to ICourse
     private toICourse(course: Course): ICourse {
-        return {
+        const icourse: ICourse = {
             id: course.getId(),
             name: course.getName(),
             code: course.getCode(),
@@ -448,16 +449,20 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
             year: course.getYear(),
             provider: course.getProvider(),
             directoryid: course.getDirectoryid(),
-        } as ICourse
+        };
+
+        return icourse;
     }
 
     // this method convert a grpc Assignment to IAssignment
     private toIAssignment(assg: Assignment): IAssignment {
-        return {
+        const iassgn: IAssignment = {
             id: assg.getId(),
             name: assg.getName(),
             courseid: assg.getCourseid(),
-        } as IAssignment
+            deadline: new Date(assg.getDeadline()),
+        };
+        return  iassgn;
     }
 
     // this method convert a grpc Enrollment to IEnrollment

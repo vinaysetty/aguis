@@ -111,7 +111,7 @@ export class CourseManager {
         //     return a;
         // }
         // return null;
-        return await this.courseProvider.getCourse(id);
+        return this.courseProvider.getCourse(id);
     }
 
     /**
@@ -119,7 +119,7 @@ export class CourseManager {
      */
     public async getCourses(): Promise<ICourse[]> {
         // return MapHelper.toArray(await this.courseProvider.getCourses());
-        return await this.courseProvider.getCourses();
+        return this.courseProvider.getCourses();
     }
 
     public async getCoursesWithState(user: IUser): Promise<IUserCourse[]> {
@@ -203,7 +203,7 @@ export class CourseManager {
      * @param courseData The new information for the course
      */
     public async updateCourse(courseId: number, courseData: ICourse): Promise<IStatusCode | IError> {
-        return await this.courseProvider.updateCourse(courseId, courseData);
+        return this.courseProvider.updateCourse(courseId, courseData);
     }
 
     /**
@@ -293,11 +293,11 @@ export class CourseManager {
     }
 
     public async createGroup(groupData: INewGroup, courseId: number): Promise<ICourseGroup | IError> {
-        return await this.courseProvider.createGroup(groupData, courseId);
+        return this.courseProvider.createGroup(groupData, courseId);
     }
 
     public async updateGroup(groupData: INewGroup, groupId: number, courseId: number): Promise<IStatusCode | IError> {
-        return await this.courseProvider.updateGroup(groupData, groupId, courseId);
+        return this.courseProvider.updateGroup(groupData, groupId, courseId);
     }
 
     /**
@@ -305,27 +305,27 @@ export class CourseManager {
      * @param courseid course id of a course
      */
     public async getCourseGroups(courseid: number): Promise<ICourseGroup[]> {
-        return await this.courseProvider.getCourseGroups(courseid);
+        return this.courseProvider.getCourseGroups(courseid);
     }
 
     public async getGroupByUserAndCourse(userid: number, courseid: number): Promise<ICourseGroup | null> {
-        return await this.courseProvider.getGroupByUserAndCourse(userid, courseid);
+        return this.courseProvider.getGroupByUserAndCourse(userid, courseid);
     }
 
     public async updateGroupStatus(groupId: number, status: CourseGroupStatus): Promise<boolean> {
-        return await this.courseProvider.updateGroupStatus(groupId, status);
+        return this.courseProvider.updateGroupStatus(groupId, status);
     }
 
     public async getGroup(gid: number): Promise<ICourseGroup | null> {
-        return await this.courseProvider.getGroup(gid);
+        return this.courseProvider.getGroup(gid);
     }
 
     public async deleteGroup(gid: number): Promise<boolean> {
-        return await this.courseProvider.deleteGroup(gid);
+        return this.courseProvider.deleteGroup(gid);
     }
 
     public async refreshCoursesFor(courseid: number): Promise<any> {
-        return await this.courseProvider.refreshCoursesFor(courseid);
+        return this.courseProvider.refreshCoursesFor(courseid);
     }
 
     /**
@@ -333,11 +333,11 @@ export class CourseManager {
      * @param provider The provider to load information from, for instance github og gitlab
      */
     public async getDirectories(provider: string): Promise<IOrganization[]> {
-        return await this.courseProvider.getDirectories(provider);
+        return this.courseProvider.getDirectories(provider);
     }
 
     public async getProviders(): Promise<string[]> {
-        return await this.courseProvider.getProviders();
+        return this.courseProvider.getProviders();
     }
 
     /**
