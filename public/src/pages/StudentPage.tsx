@@ -74,10 +74,11 @@ export class StudentPage extends ViewPage {
         if (!curUser) {
             return <h1>404</h1>;
         }
+        const courseState = await this.courseMan.getCoursesWithState(curUser);
         return <div>
             <h1>Enrollment page</h1>
             <EnrollmentView
-                courses={await this.courseMan.getCoursesWithState(curUser)}
+                courses={courseState}
                 onEnrollmentClick={(course: ICourse) => {
                     this.courseMan.addUserToCourse(curUser, course);
                     this.navMan.refresh();

@@ -125,11 +125,8 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     }
 
     public async addUserToCourse(user: IUser, course: ICourse): Promise<boolean> {
-        const result = await this.helper.post<{ status: CourseUserState }, undefined>
-            ("/courses/" + course.id + "/users/" + user.id, {
-                status: CourseUserState.pending,
-            });
-        if (result.statusCode === 201) {
+        const result = await this.grpcHelper.createEnrollment(user.id, course.id);
+        if (result.statusCode === 0) {
             return true;
         } else {
             this.handleError(result, "addUserToCourse");

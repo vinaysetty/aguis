@@ -188,39 +188,23 @@ func NewCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
 }
 
 // CreateEnrollment enrolls a user in a course.
-//func CreateEnrollment(db database.Database) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		courseID, err := parseUint(c.Param("cid"))
-//		if err != nil {
-//			return err
-//		}
-//		userID, err := parseUint(c.Param("uid"))
-//		if err != nil {
-//			return err
-//		}
-//
-//		var eur EnrollUserRequest
-//		if err := c.Bind(&eur); err != nil {
-//			return err
-//		}
-//		if !eur.valid() || userID == 0 || courseID == 0 {
-//			return echo.NewHTTPError(http.StatusBadRequest, "invalid payload")
-//		}
-//
-//		enrollment := models.Enrollment{
-//			UserID:   userID,
-//			CourseID: courseID,
-//		}
-//		if err := db.CreateEnrollment(&enrollment); err != nil {
-//			if err == gorm.ErrRecordNotFound {
-//				return c.NoContent(http.StatusNotFound)
-//			}
-//			return err
-//		}
-//
-//		return c.NoContent(http.StatusCreated)
-//	}
-//}
+func CreateEnrollment(ucid *pb.UserIDCourseID, db database.Database) (*pb.StatusCode, error) {
+	userID := ucid.Userid
+	courseID := ucid.Courseid
+
+	enrollment := models.Enrollment{
+		UserID:   userID,
+		CourseID: courseID,
+	}
+	if err := db.CreateEnrollment(&enrollment); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, status.Errorf(codes.NotFound, "record not found")
+		}
+		return nil, err
+	}
+
+	return &pb.StatusCode{Statuscode: int32(codes.OK)}, nil
+}
 
 // UpdateEnrollment accepts or rejects a user to enroll in a course.
 //func UpdateEnrollment(db database.Database) echo.HandlerFunc {
@@ -716,9 +700,7 @@ func toProtoCourse(course *models.Course) *pb.Course {
 		Tag:         course.Tag,
 		Year:        uint32(course.Year),
 		Directoryid: course.DirectoryID,
-	}
-	if course.Enrolled >= 0 {
-		pc.Enrolled = int32(course.Enrolled)
+		Enrolled:    int32(course.Enrolled),
 	}
 	return pc
 }

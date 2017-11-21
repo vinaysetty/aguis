@@ -83,6 +83,12 @@ func (s *AutograderService) UpdateCourse(ctx context.Context, c *pb.Course) (*pb
 	return web.UpdateCourse(c, s.db)
 }
 
+// CreateEnrollment add a user to a course
+func (s *AutograderService) CreateEnrollment(ctx context.Context, ucid *pb.UserIDCourseID) (*pb.StatusCode, error) {
+	SetGrpcHeaderAndTrailer(ctx)
+	return web.CreateEnrollment(ucid, s.db)
+}
+
 // SetGrpcHeaderAndTrailer sets header and treailer to grpc
 func SetGrpcHeaderAndTrailer(ctx context.Context) {
 	grpc.SendHeader(ctx, metadata.Pairs("Pre-Response-Metadata", "Is-sent-as-headers-unary"))

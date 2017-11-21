@@ -7,8 +7,10 @@ import {
     EnrollemntResponse,
     GetRecordRequest,
     RecordWithStatusRequest,
+    StatusCode,
     UpdateUserRequest,
     User,
+    UserIDCourseID,
     UsersResponse,
     Void,
 } from "../../_proto/aguis/library/aguis_service_pb";
@@ -105,6 +107,13 @@ export class GrpcHelper {
         req.setId(courseid);
         req.setState(state);
         return this.grpcUnary<EnrollemntResponse>(AutograderService.GetEnrollmentsByCourse, req);
+    }
+
+    public createEnrollment(userid: number, courseid: number): Promise<IGrpcResult<StatusCode>> {
+        const req = new UserIDCourseID();
+        req.setUserid(userid);
+        req.setCourseid(courseid);
+        return this.grpcUnary<StatusCode>(AutograderService.CreateEnrollment, req);
     }
 
     private grpcUnary<TReceive extends Message>(method: any, request: any): Promise<IGrpcResult<TReceive>> {
