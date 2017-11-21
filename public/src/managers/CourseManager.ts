@@ -35,7 +35,7 @@ export interface ICourseProvider {
 
     createNewCourse(courseData: INewCourse): Promise<ICourse | IError>;
     getCourse(id: number): Promise<ICourse | null>;
-    updateCourse(courseId: number, courseData: ICourse): Promise<IStatusCode | IError>;
+    updateCourse(courseId: number, courseData: ICourse): Promise<ICourse | IError>;
 
     getCourseGroups(courseId: number): Promise<ICourseGroup[]>;
     updateGroupStatus(groupId: number, status: CourseGroupStatus): Promise<boolean>;
@@ -202,7 +202,7 @@ export class CourseManager {
      * Updates a course with new information
      * @param courseData The new information for the course
      */
-    public async updateCourse(courseId: number, courseData: ICourse): Promise<IStatusCode | IError> {
+    public async updateCourse(courseId: number, courseData: ICourse): Promise<ICourse | IError> {
         return this.courseProvider.updateCourse(courseId, courseData);
     }
 

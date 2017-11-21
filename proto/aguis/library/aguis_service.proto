@@ -104,6 +104,7 @@ service AutograderService {
 
     rpc CreateCourse(Course) returns (Course) {}
     rpc GetCourse(GetRecordRequest) returns (Course) {}
+    rpc UpdateCourse(Course) returns (Course) {}
     rpc GetCourses(Void) returns (Courses) {}
     rpc GetCoursesWithEnrollment(RecordWithStatusRequest) returns (Courses) {}
     rpc GetAssignments(GetRecordRequest) returns (Assignments) {}

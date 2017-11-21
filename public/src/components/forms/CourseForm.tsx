@@ -185,7 +185,7 @@ class CourseForm<T> extends React.Component<ICourseFormProps<T>, ICourseFormStat
         }
     }
 
-    private async updateCourse(courseId: number): Promise<IStatusCode | IError> {
+    private async updateCourse(courseId: number): Promise<ICourse | IError> {
         const courseData: ICourse = {
             id: courseId,
             name: this.state.name,

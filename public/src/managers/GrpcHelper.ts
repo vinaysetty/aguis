@@ -12,9 +12,8 @@ import {
     UsersResponse,
     Void,
 } from "../../_proto/aguis/library/aguis_service_pb";
-import {AutograderService} from "../../_proto/aguis/library/aguis_service_pb_service";
-import {ICourse, INewCourse, IUser} from "../models";
-import CreateCourse = AutograderService.CreateCourse;
+import { AutograderService } from "../../_proto/aguis/library/aguis_service_pb_service";
+import { ICourse, INewCourse, IUser } from "../models";
 
 declare const USE_TLS: boolean;
 const host = USE_TLS ? "https://localhost:8091" : "http://localhost:8090";
@@ -64,6 +63,19 @@ export class GrpcHelper {
         nc.setYear(course.year);
         return this.grpcUnary<Course>(AutograderService.CreateCourse, nc);
     }
+
+    public updateCourse(course: ICourse): Promise<IGrpcResult<Course>> {
+        const crs = new Course();
+        crs.setId(course.id);
+        crs.setName(course.name);
+        crs.setCode(course.code);
+        crs.setDirectoryid(course.directoryid);
+        crs.setProvider(course.provider);
+        crs.setYear(course.year);
+        crs.setTag(course.tag);
+        return this.grpcUnary<Course>(AutograderService.UpdateCourse, crs);
+    }
+
     public getCourse(id: number): Promise<IGrpcResult<Course>> {
         const query = new GetRecordRequest();
         query.setId(id);

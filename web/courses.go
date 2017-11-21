@@ -136,16 +136,29 @@ type BaseHookOptions struct {
 
 // NewCourse creates a new course and associates it with a directory (organization in github)
 // and creates the repositories for the course.
-func NewCourse(cr *pb.Course, db database.Database) (*pb.Course, error) {
+func NewCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
+	newcrs := NewCourseRequest{
+		Name:        crs.Name,
+		Code:        crs.Code,
+		Year:        uint(crs.Year),
+		Tag:         crs.Tag,
+		Provider:    crs.Provider,
+		DirectoryID: crs.Directoryid,
+	}
+	if !newcrs.valid() {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid payload")
+	}
+
 	// TODO CreateCourse and CreateEnrollment should be combined into a method with transactions.
 	course := models.Course{
-		Name:        cr.Name,
-		Code:        cr.Code,
-		Year:        uint(cr.Year),
-		Tag:         cr.Tag,
-		Provider:    cr.Provider,
-		DirectoryID: cr.Directoryid,
+		Name:        crs.Name,
+		Code:        crs.Code,
+		Year:        uint(crs.Year),
+		Tag:         crs.Tag,
+		Provider:    crs.Provider,
+		DirectoryID: crs.Directoryid,
 	}
+
 	if err := db.CreateCourse(&course); err != nil {
 		if err == database.ErrCourseExists {
 			return nil, status.Errorf(codes.AlreadyExists, err.Error())
@@ -446,60 +459,38 @@ func createAssignment(request *yamlparser.NewAssignmentRequest, course *models.C
 //}
 
 // UpdateCourse updates an existing course
-//func UpdateCourse(db database.Database) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		id, err := parseUint(c.Param("cid"))
-//		if err != nil {
-//			return err
-//		}
-//
-//		if _, err := db.GetCourse(id); err != nil {
-//			if err == gorm.ErrRecordNotFound {
-//				return c.NoContent(http.StatusNotFound)
-//			}
-//			return err
-//		}
-//
-//		// TODO: Might be better to define a Validate method on models.Course and bind to that.
-//		var cr NewCourseRequest
-//		if err := c.Bind(&cr); err != nil {
-//			return err
-//		}
-//		if !cr.valid() {
-//			return echo.NewHTTPError(http.StatusBadRequest, "invalid payload")
-//		}
-//
-//		if c.Get(cr.Provider) == nil {
-//			return echo.NewHTTPError(http.StatusBadRequest, "provider "+cr.Provider+" not registered")
-//		}
-//		// If type assertions fails, the recover middleware will catch the panic and log a stack trace.
-//		s := c.Get(cr.Provider).(scm.SCM)
-//
-//		ctx, cancel := context.WithTimeout(c.Request().Context(), MaxWait)
-//		defer cancel()
-//
-//		// Check that the directory exists.
-//		_, err = s.GetDirectory(ctx, cr.DirectoryID)
-//		if err != nil {
-//			return err
-//		}
-//
-//		if err := db.UpdateCourse(&models.Course{
-//			ID:          id,
-//			Name:        cr.Name,
-//			Code:        cr.Code,
-//			Year:        cr.Year,
-//			Tag:         cr.Tag,
-//			Provider:    cr.Provider,
-//			DirectoryID: cr.DirectoryID,
-//		}); err != nil {
-//			return err
-//		}
-//
-//		return c.NoContent(http.StatusOK)
-//
-//	}
-//}
+func UpdateCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
+	course, err := db.GetCourse(crs.Id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, status.Errorf(codes.NotFound, "Course not found")
+		}
+		return nil, err
+	}
+
+	newcrs := NewCourseRequest{
+		Name:        crs.Name,
+		Code:        crs.Code,
+		Year:        uint(crs.Year),
+		Tag:         crs.Tag,
+		Provider:    crs.Provider,
+		DirectoryID: crs.Directoryid,
+	}
+	if !newcrs.valid() {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid payload")
+	}
+
+	course.Name = crs.Name
+	course.Code = crs.Code
+	course.Year = uint(crs.Year)
+	course.Tag = crs.Tag
+	course.Provider = crs.Provider
+	course.DirectoryID = crs.Directoryid
+	if err := db.UpdateCourse(course); err != nil {
+		return nil, err
+	}
+	return toProtoCourse(course), nil
+}
 
 // GetEnrollmentsByCourse get all enrollments for a course.
 func GetEnrollmentsByCourse(request *pb.RecordWithStatusRequest, db database.Database) (*pb.EnrollemntResponse, error) {

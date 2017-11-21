@@ -46,6 +46,14 @@ export namespace AutograderService {
     static readonly requestType = aguis_library_aguis_service_pb.GetRecordRequest;
     static readonly responseType = aguis_library_aguis_service_pb.Course;
   }
+  export class UpdateCourse {
+    static readonly methodName = "UpdateCourse";
+    static readonly service = AutograderService;
+    static readonly requestStream = false;
+    static readonly responseStream = false;
+    static readonly requestType = aguis_library_aguis_service_pb.Course;
+    static readonly responseType = aguis_library_aguis_service_pb.Course;
+  }
   export class GetCourses {
     static readonly methodName = "GetCourses";
     static readonly service = AutograderService;
