@@ -87,15 +87,15 @@ func main() {
 		Secret:  os.Getenv("WEBHOOK_SECRET"),
 	}
 
-	store := newStore([]byte("secret"))
-	gothic.Store = store
-	e := newServer(l, store)
-	enabled := enableProviders(l, *baseURL, *fake)
-	registerWebhooks(l, e, db, bh.Secret, enabled)
-	registerAuth(e, db)
-	registerAPI(l, e, db, &bh)
-	registerFrontend(e, entryPoint, *public)
-	run(l, e, *httpAddr)
+	store := newStore([]byte("secret"))            // Get session from gorilla
+	gothic.Store = store                           // Store session in gothic
+	e := newServer(l, store)                       // Create server with echo
+	enabled := enableProviders(l, *baseURL, *fake) // Choose/Enable provider (GitHub, GitLab)
+	registerWebhooks(l, e, db, bh.Secret, enabled) // Webhooks I don't understand
+	registerAuth(e, db)                            // OAuth API towards provider
+	registerAPI(l, e, db, &bh)                     // Create REST API
+	registerFrontend(e, entryPoint, *public)       // FE I don't understand
+	run(l, e, *httpAddr)                           // Start the server
 }
 
 func newServer(l *logrus.Logger, store sessions.Store) *echo.Echo {
@@ -224,6 +224,10 @@ func registerAuth(e *echo.Echo, db database.Database) {
 	oauth2.GET("", auth.OAuth2Login(db))
 	oauth2.GET("/callback", auth.OAuth2Callback(db))
 	e.GET("/logout", auth.OAuth2Logout())
+}
+
+func registerGraphqlAPI(e *echo.Echo, db database.Database) {
+
 }
 
 func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *web.BaseHookOptions) {
