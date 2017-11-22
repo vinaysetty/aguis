@@ -127,7 +127,7 @@ func enableProviders(l logrus.FieldLogger, baseURL string, fake bool) map[string
 		KeyEnv:        "GITHUB_KEY",
 		SecretEnv:     "GITHUB_SECRET",
 		CallbackURL:   auth.GetCallbackURL(baseURL, "github"),
-		StudentScopes: []string{},
+		StudentScopes: []string{"user", "repo", "delete_repo"}, // For testing, consider to push to master
 		TeacherScopes: []string{"user", "repo", "delete_repo"},
 	}, func(key, secret, callback string, scopes ...string) goth.Provider {
 		return github.New(key, secret, callback, scopes...)
@@ -245,15 +245,12 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 
 	api.GET("/user", web.GetSelf())
 
-	// TODO: Implement GraphQL
-	//-----------
 	users := api.Group("/users")
 	users.GET("", web.GetUsers(db))
 	users.GET("/:uid", web.GetUser(db))
 	users.PATCH("/:uid", web.PatchUser(db))
 	users.GET("/:uid/courses", web.ListCoursesWithEnrollment(db))
 	users.GET("/:uid/courses/:cid/group", web.GetGroupByUserAndCourse(db))
-	//-----------
 
 	courses := api.Group("/courses")
 	courses.GET("", web.ListCourses(db))
