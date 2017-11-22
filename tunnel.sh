@@ -27,7 +27,7 @@ case $username in
     junaid)
         rport=3004
         ;;
-    hansludvig)
+    hanslk)
         rport=3005
         ;;
     *)
