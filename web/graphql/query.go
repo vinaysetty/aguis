@@ -2,8 +2,9 @@ package graphql
 
 import (
 	"github.com/graphql-go/graphql"
-	"github.com/hansludvig/graphql-aguis/graphql/objects"
 	"github.com/autograde/aguis/models"
+	"github.com/autograde/aguis/web/graphql/objects"
+	
 )
 
 var QueryType = graphql.NewObject(graphql.ObjectConfig{
@@ -32,6 +33,7 @@ var QueryType = graphql.NewObject(graphql.ObjectConfig{
 func (string) GetCourse *models.Course{
 	return nil
 }
+
 
 func GetUser(id int) *User {
 	if u, ok := UserData[id]; ok {
