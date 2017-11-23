@@ -135,13 +135,8 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
     }
 
     public async changeUserState(link: ICourseUserLink, state: CourseUserState): Promise<boolean> {
-        const result = await this.helper.patch<{ courseid: number, userid: number, status: CourseUserState }, undefined>
-            ("/courses/" + link.courseId + "/users/" + link.userid, {
-                courseid: link.courseId,
-                userid: link.userid,
-                status: state,
-            });
-        if (result.statusCode <= 202) {
+        const result = await this.grpcHelper.updateEnrollment(link.userid, link.courseId, state);
+        if (result.statusCode === 0) {
             return true;
         } else {
             this.handleError(result, "changeUserState");

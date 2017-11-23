@@ -491,3 +491,31 @@ export namespace StatusCode {
   }
 }
 
+export class UpdateEnrollmentRequest extends jspb.Message {
+  getUserid(): number;
+  setUserid(value: number): void;
+
+  getCourseid(): number;
+  setCourseid(value: number): void;
+
+  getStatus(): number;
+  setStatus(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateEnrollmentRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateEnrollmentRequest): UpdateEnrollmentRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: UpdateEnrollmentRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateEnrollmentRequest;
+  static deserializeBinaryFromReader(message: UpdateEnrollmentRequest, reader: jspb.BinaryReader): UpdateEnrollmentRequest;
+}
+
+export namespace UpdateEnrollmentRequest {
+  export type AsObject = {
+    userid: number,
+    courseid: number,
+    status: number,
+  }
+}
+

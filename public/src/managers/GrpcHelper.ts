@@ -8,6 +8,7 @@ import {
     GetRecordRequest,
     RecordWithStatusRequest,
     StatusCode,
+    UpdateEnrollmentRequest,
     UpdateUserRequest,
     User,
     UserIDCourseID,
@@ -15,7 +16,7 @@ import {
     Void,
 } from "../../_proto/aguis/library/aguis_service_pb";
 import { AutograderService } from "../../_proto/aguis/library/aguis_service_pb_service";
-import { ICourse, INewCourse, IUser } from "../models";
+import { CourseUserState, ICourse, INewCourse, IUser } from "../models";
 
 declare const USE_TLS: boolean;
 const host = USE_TLS ? "https://localhost:8091" : "http://localhost:8090";
@@ -114,6 +115,16 @@ export class GrpcHelper {
         req.setUserid(userid);
         req.setCourseid(courseid);
         return this.grpcUnary<StatusCode>(AutograderService.CreateEnrollment, req);
+    }
+
+    public updateEnrollment(userid: number,
+                            courseid: number,
+                            state: CourseUserState): Promise<IGrpcResult<StatusCode>> {
+        const req = new UpdateEnrollmentRequest();
+        req.setUserid(userid);
+        req.setCourseid(courseid);
+        req.setStatus(state);
+        return this.grpcUnary<StatusCode>(AutograderService.UpdateEnrollment, req);
     }
 
     private grpcUnary<TReceive extends Message>(method: any, request: any): Promise<IGrpcResult<TReceive>> {

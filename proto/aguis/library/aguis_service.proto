@@ -104,6 +104,12 @@ message StatusCode {
     int32 statuscode = 1;
 }
 
+message UpdateEnrollmentRequest {
+    uint64 userid = 1;
+    uint64 courseid = 2;
+    int32 status = 3;
+}
+
 
 service AutograderService {
     rpc GetUser (GetRecordRequest) returns (User) {}
@@ -117,5 +123,7 @@ service AutograderService {
     rpc GetCoursesWithEnrollment(RecordWithStatusRequest) returns (Courses) {}
     rpc GetAssignments(GetRecordRequest) returns (Assignments) {}
     rpc GetEnrollmentsByCourse(RecordWithStatusRequest) returns (EnrollemntResponse) {}
+
     rpc CreateEnrollment(UserIDCourseID) returns (StatusCode) {}
+    rpc UpdateEnrollment(UpdateEnrollmentRequest) returns (StatusCode) {}
 }

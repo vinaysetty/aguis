@@ -207,56 +207,47 @@ func CreateEnrollment(ucid *pb.UserIDCourseID, db database.Database) (*pb.Status
 }
 
 // UpdateEnrollment accepts or rejects a user to enroll in a course.
-//func UpdateEnrollment(db database.Database) echo.HandlerFunc {
-//	return func(c echo.Context) error {
-//		courseID, err := parseUint(c.Param("cid"))
-//		if err != nil {
-//			return err
-//		}
-//		userID, err := parseUint(c.Param("uid"))
-//		if err != nil {
-//			return err
-//		}
-//
-//		var eur EnrollUserRequest
-//		if err := c.Bind(&eur); err != nil {
-//			return err
-//		}
-//		if !eur.valid() || userID == 0 || courseID == 0 {
-//			return echo.NewHTTPError(http.StatusBadRequest, "invalid payload")
-//		}
-//
-//		if _, err := db.GetEnrollmentByCourseAndUser(courseID, userID); err != nil {
-//			if err == gorm.ErrRecordNotFound {
-//				return c.NoContent(http.StatusNotFound)
-//			}
-//			return err
-//		}
-//
-//		// If type assertions fails, the recover middleware will catch the panic and log a stack trace.
-//		user := c.Get("user").(*models.User)
-//		// TODO: This check should be performed in AccessControl.
-//		if !user.IsAdmin {
-//			// Only admin users are allowed to enroll or reject users to a course.
-//			// TODO we should also allow users of the 'teachers' team to accept/reject users
-//			return c.NoContent(http.StatusUnauthorized)
-//		}
-//
-//		// TODO If the enrollment is accepted, create repositories with webooks.
-//		switch eur.Status {
-//		case models.Student:
-//			err = db.EnrollStudent(userID, courseID)
-//		case models.Teacher:
-//			err = db.EnrollTeacher(userID, courseID)
-//		case models.Rejected:
-//			err = db.RejectEnrollment(userID, courseID)
-//		}
-//		if err != nil {
-//			return err
-//		}
-//		return c.NoContent(http.StatusOK)
-//	}
-//}
+func UpdateEnrollment(req *pb.UpdateEnrollmentRequest, db database.Database) (*pb.StatusCode, error) {
+	userID := req.Userid
+	courseID := req.Courseid
+	enroll_status := uint(req.Status)
+	if enroll_status > models.Teacher || userID == 0 || courseID == 0 {
+		return &pb.StatusCode{Statuscode: int32(codes.InvalidArgument)},
+			status.Errorf(codes.InvalidArgument, "invalid payload")
+	}
+
+	if _, err := db.GetEnrollmentByCourseAndUser(courseID, userID); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return &pb.StatusCode{Statuscode: int32(codes.NotFound)},
+				status.Errorf(codes.NotFound, "not found")
+		}
+		return &pb.StatusCode{Statuscode: int32(codes.Aborted)}, err
+	}
+
+	// TODO get logged in user in stead of hard coding
+	user, err := db.GetUser(1)
+	// TODO: This check should be performed in AccessControl.
+	if !user.IsAdmin {
+		// Only admin users are allowed to enroll or reject users to a course.
+		// TODO we should also allow users of the 'teachers' team to accept/reject users
+		return &pb.StatusCode{Statuscode: int32(codes.PermissionDenied)},
+			status.Errorf(codes.PermissionDenied, "unauthorized")
+	}
+
+	// TODO If the enrollment is accepted, create repositories with webooks.
+	switch enroll_status {
+	case models.Student:
+		err = db.EnrollStudent(userID, courseID)
+	case models.Teacher:
+		err = db.EnrollTeacher(userID, courseID)
+	case models.Rejected:
+		err = db.RejectEnrollment(userID, courseID)
+	}
+	if err != nil {
+		return &pb.StatusCode{Statuscode: int32(codes.Aborted)}, err
+	}
+	return &pb.StatusCode{Statuscode: int32(codes.OK)}, nil
+}
 
 // GetCourse find course by id and return JSON object.
 func GetCourse(query *pb.GetRecordRequest, db database.Database) (*pb.Course, error) {

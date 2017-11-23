@@ -94,4 +94,12 @@ export namespace AutograderService {
     static readonly requestType = aguis_library_aguis_service_pb.UserIDCourseID;
     static readonly responseType = aguis_library_aguis_service_pb.StatusCode;
   }
+  export class UpdateEnrollment {
+    static readonly methodName = "UpdateEnrollment";
+    static readonly service = AutograderService;
+    static readonly requestStream = false;
+    static readonly responseStream = false;
+    static readonly requestType = aguis_library_aguis_service_pb.UpdateEnrollmentRequest;
+    static readonly responseType = aguis_library_aguis_service_pb.StatusCode;
+  }
 }
