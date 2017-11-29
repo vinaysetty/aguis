@@ -5,6 +5,7 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
+// EnrollmentType here
 var EnrollmentType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Enrollment",
 	Fields: graphql.Fields{

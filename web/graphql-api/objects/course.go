@@ -5,6 +5,7 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
+// CourseType er
 var CourseType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Course",
 	Fields: graphql.Fields{
@@ -71,9 +72,6 @@ var CourseType = graphql.NewObject(graphql.ObjectConfig{
 				return nil, nil
 			},
 		},
-		"enrollments": &graphql.Field{
-			Type: graphql.NewList(EnrollmentType),
-		},
 		"enrolled": &graphql.Field{
 			Type: graphql.Int,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
@@ -82,12 +80,6 @@ var CourseType = graphql.NewObject(graphql.ObjectConfig{
 				}
 				return nil, nil
 			},
-		},
-		"assignments": &graphql.Field{
-			Type: graphql.NewList(AssignmentType),
-		},
-		"groups": &graphql.Field{
-			Type: graphql.NewList(GroupType),
 		},
 	},
 })

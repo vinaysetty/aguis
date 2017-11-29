@@ -16,7 +16,7 @@ import (
 	"github.com/autograde/aguis/logger"
 	"github.com/autograde/aguis/web"
 	"github.com/autograde/aguis/web/auth"
-	"github.com/autograde/aguis/web/graphql"
+	"github.com/autograde/aguis/web/graphql-api/objects"
 	"github.com/graphql-go/graphql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/labstack/echo"
@@ -75,23 +75,13 @@ func main() {
 		}
 	}()
 
-	e := newServer(l) // Create server with echo
-	//registerAPI(l, e, db, &bh)                     // Create REST API
-	run(l, e, *httpAddr) // Start the server
+	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
+		result := executeQuery(r.URL.Query().Get("query"), test.Schema)
+		json.NewEncoder(w).Encode(result)
+	})
 }
 
-func newServer(l *logrus.Logger) *echo.Echo {
-	e := echo.New()
-	e.Logger = web.EchoLogger{Logger: l}
-	e.HideBanner = true
-	e.Use(
-		middleware.Recover(),
-		web.Logger(l),
-		middleware.Secure(),
-	)
 
-	return e
-}
 
 func enableProviders(l logrus.FieldLogger, baseURL string, fake bool) map[string]bool {
 	enabled := make(map[string]bool)
@@ -126,38 +116,47 @@ func executeQuery(query string, schema graphql.Schema) *graphql.Result {
 	return result
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	result := executeQuery(r.URL.Query().Get("query"), graphql.Schema)
-	json.NewEncoder(w).Encode(result)
-}
 
-func registerGraphqlAPI(e *echo.Echo, db database.Database) {
-	api := e.Group("/api/v1")
-
-	//Graphql endpoints
-	api.GET("/graphql", echo.WrapHandler(http.HandlerFunc(handler)))
-}
-
-func run(l logrus.FieldLogger, e *echo.Echo, httpAddr string) {
-	go func() {
-		srvErr := e.Start(httpAddr)
-		if srvErr == http.ErrServerClosed {
-			l.Warn("shutting down the server")
-			return
+var queryType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Query",
+	Fields: graphql.Fields{
+		"courses": &graphql.Field{
+			Type: graphql.NewList(objects.CourseType),
+		},
+		"course": &graphql.Field{
+			Type: objects.CourseType,
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Type: graphql.Int,
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				if id, ok := p.Args["id"].(int); ok {
+					return db.GetCourse(id), nil
+				}
+				return nil, nil
+			},
+		},
+		"user": &graphql.Field{
+			Type: objects.UserType,
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Type: graphql.Int,
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				if id, ok := p.Args["id"].(int); ok {
+					return db.GetUser(id), nil
+				}
+				return nil, nil
+			},
 		}
-		l.WithError(srvErr).Fatal("could not start server")
-	}()
+	},
+})
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	if err := e.Shutdown(ctx); err != nil {
-		l.WithError(err).Fatal("failure during server shutdown")
-	}
-}
+var schema = graphql.NewSchema(graphql.SchemaConfig{
+	Query: queryType,
+})
 
 func tempFile(name string) string {
 	return filepath.Join(os.TempDir(), name)
