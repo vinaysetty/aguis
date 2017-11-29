@@ -1,28 +1,19 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"mime"
 	"net/http"
 	"os"
-	"os/signal"
 	"path/filepath"
-	"time"
 
 	"github.com/autograde/aguis/database"
 	"github.com/autograde/aguis/logger"
-	"github.com/autograde/aguis/web"
-	"github.com/autograde/aguis/web/auth"
 	"github.com/autograde/aguis/web/graphql-api/objects"
 	"github.com/graphql-go/graphql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	"github.com/markbates/goth"
-	"github.com/markbates/goth/providers/github"
 	"github.com/sirupsen/logrus"
 )
 
@@ -46,14 +37,9 @@ func init() {
 
 func main() {
 	var (
-		httpAddr = flag.String("http.addr", ":8080", "HTTP listen address")
-		public   = flag.String("http.public", "public", "directory to server static files from")
+		public = flag.String("http.public", "public", "directory to server static files from")
 
 		dbFile = flag.String("database.file", tempFile("ag.db"), "database file")
-
-		baseURL = flag.String("service.url", "localhost", "service base url")
-
-		fake = flag.Bool("provider.fake", false, "enable fake provider")
 	)
 	flag.Parse()
 
@@ -75,36 +61,38 @@ func main() {
 		}
 	}()
 
+	var queryType = graphql.NewObject(graphql.ObjectConfig{
+		Name: "Query",
+		Fields: graphql.Fields{
+			"user": &graphql.Field{
+				Type: objects.UserType,
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.Int,
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if id, ok := p.Args["id"].(uint64); ok {
+						user, _ := db.GetUser(id)
+						return user, nil
+					}
+					return nil, nil
+				},
+			},
+		},
+	})
+
+	var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
+		Query: queryType,
+	})
+
 	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
-		result := executeQuery(r.URL.Query().Get("query"), test.Schema)
+		result := executeQuery(r.URL.Query().Get("query"), schema)
 		json.NewEncoder(w).Encode(result)
 	})
+
 }
 
-
-
-func enableProviders(l logrus.FieldLogger, baseURL string, fake bool) map[string]bool {
-	enabled := make(map[string]bool)
-
-	if ok := auth.EnableProvider(&auth.Provider{
-		Name:          "github",
-		KeyEnv:        "GITHUB_KEY",
-		SecretEnv:     "GITHUB_SECRET",
-		CallbackURL:   auth.GetCallbackURL(baseURL, "github"),
-		StudentScopes: []string{"user", "repo", "delete_repo"}, // For testing, consider to push to master
-		TeacherScopes: []string{"user", "repo", "delete_repo"},
-	}, func(key, secret, callback string, scopes ...string) goth.Provider {
-		return github.New(key, secret, callback, scopes...)
-	}); ok {
-		enabled["github"] = true
-	} else {
-		l.WithFields(logrus.Fields{
-			"provider": "github",
-			"enabled":  false,
-		}).Warn("environment variables not set")
-	}
-	return enabled
-}
 func executeQuery(query string, schema graphql.Schema) *graphql.Result {
 	result := graphql.Do(graphql.Params{
 		Schema:        schema,
@@ -115,48 +103,6 @@ func executeQuery(query string, schema graphql.Schema) *graphql.Result {
 	}
 	return result
 }
-
-
-var queryType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Query",
-	Fields: graphql.Fields{
-		"courses": &graphql.Field{
-			Type: graphql.NewList(objects.CourseType),
-		},
-		"course": &graphql.Field{
-			Type: objects.CourseType,
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.Int,
-				},
-			},
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				if id, ok := p.Args["id"].(int); ok {
-					return db.GetCourse(id), nil
-				}
-				return nil, nil
-			},
-		},
-		"user": &graphql.Field{
-			Type: objects.UserType,
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.Int,
-				},
-			},
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				if id, ok := p.Args["id"].(int); ok {
-					return db.GetUser(id), nil
-				}
-				return nil, nil
-			},
-		}
-	},
-})
-
-var schema = graphql.NewSchema(graphql.SchemaConfig{
-	Query: queryType,
-})
 
 func tempFile(name string) string {
 	return filepath.Join(os.TempDir(), name)
