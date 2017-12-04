@@ -2998,7 +2998,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.library.Course.repeatedFields_ = [9,10];
+proto.library.Course.repeatedFields_ = [9,10,11];
 
 
 
@@ -3037,6 +3037,8 @@ proto.library.Course.toObject = function(includeInstance, msg) {
     provider: jspb.Message.getFieldWithDefault(msg, 6, ""),
     directoryid: jspb.Message.getFieldWithDefault(msg, 7, 0),
     enrolled: jspb.Message.getFieldWithDefault(msg, 8, 0),
+    enrollmentsList: jspb.Message.toObjectList(msg.getEnrollmentsList(),
+    proto.library.Enrollment.toObject, includeInstance),
     assignmentsList: jspb.Message.toObjectList(msg.getAssignmentsList(),
     proto.library.Assignment.toObject, includeInstance),
     groupsList: jspb.Message.toObjectList(msg.getGroupsList(),
@@ -3110,11 +3112,16 @@ proto.library.Course.deserializeBinaryFromReader = function(msg, reader) {
       msg.setEnrolled(value);
       break;
     case 9:
+      var value = new proto.library.Enrollment;
+      reader.readMessage(value,proto.library.Enrollment.deserializeBinaryFromReader);
+      msg.addEnrollments(value);
+      break;
+    case 10:
       var value = new proto.library.Assignment;
       reader.readMessage(value,proto.library.Assignment.deserializeBinaryFromReader);
       msg.addAssignments(value);
       break;
-    case 10:
+    case 11:
       var value = new proto.library.Group;
       reader.readMessage(value,proto.library.Group.deserializeBinaryFromReader);
       msg.addGroups(value);
@@ -3204,10 +3211,18 @@ proto.library.Course.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getAssignmentsList();
+  f = message.getEnrollmentsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       9,
+      f,
+      proto.library.Enrollment.serializeBinaryToWriter
+    );
+  }
+  f = message.getAssignmentsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      10,
       f,
       proto.library.Assignment.serializeBinaryToWriter
     );
@@ -3215,7 +3230,7 @@ proto.library.Course.serializeBinaryToWriter = function(message, writer) {
   f = message.getGroupsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      10,
+      11,
       f,
       proto.library.Group.serializeBinaryToWriter
     );
@@ -3344,18 +3359,49 @@ proto.library.Course.prototype.setEnrolled = function(value) {
 
 
 /**
- * repeated Assignment assignments = 9;
+ * repeated Enrollment enrollments = 9;
+ * @return {!Array.<!proto.library.Enrollment>}
+ */
+proto.library.Course.prototype.getEnrollmentsList = function() {
+  return /** @type{!Array.<!proto.library.Enrollment>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.library.Enrollment, 9));
+};
+
+
+/** @param {!Array.<!proto.library.Enrollment>} value */
+proto.library.Course.prototype.setEnrollmentsList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 9, value);
+};
+
+
+/**
+ * @param {!proto.library.Enrollment=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.library.Enrollment}
+ */
+proto.library.Course.prototype.addEnrollments = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 9, opt_value, proto.library.Enrollment, opt_index);
+};
+
+
+proto.library.Course.prototype.clearEnrollmentsList = function() {
+  this.setEnrollmentsList([]);
+};
+
+
+/**
+ * repeated Assignment assignments = 10;
  * @return {!Array.<!proto.library.Assignment>}
  */
 proto.library.Course.prototype.getAssignmentsList = function() {
   return /** @type{!Array.<!proto.library.Assignment>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.library.Assignment, 9));
+    jspb.Message.getRepeatedWrapperField(this, proto.library.Assignment, 10));
 };
 
 
 /** @param {!Array.<!proto.library.Assignment>} value */
 proto.library.Course.prototype.setAssignmentsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 9, value);
+  jspb.Message.setRepeatedWrapperField(this, 10, value);
 };
 
 
@@ -3365,7 +3411,7 @@ proto.library.Course.prototype.setAssignmentsList = function(value) {
  * @return {!proto.library.Assignment}
  */
 proto.library.Course.prototype.addAssignments = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 9, opt_value, proto.library.Assignment, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 10, opt_value, proto.library.Assignment, opt_index);
 };
 
 
@@ -3375,18 +3421,18 @@ proto.library.Course.prototype.clearAssignmentsList = function() {
 
 
 /**
- * repeated Group groups = 10;
+ * repeated Group groups = 11;
  * @return {!Array.<!proto.library.Group>}
  */
 proto.library.Course.prototype.getGroupsList = function() {
   return /** @type{!Array.<!proto.library.Group>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.library.Group, 10));
+    jspb.Message.getRepeatedWrapperField(this, proto.library.Group, 11));
 };
 
 
 /** @param {!Array.<!proto.library.Group>} value */
 proto.library.Course.prototype.setGroupsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 10, value);
+  jspb.Message.setRepeatedWrapperField(this, 11, value);
 };
 
 
@@ -3396,7 +3442,7 @@ proto.library.Course.prototype.setGroupsList = function(value) {
  * @return {!proto.library.Group}
  */
 proto.library.Course.prototype.addGroups = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 10, opt_value, proto.library.Group, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 11, opt_value, proto.library.Group, opt_index);
 };
 
 

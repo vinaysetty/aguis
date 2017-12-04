@@ -316,14 +316,15 @@ func TestGormDBAcceptRejectEnrollment(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("courseUserEnrollments: %v", courseUserEnrollments)
+	if courseUserEnrollments.Status != pb.Enrollment_Pending {
+		t.Fatalf("have %v want pending enrollment", courseUserEnrollments.Status)
+	}
 
 	// Get course's pending enrollments.
 	pendingEnrollments, err := db.GetEnrollmentsByCourse(course.ID, pb.Enrollment_Pending)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if len(pendingEnrollments) != 1 && pendingEnrollments[0].Status == pb.Enrollment_Pending {
 		t.Fatalf("have %v want 1 pending enrollment", pendingEnrollments)
 	}
@@ -338,7 +339,6 @@ func TestGormDBAcceptRejectEnrollment(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if len(acceptedEnrollments) != 1 && acceptedEnrollments[0].Status == pb.Enrollment_Student {
 		t.Fatalf("have %v want 1 accepted enrollment", acceptedEnrollments)
 	}
@@ -353,7 +353,6 @@ func TestGormDBAcceptRejectEnrollment(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if len(rejectedEnrollments) != 1 && rejectedEnrollments[0].Status == pb.Enrollment_Rejected {
 		t.Fatalf("have %v want 1 rejected enrollment", rejectedEnrollments)
 	}

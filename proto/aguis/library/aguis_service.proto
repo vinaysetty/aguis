@@ -4,7 +4,9 @@ package library;
 
 message Enrollment {
     uint64 ID = 1;
+    //gorm:"unique_index:uid_user_course"
     uint64 courseID = 2;
+    //gorm:"unique_index:uid_user_course"
     uint64 userID = 3;
     uint64 groupID = 4;
     User user = 5;
@@ -38,9 +40,12 @@ message User {
 
 message RemoteIdentity {
     uint64 ID = 1;
+    //gorm:"unique_index:uid_provider_remote_id"
     string provider = 2;
+    //gorm:"unique_index:uid_provider_remote_id"
     uint64 remoteID = 3;
-    string accessToken = 4; // TODO: should this be included here?
+    // TODO: should this be included here?
+    string accessToken = 4;
     uint64 userID = 5;
 }
 
@@ -88,8 +93,10 @@ message Assignments {
 message Group {
     uint64 ID = 1;
     // group name under the same course must be unique
+    //gorm:"unique_index:idx_unique_group_name"
     string name = 2;
     uint32 status = 3;
+    //gorm:"unique_index:idx_unique_group_name"
     uint64 CourseID = 4;
     repeated User Users = 5;
     repeated Enrollment Enrollments = 6;
@@ -104,8 +111,9 @@ message Course {
     string provider = 6;
     uint64 directoryID = 7;
     Enrollment.Status enrolled = 8;
-    repeated Assignment assignments = 9;
-    repeated Group groups = 10;
+    repeated Enrollment enrollments = 9;
+    repeated Assignment assignments = 10;
+    repeated Group groups = 11;
 }
 
 message Courses {
@@ -130,7 +138,6 @@ message UpdateEnrollmentRequest {
     uint64 courseID = 2;
     int32 status = 3;
 }
-
 
 service AutograderService {
     rpc GetUser (GetRecordRequest) returns (User) {}

@@ -397,7 +397,6 @@ func (db *GormDB) GetEnrollmentByCourseAndUser(cid uint64, uid uint64) (*pb.Enro
 }
 
 func (db *GormDB) setEnrollment(uid, cid uint64, status pb.Enrollment_Status) error {
-	//TODO Can't do >
 	if status > pb.Enrollment_Teacher {
 		panic("invalid status")
 	}

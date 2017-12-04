@@ -444,6 +444,11 @@ export class Course extends jspb.Message {
   getEnrolled(): Enrollment.Status;
   setEnrolled(value: Enrollment.Status): void;
 
+  clearEnrollmentsList(): void;
+  getEnrollmentsList(): Array<Enrollment>;
+  setEnrollmentsList(value: Array<Enrollment>): void;
+  addEnrollments(value?: Enrollment, index?: number): Enrollment;
+
   clearAssignmentsList(): void;
   getAssignmentsList(): Array<Assignment>;
   setAssignmentsList(value: Array<Assignment>): void;
@@ -474,6 +479,7 @@ export namespace Course {
     provider: string,
     directoryid: number,
     enrolled: Enrollment.Status,
+    enrollmentsList: Array<Enrollment.AsObject>,
     assignmentsList: Array<Assignment.AsObject>,
     groupsList: Array<Group.AsObject>,
   }
