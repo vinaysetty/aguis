@@ -16,9 +16,6 @@ export class Enrollment extends jspb.Message {
   getGroupid(): number;
   setGroupid(value: number): void;
 
-  getStatus(): number;
-  setStatus(value: number): void;
-
   hasUser(): boolean;
   clearUser(): void;
   getUser(): User | undefined;
@@ -33,6 +30,9 @@ export class Enrollment extends jspb.Message {
   clearGroup(): void;
   getGroup(): Group | undefined;
   setGroup(value?: Group): void;
+
+  getStatus(): Enrollment.Status;
+  setStatus(value: Enrollment.Status): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Enrollment.AsObject;
@@ -50,10 +50,18 @@ export namespace Enrollment {
     courseid: number,
     userid: number,
     groupid: number,
-    status: number,
     user?: User.AsObject,
     course?: Course.AsObject,
     group?: Group.AsObject,
+    status: Enrollment.Status,
+  }
+
+  export enum Status {
+    None = 0,
+    Pending = 1,
+    Rejected = 2,
+    Student = 3,
+    Teacher = 4,
   }
 }
 
@@ -98,6 +106,11 @@ export class User extends jspb.Message {
   getAvatarurl(): string;
   setAvatarurl(value: string): void;
 
+  clearRemoteidentitiesList(): void;
+  getRemoteidentitiesList(): Array<RemoteIdentity>;
+  setRemoteidentitiesList(value: Array<RemoteIdentity>): void;
+  addRemoteidentities(value?: RemoteIdentity, index?: number): RemoteIdentity;
+
   clearEnrollmentsList(): void;
   getEnrollmentsList(): Array<Enrollment>;
   setEnrollmentsList(value: Array<Enrollment>): void;
@@ -121,7 +134,44 @@ export namespace User {
     studentid: string,
     email: string,
     avatarurl: string,
+    remoteidentitiesList: Array<RemoteIdentity.AsObject>,
     enrollmentsList: Array<Enrollment.AsObject>,
+  }
+}
+
+export class RemoteIdentity extends jspb.Message {
+  getId(): number;
+  setId(value: number): void;
+
+  getProvider(): string;
+  setProvider(value: string): void;
+
+  getRemoteid(): number;
+  setRemoteid(value: number): void;
+
+  getAccesstoken(): string;
+  setAccesstoken(value: string): void;
+
+  getUserid(): number;
+  setUserid(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RemoteIdentity.AsObject;
+  static toObject(includeInstance: boolean, msg: RemoteIdentity): RemoteIdentity.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: RemoteIdentity, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RemoteIdentity;
+  static deserializeBinaryFromReader(message: RemoteIdentity, reader: jspb.BinaryReader): RemoteIdentity;
+}
+
+export namespace RemoteIdentity {
+  export type AsObject = {
+    id: number,
+    provider: string,
+    remoteid: number,
+    accesstoken: string,
+    userid: number,
   }
 }
 
@@ -326,6 +376,28 @@ export namespace Assignments {
 }
 
 export class Group extends jspb.Message {
+  getId(): number;
+  setId(value: number): void;
+
+  getName(): string;
+  setName(value: string): void;
+
+  getStatus(): number;
+  setStatus(value: number): void;
+
+  getCourseid(): number;
+  setCourseid(value: number): void;
+
+  clearUsersList(): void;
+  getUsersList(): Array<User>;
+  setUsersList(value: Array<User>): void;
+  addUsers(value?: User, index?: number): User;
+
+  clearEnrollmentsList(): void;
+  getEnrollmentsList(): Array<Enrollment>;
+  setEnrollmentsList(value: Array<Enrollment>): void;
+  addEnrollments(value?: Enrollment, index?: number): Enrollment;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Group.AsObject;
   static toObject(includeInstance: boolean, msg: Group): Group.AsObject;
@@ -338,6 +410,12 @@ export class Group extends jspb.Message {
 
 export namespace Group {
   export type AsObject = {
+    id: number,
+    name: string,
+    status: number,
+    courseid: number,
+    usersList: Array<User.AsObject>,
+    enrollmentsList: Array<Enrollment.AsObject>,
   }
 }
 
@@ -363,8 +441,8 @@ export class Course extends jspb.Message {
   getDirectoryid(): number;
   setDirectoryid(value: number): void;
 
-  getEnrolled(): number;
-  setEnrolled(value: number): void;
+  getEnrolled(): Enrollment.Status;
+  setEnrolled(value: Enrollment.Status): void;
 
   clearAssignmentsList(): void;
   getAssignmentsList(): Array<Assignment>;
@@ -395,7 +473,7 @@ export namespace Course {
     tag: string,
     provider: string,
     directoryid: number,
-    enrolled: number,
+    enrolled: Enrollment.Status,
     assignmentsList: Array<Assignment.AsObject>,
     groupsList: Array<Group.AsObject>,
   }
