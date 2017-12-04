@@ -121,8 +121,8 @@ message Courses {
 }
 
 message RecordWithStatusRequest {
-    uint64 ID = 1; // id can be User ID or Course ID depending
-    string state = 2;
+    uint64 ID = 1; // id can be User ID or Course ID depending //TODO NO! They should be different messages
+    string state = 2; // TODO Avoid string types that are parsed! Use 'repeated Enrollment.Status statuses'
 }
 
 message UserIDCourseID {

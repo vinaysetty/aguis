@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/autograde/aguis/models"
+	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
 	"github.com/labstack/echo"
 )
 
@@ -33,28 +33,31 @@ var errInvalidStatus = echo.NewHTTPError(http.StatusBadRequest, "invalid status 
 
 // parseEnrollmentStatus takes a string of comma separated status values
 // and returns a slice of the corresponding status constants.
-func parseEnrollmentStatus(s string) ([]uint, error) {
+// TODO This function should be deleted and replaced with proper type safe handling without strings
+// The RecordWithStatusRequest should pass []Enrollment_Status instead of State - to make it type safe.
+// That is, we won't need to parse the requst.State object.
+func parseEnrollmentStatus(s string) ([]pb.Enrollment_Status, error) {
 	if s == "" {
-		return []uint{}, nil
+		return []pb.Enrollment_Status{}, nil
 	}
 
 	ss := strings.Split(s, ",")
 	if len(ss) > 4 {
-		return []uint{}, errInvalidStatus
+		return []pb.Enrollment_Status{}, errInvalidStatus
 	}
-	var statuses []uint
+	var statuses []pb.Enrollment_Status
 	for _, s := range ss {
 		switch s {
 		case "pending":
-			statuses = append(statuses, models.Pending)
+			statuses = append(statuses, pb.Enrollment_Pending)
 		case "rejected":
-			statuses = append(statuses, models.Rejected)
+			statuses = append(statuses, pb.Enrollment_Rejected)
 		case "student":
-			statuses = append(statuses, models.Student)
+			statuses = append(statuses, pb.Enrollment_Student)
 		case "teacher":
-			statuses = append(statuses, models.Teacher)
+			statuses = append(statuses, pb.Enrollment_Teacher)
 		default:
-			return []uint{}, errInvalidStatus
+			return []pb.Enrollment_Status{}, errInvalidStatus
 		}
 	}
 	return statuses, nil

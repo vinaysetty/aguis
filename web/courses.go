@@ -71,49 +71,38 @@ type UpdateGroupRequest struct {
 
 // ListCourses returns a JSON object containing all the courses in the database.
 func ListCourses(db database.Database) (*pb.Courses, error) {
-	var results []*pb.Course
 	courses, err := db.GetCourses()
 	if err != nil {
 		return nil, err
 	}
-	for _, course := range courses {
-		results = append(results, toProtoCourse(course))
-	}
-	return &pb.Courses{Courses: results}, nil
+	return &pb.Courses{Courses: courses}, nil
 }
 
 // ListCoursesWithEnrollment lists all existing courses with the provided users
 // enrollment status.
 // If status query param is provided, lists only courses of the student filtered by the query param.
 func ListCoursesWithEnrollment(request *pb.RecordWithStatusRequest, db database.Database) (*pb.Courses, error) {
-	var results []*pb.Course
-	id := request.Id
+	//TODO We should fix the RecordWithStatusRequest to pass Enrollment_Status instead of State - to make it type safe.
+	// That is, we won't need to parse the requst.State object.
 	statuses, err := parseEnrollmentStatus(request.State)
 	if err != nil {
 		return nil, err
 	}
 
-	courses, err := db.GetCoursesByUser(id, statuses...)
+	courses, err := db.GetCoursesByUser(request.ID, statuses...)
 	if err != nil {
 		return nil, err
 	}
-	for _, course := range courses {
-		results = append(results, toProtoCourse(course))
-	}
-	return &pb.Courses{Courses: results}, nil
+	return &pb.Courses{Courses: courses}, nil
 }
 
 // ListAssignments lists the assignments for the provided course.
 func ListAssignments(request *pb.GetRecordRequest, db database.Database) (*pb.Assignments, error) {
-	var results []*pb.Assignment
-	assignments, err := db.GetAssignmentsByCourse(request.Id)
+	assignments, err := db.GetAssignmentsByCourse(request.ID)
 	if err != nil {
 		return nil, err
 	}
-	for _, asg := range assignments {
-		results = append(results, toProtoAssignment(asg))
-	}
-	return &pb.Assignments{Assignments: results}, nil
+	return &pb.Assignments{Assignments: assignments}, nil
 }
 
 // Default repository names.
@@ -137,29 +126,23 @@ type BaseHookOptions struct {
 // NewCourse creates a new course and associates it with a directory (organization in github)
 // and creates the repositories for the course.
 func NewCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
+	//TODO this NewCourseRequest can be removed when pb.Course is moved to models
+	//  and the associated valid() function is moved there as well. (or we could use some other validator function.)
 	newcrs := NewCourseRequest{
 		Name:        crs.Name,
 		Code:        crs.Code,
 		Year:        uint(crs.Year),
 		Tag:         crs.Tag,
 		Provider:    crs.Provider,
-		DirectoryID: crs.Directoryid,
+		DirectoryID: crs.DirectoryID,
 	}
 	if !newcrs.valid() {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid payload")
 	}
 
 	// TODO CreateCourse and CreateEnrollment should be combined into a method with transactions.
-	course := models.Course{
-		Name:        crs.Name,
-		Code:        crs.Code,
-		Year:        uint(crs.Year),
-		Tag:         crs.Tag,
-		Provider:    crs.Provider,
-		DirectoryID: crs.Directoryid,
-	}
 
-	if err := db.CreateCourse(&course); err != nil {
+	if err := db.CreateCourse(crs); err != nil {
 		if err == database.ErrCourseExists {
 			return nil, status.Errorf(codes.AlreadyExists, err.Error())
 		}
@@ -172,29 +155,26 @@ func NewCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "login user not found")
 	}
-	if err := db.CreateEnrollment(&models.Enrollment{
+	if err := db.CreateEnrollment(&pb.Enrollment{
 		UserID:   user.ID,
-		CourseID: course.ID,
+		CourseID: crs.ID,
 	}); err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, status.Errorf(codes.NotFound, err.Error())
 		}
 		return nil, err
 	}
-	if err := db.EnrollTeacher(user.ID, course.ID); err != nil {
+	if err := db.EnrollTeacher(user.ID, crs.ID); err != nil {
 		return nil, err
 	}
-	return toProtoCourse(&course), nil
+	return crs, nil
 }
 
 // CreateEnrollment enrolls a user in a course.
 func CreateEnrollment(ucid *pb.UserIDCourseID, db database.Database) (*pb.StatusCode, error) {
-	userID := ucid.Userid
-	courseID := ucid.Courseid
-
-	enrollment := models.Enrollment{
-		UserID:   userID,
-		CourseID: courseID,
+	enrollment := pb.Enrollment{
+		UserID:   ucid.UserID,
+		CourseID: ucid.CourseID,
 	}
 	if err := db.CreateEnrollment(&enrollment); err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -208,10 +188,12 @@ func CreateEnrollment(ucid *pb.UserIDCourseID, db database.Database) (*pb.Status
 
 // UpdateEnrollment accepts or rejects a user to enroll in a course.
 func UpdateEnrollment(req *pb.UpdateEnrollmentRequest, db database.Database) (*pb.StatusCode, error) {
-	userID := req.Userid
-	courseID := req.Courseid
+	userID := req.UserID
+	courseID := req.CourseID
 	enroll_status := uint(req.Status)
-	if enroll_status > models.Teacher || userID == 0 || courseID == 0 {
+	//TODO Make UpdateEnrollmentRequest use Enrollment_Status to make it type safe
+	// TODO Make validation take place as method on UpdateEnrollmentRequest and so on...
+	if enroll_status > pb.Enrollment_Teacher || userID == 0 || courseID == 0 {
 		return &pb.StatusCode{Statuscode: int32(codes.InvalidArgument)},
 			status.Errorf(codes.InvalidArgument, "invalid payload")
 	}
@@ -234,7 +216,7 @@ func UpdateEnrollment(req *pb.UpdateEnrollmentRequest, db database.Database) (*p
 			status.Errorf(codes.PermissionDenied, "unauthorized")
 	}
 
-	// TODO If the enrollment is accepted, create repositories with webooks.
+	//TODO make these use pb.Enrollment_Status
 	switch enroll_status {
 	case models.Student:
 		err = db.EnrollStudent(userID, courseID)
@@ -246,12 +228,14 @@ func UpdateEnrollment(req *pb.UpdateEnrollmentRequest, db database.Database) (*p
 	if err != nil {
 		return &pb.StatusCode{Statuscode: int32(codes.Aborted)}, err
 	}
+	// TODO If the enrollment is accepted, create repositories with webooks.
+
 	return &pb.StatusCode{Statuscode: int32(codes.OK)}, nil
 }
 
 // GetCourse find course by id and return JSON object.
 func GetCourse(query *pb.GetRecordRequest, db database.Database) (*pb.Course, error) {
-	course, err := db.GetCourse(query.Id)
+	course, err := db.GetCourse(query.ID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, status.Errorf(codes.NotFound, "Course not found")
@@ -259,8 +243,7 @@ func GetCourse(query *pb.GetRecordRequest, db database.Database) (*pb.Course, er
 		return nil, err
 
 	}
-
-	return toProtoCourse(course), nil
+	return course, nil
 }
 
 // RefreshCourse refreshes the information to a course
@@ -370,6 +353,7 @@ func GetCourse(query *pb.GetRecordRequest, db database.Database) (*pb.Course, er
 //	return remoteID, nil
 //}
 
+//TODO This does not appear to be used anymore; can it be deleted??
 func createAssignment(request *yamlparser.NewAssignmentRequest, course *models.Course) (*models.Assignment, error) {
 	date, err := time.Parse("02-01-2006 15:04", request.Deadline)
 	if err != nil {
@@ -435,7 +419,7 @@ func createAssignment(request *yamlparser.NewAssignmentRequest, course *models.C
 
 // UpdateCourse updates an existing course
 func UpdateCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
-	course, err := db.GetCourse(crs.Id)
+	course, err := db.GetCourse(crs.ID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, status.Errorf(codes.NotFound, "Course not found")
@@ -449,32 +433,28 @@ func UpdateCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
 		Year:        uint(crs.Year),
 		Tag:         crs.Tag,
 		Provider:    crs.Provider,
-		DirectoryID: crs.Directoryid,
+		DirectoryID: crs.DirectoryID,
 	}
 	if !newcrs.valid() {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid payload")
 	}
 
-	course.Name = crs.Name
-	course.Code = crs.Code
-	course.Year = uint(crs.Year)
-	course.Tag = crs.Tag
-	course.Provider = crs.Provider
-	course.DirectoryID = crs.Directoryid
 	if err := db.UpdateCourse(course); err != nil {
 		return nil, err
 	}
-	return toProtoCourse(course), nil
+	return course, nil
 }
 
 // GetEnrollmentsByCourse get all enrollments for a course.
 func GetEnrollmentsByCourse(request *pb.RecordWithStatusRequest, db database.Database) (*pb.EnrollemntResponse, error) {
+	//TODO We should fix the RecordWithStatusRequest to pass Enrollment_Status instead of State - to make it type safe.
+	// That is, we won't need to parse the requst.State object.
 	statuses, err := parseEnrollmentStatus(request.State)
 	if err != nil {
 		return nil, err
 	}
 
-	enrollments, err := db.GetEnrollmentsByCourse(request.Id, statuses...)
+	enrollments, err := db.GetEnrollmentsByCourse(request.ID, statuses...)
 	if err != nil {
 		return nil, err
 	}
@@ -485,12 +465,7 @@ func GetEnrollmentsByCourse(request *pb.RecordWithStatusRequest, db database.Dat
 			return nil, err
 		}
 	}
-
-	var results []*pb.Enrollment
-	for _, enroll := range enrollments {
-		results = append(results, toProtoEnrollment(enroll))
-	}
-	return &pb.EnrollemntResponse{Enrollments: results}, nil
+	return &pb.EnrollemntResponse{Enrollments: enrollments}, nil
 }
 
 // NewGroup creates a new group under a course
