@@ -7,6 +7,7 @@ import (
 
 	"github.com/autograde/aguis/database"
 	"github.com/autograde/aguis/logger"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/sirupsen/logrus"
 )
 

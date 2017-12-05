@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/autograde/aguis/models"
+	pb "github.com/autograde/aguis/ag"
 	"github.com/autograde/aguis/web"
 	"github.com/labstack/echo"
 	_ "github.com/mattn/go-sqlite3"
@@ -20,7 +20,7 @@ func TestDeleteGroup(t *testing.T) {
 	defer cleanup()
 
 	// Create course.
-	testCourse := models.Course{
+	testCourse := pb.Course{
 		Name:        "Distributed Systems",
 		Code:        "DAT520",
 		Year:        2018,
@@ -33,15 +33,15 @@ func TestDeleteGroup(t *testing.T) {
 	}
 
 	// Create user.
-	var user models.User
+	var user pb.User
 	if err := db.CreateUserFromRemoteIdentity(
-		&user, &models.RemoteIdentity{},
+		&user, &pb.RemoteIdentity{},
 	); err != nil {
 		t.Fatal(err)
 	}
 
 	// Create enrollment.
-	if err := db.CreateEnrollment(&models.Enrollment{
+	if err := db.CreateEnrollment(&pb.Enrollment{
 		UserID:   user.ID,
 		CourseID: testCourse.ID,
 	}); err != nil {
@@ -52,7 +52,7 @@ func TestDeleteGroup(t *testing.T) {
 	}
 
 	// Create group.
-	group := models.Group{CourseID: testCourse.ID}
+	group := pb.Group{CourseID: testCourse.ID}
 	if err := db.CreateGroup(&group); err != nil {
 		t.Fatal(err)
 	}
@@ -76,5 +76,4 @@ func TestDeleteGroup(t *testing.T) {
 	}
 
 	assertCode(t, w.Code, http.StatusOK)
-
 }

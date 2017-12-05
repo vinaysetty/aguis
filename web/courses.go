@@ -138,7 +138,7 @@ func NewCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
 	}
 
 	// Automatically enroll the teacher creating the course
-	// TODO get logged in user in stead of hard coding
+	// TODO get logged in user instead of hard coding
 	user, err := db.GetUser(1)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "login user not found")

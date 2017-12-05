@@ -37,15 +37,21 @@ func GetUser(query *pb.RecordRequest, db database.Database) (*pb.User, error) {
 		}
 		return nil, err
 	}
+	// Remove access token for user
+	for _, remoteID := range user.GetRemoteIdentities() {
+		remoteID.AccessToken = ""
+	}
 	return user, nil
 }
 
 // GetUsers returns all the users in the database.
 func GetUsers(db database.Database) (*pb.Users, error) {
+	// This call does not preload the remote identities,
+	// and therefore we do not need to remove the access token.
 	users, err := db.GetUsers()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, status.Errorf(codes.NotFound, "Users not found")
+			return nil, status.Errorf(codes.NotFound, "No users found")
 		}
 		return nil, err
 	}
@@ -58,12 +64,21 @@ func UpdateUser(userReq *pb.User, db database.Database) (*pb.User, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	user.Name = userReq.Name
-	user.Email = userReq.Email
-	user.AvatarURL = userReq.AvatarURL
-	user.StudentID = userReq.StudentID
-	user.IsAdmin = userReq.IsAdmin
+	if userReq.Name != "" {
+		user.Name = userReq.Name
+	}
+	if userReq.StudentID != "" {
+		user.StudentID = userReq.StudentID
+	}
+	if userReq.Email != "" {
+		user.Email = userReq.Email
+	}
+	if userReq.AvatarURL != "" {
+		user.AvatarURL = userReq.AvatarURL
+	}
+	if userReq.IsAdmin {
+		user.IsAdmin = userReq.IsAdmin
+	}
 	if err := db.UpdateUser(user); err != nil {
 		return nil, err
 	}
