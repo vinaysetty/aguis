@@ -79,9 +79,9 @@ func ListCourses(db database.Database) (*pb.Courses, error) {
 func ListCoursesWithEnrollment(request *pb.RecordWithStatusRequest, db database.Database) (*pb.Courses, error) {
 	//TODO Not sure we need this nil check?? Make test case to check if we need it. Maybe database query will do the right thing, even with nil input for the statuses argument.
 	statuses := request.GetStatuses()
-	if statuses == nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid status query")
-	}
+	// if statuses == nil {
+	// 	return nil, status.Errorf(codes.InvalidArgument, "invalid status query")
+	// }
 
 	courses, err := db.GetCoursesByUser(request.ID, statuses...)
 	if err != nil {
