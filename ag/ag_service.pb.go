@@ -153,9 +153,9 @@ func (m *User) GetEnrollments() []*Enrollment {
 type RemoteIdentity struct {
 	ID uint64 `protobuf:"varint,1,opt,name=ID" json:"ID,omitempty"`
 	// gorm:"unique_index:uid_provider_remote_id"
-	Provider string `protobuf:"bytes,2,opt,name=provider" json:"provider,omitempty"`
+	Provider string `protobuf:"bytes,2,opt,name=provider" json:"provider,omitempty" gorm:"unique_index:uid_provider_remote_id"`
 	// gorm:"unique_index:uid_provider_remote_id"
-	RemoteID uint64 `protobuf:"varint,3,opt,name=remoteID" json:"remoteID,omitempty"`
+	RemoteID uint64 `protobuf:"varint,3,opt,name=remoteID" json:"remoteID,omitempty" gorm:"unique_index:uid_provider_remote_id"`
 	// TODO: should this be included here?
 	AccessToken string `protobuf:"bytes,4,opt,name=accessToken" json:"accessToken,omitempty"`
 	UserID      uint64 `protobuf:"varint,5,opt,name=userID" json:"userID,omitempty"`
@@ -407,10 +407,10 @@ type Group struct {
 	ID uint64 `protobuf:"varint,1,opt,name=ID" json:"ID,omitempty"`
 	// group name under the same course must be unique
 	// gorm:"unique_index:idx_unique_group_name"
-	Name   string            `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
+	Name   string            `protobuf:"bytes,2,opt,name=name" json:"name,omitempty" gorm:"unique_index:idx_unique_group_name"`
 	Status Enrollment_Status `protobuf:"varint,3,opt,name=status,enum=ag.Enrollment_Status" json:"status,omitempty"`
 	// gorm:"unique_index:idx_unique_group_name"
-	CourseID    uint64        `protobuf:"varint,4,opt,name=CourseID" json:"CourseID,omitempty"`
+	CourseID    uint64        `protobuf:"varint,4,opt,name=CourseID" json:"CourseID,omitempty" gorm:"unique_index:idx_unique_group_name"`
 	Users       []*User       `protobuf:"bytes,5,rep,name=Users" json:"Users,omitempty"`
 	Enrollments []*Enrollment `protobuf:"bytes,6,rep,name=Enrollments" json:"Enrollments,omitempty"`
 }
@@ -577,9 +577,9 @@ func (m *Courses) GetCourses() []*Course {
 type Enrollment struct {
 	ID uint64 `protobuf:"varint,1,opt,name=ID" json:"ID,omitempty"`
 	// gorm:"unique_index:uid_user_course"
-	CourseID uint64 `protobuf:"varint,2,opt,name=courseID" json:"courseID,omitempty"`
+	CourseID uint64 `protobuf:"varint,2,opt,name=courseID" json:"courseID,omitempty" gorm:"unique_index:uid_user_course"`
 	// gorm:"unique_index:uid_user_course"
-	UserID  uint64            `protobuf:"varint,3,opt,name=userID" json:"userID,omitempty"`
+	UserID  uint64            `protobuf:"varint,3,opt,name=userID" json:"userID,omitempty" gorm:"unique_index:uid_user_course"`
 	GroupID uint64            `protobuf:"varint,4,opt,name=groupID" json:"groupID,omitempty"`
 	User    *User             `protobuf:"bytes,5,opt,name=user" json:"user,omitempty"`
 	Course  *Course           `protobuf:"bytes,6,opt,name=course" json:"course,omitempty"`
