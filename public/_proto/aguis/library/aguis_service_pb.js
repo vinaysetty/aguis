@@ -11,24 +11,24 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
 
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.exportSymbol('proto.library.Assignment', null, global);
 goog.exportSymbol('proto.library.Assignments', null, global);
 goog.exportSymbol('proto.library.Course', null, global);
 goog.exportSymbol('proto.library.Courses', null, global);
-goog.exportSymbol('proto.library.EnrollemntResponse', null, global);
 goog.exportSymbol('proto.library.Enrollment', null, global);
 goog.exportSymbol('proto.library.Enrollment.Status', null, global);
-goog.exportSymbol('proto.library.GetRecordRequest', null, global);
+goog.exportSymbol('proto.library.EnrollmentRequest', null, global);
+goog.exportSymbol('proto.library.EnrollmentResponse', null, global);
 goog.exportSymbol('proto.library.Group', null, global);
+goog.exportSymbol('proto.library.RecordRequest', null, global);
 goog.exportSymbol('proto.library.RecordWithStatusRequest', null, global);
 goog.exportSymbol('proto.library.RemoteIdentity', null, global);
 goog.exportSymbol('proto.library.StatusCode', null, global);
 goog.exportSymbol('proto.library.Submission', null, global);
-goog.exportSymbol('proto.library.UpdateEnrollmentRequest', null, global);
-goog.exportSymbol('proto.library.UpdateUserRequest', null, global);
 goog.exportSymbol('proto.library.User', null, global);
 goog.exportSymbol('proto.library.UserIDCourseID', null, global);
-goog.exportSymbol('proto.library.UsersResponse', null, global);
+goog.exportSymbol('proto.library.Users', null, global);
 goog.exportSymbol('proto.library.Void', null, global);
 
 /**
@@ -269,7 +269,7 @@ proto.library.Enrollment.prototype.getId = function() {
 
 /** @param {number} value */
 proto.library.Enrollment.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -284,7 +284,7 @@ proto.library.Enrollment.prototype.getCourseid = function() {
 
 /** @param {number} value */
 proto.library.Enrollment.prototype.setCourseid = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -299,7 +299,7 @@ proto.library.Enrollment.prototype.getUserid = function() {
 
 /** @param {number} value */
 proto.library.Enrollment.prototype.setUserid = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -314,7 +314,7 @@ proto.library.Enrollment.prototype.getGroupid = function() {
 
 /** @param {number} value */
 proto.library.Enrollment.prototype.setGroupid = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -419,7 +419,7 @@ proto.library.Enrollment.prototype.getStatus = function() {
 
 /** @param {!proto.library.Enrollment.Status} value */
 proto.library.Enrollment.prototype.setStatus = function(value) {
-  jspb.Message.setProto3EnumField(this, 8, value);
+  jspb.Message.setField(this, 8, value);
 };
 
 
@@ -434,19 +434,19 @@ proto.library.Enrollment.prototype.setStatus = function(value) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.library.EnrollemntResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.library.EnrollemntResponse.repeatedFields_, null);
+proto.library.EnrollmentResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.library.EnrollmentResponse.repeatedFields_, null);
 };
-goog.inherits(proto.library.EnrollemntResponse, jspb.Message);
+goog.inherits(proto.library.EnrollmentResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.library.EnrollemntResponse.displayName = 'proto.library.EnrollemntResponse';
+  proto.library.EnrollmentResponse.displayName = 'proto.library.EnrollmentResponse';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.library.EnrollemntResponse.repeatedFields_ = [1];
+proto.library.EnrollmentResponse.repeatedFields_ = [1];
 
 
 
@@ -461,8 +461,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.library.EnrollemntResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.library.EnrollemntResponse.toObject(opt_includeInstance, this);
+proto.library.EnrollmentResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.library.EnrollmentResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -471,11 +471,11 @@ proto.library.EnrollemntResponse.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.library.EnrollemntResponse} msg The msg instance to transform.
+ * @param {!proto.library.EnrollmentResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.library.EnrollemntResponse.toObject = function(includeInstance, msg) {
+proto.library.EnrollmentResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     enrollmentsList: jspb.Message.toObjectList(msg.getEnrollmentsList(),
     proto.library.Enrollment.toObject, includeInstance)
@@ -492,23 +492,23 @@ proto.library.EnrollemntResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.library.EnrollemntResponse}
+ * @return {!proto.library.EnrollmentResponse}
  */
-proto.library.EnrollemntResponse.deserializeBinary = function(bytes) {
+proto.library.EnrollmentResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.library.EnrollemntResponse;
-  return proto.library.EnrollemntResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.library.EnrollmentResponse;
+  return proto.library.EnrollmentResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.library.EnrollemntResponse} msg The message object to deserialize into.
+ * @param {!proto.library.EnrollmentResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.library.EnrollemntResponse}
+ * @return {!proto.library.EnrollmentResponse}
  */
-proto.library.EnrollemntResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.library.EnrollmentResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -533,9 +533,9 @@ proto.library.EnrollemntResponse.deserializeBinaryFromReader = function(msg, rea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.library.EnrollemntResponse.prototype.serializeBinary = function() {
+proto.library.EnrollmentResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.library.EnrollemntResponse.serializeBinaryToWriter(this, writer);
+  proto.library.EnrollmentResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -543,11 +543,11 @@ proto.library.EnrollemntResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.library.EnrollemntResponse} message
+ * @param {!proto.library.EnrollmentResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.library.EnrollemntResponse.serializeBinaryToWriter = function(message, writer) {
+proto.library.EnrollmentResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getEnrollmentsList();
   if (f.length > 0) {
@@ -564,14 +564,14 @@ proto.library.EnrollemntResponse.serializeBinaryToWriter = function(message, wri
  * repeated Enrollment enrollments = 1;
  * @return {!Array.<!proto.library.Enrollment>}
  */
-proto.library.EnrollemntResponse.prototype.getEnrollmentsList = function() {
+proto.library.EnrollmentResponse.prototype.getEnrollmentsList = function() {
   return /** @type{!Array.<!proto.library.Enrollment>} */ (
     jspb.Message.getRepeatedWrapperField(this, proto.library.Enrollment, 1));
 };
 
 
 /** @param {!Array.<!proto.library.Enrollment>} value */
-proto.library.EnrollemntResponse.prototype.setEnrollmentsList = function(value) {
+proto.library.EnrollmentResponse.prototype.setEnrollmentsList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
@@ -581,12 +581,12 @@ proto.library.EnrollemntResponse.prototype.setEnrollmentsList = function(value) 
  * @param {number=} opt_index
  * @return {!proto.library.Enrollment}
  */
-proto.library.EnrollemntResponse.prototype.addEnrollments = function(opt_value, opt_index) {
+proto.library.EnrollmentResponse.prototype.addEnrollments = function(opt_value, opt_index) {
   return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.library.Enrollment, opt_index);
 };
 
 
-proto.library.EnrollemntResponse.prototype.clearEnrollmentsList = function() {
+proto.library.EnrollmentResponse.prototype.clearEnrollmentsList = function() {
   this.setEnrollmentsList([]);
 };
 
@@ -826,7 +826,7 @@ proto.library.User.prototype.getId = function() {
 
 /** @param {number} value */
 proto.library.User.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -843,7 +843,7 @@ proto.library.User.prototype.getIsadmin = function() {
 
 /** @param {boolean} value */
 proto.library.User.prototype.setIsadmin = function(value) {
-  jspb.Message.setProto3BooleanField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -858,7 +858,7 @@ proto.library.User.prototype.getName = function() {
 
 /** @param {string} value */
 proto.library.User.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -873,7 +873,7 @@ proto.library.User.prototype.getStudentid = function() {
 
 /** @param {string} value */
 proto.library.User.prototype.setStudentid = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -888,7 +888,7 @@ proto.library.User.prototype.getEmail = function() {
 
 /** @param {string} value */
 proto.library.User.prototype.setEmail = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  jspb.Message.setField(this, 5, value);
 };
 
 
@@ -903,7 +903,7 @@ proto.library.User.prototype.getAvatarurl = function() {
 
 /** @param {string} value */
 proto.library.User.prototype.setAvatarurl = function(value) {
-  jspb.Message.setProto3StringField(this, 6, value);
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -1155,7 +1155,7 @@ proto.library.RemoteIdentity.prototype.getId = function() {
 
 /** @param {number} value */
 proto.library.RemoteIdentity.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -1170,7 +1170,7 @@ proto.library.RemoteIdentity.prototype.getProvider = function() {
 
 /** @param {string} value */
 proto.library.RemoteIdentity.prototype.setProvider = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -1185,7 +1185,7 @@ proto.library.RemoteIdentity.prototype.getRemoteid = function() {
 
 /** @param {number} value */
 proto.library.RemoteIdentity.prototype.setRemoteid = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -1200,7 +1200,7 @@ proto.library.RemoteIdentity.prototype.getAccesstoken = function() {
 
 /** @param {string} value */
 proto.library.RemoteIdentity.prototype.setAccesstoken = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -1215,7 +1215,7 @@ proto.library.RemoteIdentity.prototype.getUserid = function() {
 
 /** @param {number} value */
 proto.library.RemoteIdentity.prototype.setUserid = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  jspb.Message.setField(this, 5, value);
 };
 
 
@@ -1230,19 +1230,19 @@ proto.library.RemoteIdentity.prototype.setUserid = function(value) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.library.UsersResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.library.UsersResponse.repeatedFields_, null);
+proto.library.Users = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.library.Users.repeatedFields_, null);
 };
-goog.inherits(proto.library.UsersResponse, jspb.Message);
+goog.inherits(proto.library.Users, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.library.UsersResponse.displayName = 'proto.library.UsersResponse';
+  proto.library.Users.displayName = 'proto.library.Users';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.library.UsersResponse.repeatedFields_ = [1];
+proto.library.Users.repeatedFields_ = [1];
 
 
 
@@ -1257,8 +1257,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.library.UsersResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.library.UsersResponse.toObject(opt_includeInstance, this);
+proto.library.Users.prototype.toObject = function(opt_includeInstance) {
+  return proto.library.Users.toObject(opt_includeInstance, this);
 };
 
 
@@ -1267,11 +1267,11 @@ proto.library.UsersResponse.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.library.UsersResponse} msg The msg instance to transform.
+ * @param {!proto.library.Users} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.library.UsersResponse.toObject = function(includeInstance, msg) {
+proto.library.Users.toObject = function(includeInstance, msg) {
   var f, obj = {
     usersList: jspb.Message.toObjectList(msg.getUsersList(),
     proto.library.User.toObject, includeInstance)
@@ -1288,23 +1288,23 @@ proto.library.UsersResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.library.UsersResponse}
+ * @return {!proto.library.Users}
  */
-proto.library.UsersResponse.deserializeBinary = function(bytes) {
+proto.library.Users.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.library.UsersResponse;
-  return proto.library.UsersResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.library.Users;
+  return proto.library.Users.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.library.UsersResponse} msg The message object to deserialize into.
+ * @param {!proto.library.Users} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.library.UsersResponse}
+ * @return {!proto.library.Users}
  */
-proto.library.UsersResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.library.Users.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1329,9 +1329,9 @@ proto.library.UsersResponse.deserializeBinaryFromReader = function(msg, reader) 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.library.UsersResponse.prototype.serializeBinary = function() {
+proto.library.Users.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.library.UsersResponse.serializeBinaryToWriter(this, writer);
+  proto.library.Users.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1339,11 +1339,11 @@ proto.library.UsersResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.library.UsersResponse} message
+ * @param {!proto.library.Users} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.library.UsersResponse.serializeBinaryToWriter = function(message, writer) {
+proto.library.Users.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getUsersList();
   if (f.length > 0) {
@@ -1360,14 +1360,14 @@ proto.library.UsersResponse.serializeBinaryToWriter = function(message, writer) 
  * repeated User Users = 1;
  * @return {!Array.<!proto.library.User>}
  */
-proto.library.UsersResponse.prototype.getUsersList = function() {
+proto.library.Users.prototype.getUsersList = function() {
   return /** @type{!Array.<!proto.library.User>} */ (
     jspb.Message.getRepeatedWrapperField(this, proto.library.User, 1));
 };
 
 
 /** @param {!Array.<!proto.library.User>} value */
-proto.library.UsersResponse.prototype.setUsersList = function(value) {
+proto.library.Users.prototype.setUsersList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
@@ -1377,12 +1377,12 @@ proto.library.UsersResponse.prototype.setUsersList = function(value) {
  * @param {number=} opt_index
  * @return {!proto.library.User}
  */
-proto.library.UsersResponse.prototype.addUsers = function(opt_value, opt_index) {
+proto.library.Users.prototype.addUsers = function(opt_value, opt_index) {
   return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.library.User, opt_index);
 };
 
 
-proto.library.UsersResponse.prototype.clearUsersList = function() {
+proto.library.Users.prototype.clearUsersList = function() {
   this.setUsersList([]);
 };
 
@@ -1514,12 +1514,12 @@ proto.library.Void.serializeBinaryToWriter = function(message, writer) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.library.GetRecordRequest = function(opt_data) {
+proto.library.RecordRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.library.GetRecordRequest, jspb.Message);
+goog.inherits(proto.library.RecordRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.library.GetRecordRequest.displayName = 'proto.library.GetRecordRequest';
+  proto.library.RecordRequest.displayName = 'proto.library.RecordRequest';
 }
 
 
@@ -1534,8 +1534,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.library.GetRecordRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.library.GetRecordRequest.toObject(opt_includeInstance, this);
+proto.library.RecordRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.library.RecordRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -1544,11 +1544,11 @@ proto.library.GetRecordRequest.prototype.toObject = function(opt_includeInstance
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.library.GetRecordRequest} msg The msg instance to transform.
+ * @param {!proto.library.RecordRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.library.GetRecordRequest.toObject = function(includeInstance, msg) {
+proto.library.RecordRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
@@ -1564,23 +1564,23 @@ proto.library.GetRecordRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.library.GetRecordRequest}
+ * @return {!proto.library.RecordRequest}
  */
-proto.library.GetRecordRequest.deserializeBinary = function(bytes) {
+proto.library.RecordRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.library.GetRecordRequest;
-  return proto.library.GetRecordRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.library.RecordRequest;
+  return proto.library.RecordRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.library.GetRecordRequest} msg The message object to deserialize into.
+ * @param {!proto.library.RecordRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.library.GetRecordRequest}
+ * @return {!proto.library.RecordRequest}
  */
-proto.library.GetRecordRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.library.RecordRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1604,9 +1604,9 @@ proto.library.GetRecordRequest.deserializeBinaryFromReader = function(msg, reade
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.library.GetRecordRequest.prototype.serializeBinary = function() {
+proto.library.RecordRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.library.GetRecordRequest.serializeBinaryToWriter(this, writer);
+  proto.library.RecordRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1614,11 +1614,11 @@ proto.library.GetRecordRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.library.GetRecordRequest} message
+ * @param {!proto.library.RecordRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.library.GetRecordRequest.serializeBinaryToWriter = function(message, writer) {
+proto.library.RecordRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId();
   if (f !== 0) {
@@ -1634,173 +1634,14 @@ proto.library.GetRecordRequest.serializeBinaryToWriter = function(message, write
  * optional uint64 ID = 1;
  * @return {number}
  */
-proto.library.GetRecordRequest.prototype.getId = function() {
+proto.library.RecordRequest.prototype.getId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /** @param {number} value */
-proto.library.GetRecordRequest.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
-};
-
-
-
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.library.UpdateUserRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.library.UpdateUserRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  proto.library.UpdateUserRequest.displayName = 'proto.library.UpdateUserRequest';
-}
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto suitable for use in Soy templates.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.library.UpdateUserRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.library.UpdateUserRequest.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.library.UpdateUserRequest} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.library.UpdateUserRequest.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    user: (f = msg.getUser()) && proto.library.User.toObject(includeInstance, f)
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.library.UpdateUserRequest}
- */
-proto.library.UpdateUserRequest.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.library.UpdateUserRequest;
-  return proto.library.UpdateUserRequest.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.library.UpdateUserRequest} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.library.UpdateUserRequest}
- */
-proto.library.UpdateUserRequest.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = new proto.library.User;
-      reader.readMessage(value,proto.library.User.deserializeBinaryFromReader);
-      msg.setUser(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.library.UpdateUserRequest.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.library.UpdateUserRequest.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.library.UpdateUserRequest} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.library.UpdateUserRequest.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getUser();
-  if (f != null) {
-    writer.writeMessage(
-      1,
-      f,
-      proto.library.User.serializeBinaryToWriter
-    );
-  }
-};
-
-
-/**
- * optional User User = 1;
- * @return {?proto.library.User}
- */
-proto.library.UpdateUserRequest.prototype.getUser = function() {
-  return /** @type{?proto.library.User} */ (
-    jspb.Message.getWrapperField(this, proto.library.User, 1));
-};
-
-
-/** @param {?proto.library.User|undefined} value */
-proto.library.UpdateUserRequest.prototype.setUser = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
-};
-
-
-proto.library.UpdateUserRequest.prototype.clearUser = function() {
-  this.setUser(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {!boolean}
- */
-proto.library.UpdateUserRequest.prototype.hasUser = function() {
-  return jspb.Message.getField(this, 1) != null;
+proto.library.RecordRequest.prototype.setId = function(value) {
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -1855,7 +1696,7 @@ proto.library.Assignment.toObject = function(includeInstance, msg) {
     courseid: jspb.Message.getFieldWithDefault(msg, 2, 0),
     name: jspb.Message.getFieldWithDefault(msg, 3, ""),
     language: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    deadline: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    deadline: (f = msg.getDeadline()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     autoapprove: jspb.Message.getFieldWithDefault(msg, 6, false),
     order: jspb.Message.getFieldWithDefault(msg, 7, 0),
     submission: (f = msg.getSubmission()) && proto.library.Submission.toObject(includeInstance, f)
@@ -1912,7 +1753,8 @@ proto.library.Assignment.deserializeBinaryFromReader = function(msg, reader) {
       msg.setLanguage(value);
       break;
     case 5:
-      var value = /** @type {string} */ (reader.readString());
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setDeadline(value);
       break;
     case 6:
@@ -1986,10 +1828,11 @@ proto.library.Assignment.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getDeadline();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f != null) {
+    writer.writeMessage(
       5,
-      f
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
   f = message.getAutoapprove();
@@ -2028,7 +1871,7 @@ proto.library.Assignment.prototype.getId = function() {
 
 /** @param {number} value */
 proto.library.Assignment.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -2043,7 +1886,7 @@ proto.library.Assignment.prototype.getCourseid = function() {
 
 /** @param {number} value */
 proto.library.Assignment.prototype.setCourseid = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -2058,7 +1901,7 @@ proto.library.Assignment.prototype.getName = function() {
 
 /** @param {string} value */
 proto.library.Assignment.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -2073,22 +1916,37 @@ proto.library.Assignment.prototype.getLanguage = function() {
 
 /** @param {string} value */
 proto.library.Assignment.prototype.setLanguage = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
 /**
- * optional string deadline = 5;
- * @return {string}
+ * optional google.protobuf.Timestamp deadline = 5;
+ * @return {?proto.google.protobuf.Timestamp}
  */
 proto.library.Assignment.prototype.getDeadline = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 5));
 };
 
 
-/** @param {string} value */
+/** @param {?proto.google.protobuf.Timestamp|undefined} value */
 proto.library.Assignment.prototype.setDeadline = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+proto.library.Assignment.prototype.clearDeadline = function() {
+  this.setDeadline(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.library.Assignment.prototype.hasDeadline = function() {
+  return jspb.Message.getField(this, 5) != null;
 };
 
 
@@ -2105,7 +1963,7 @@ proto.library.Assignment.prototype.getAutoapprove = function() {
 
 /** @param {boolean} value */
 proto.library.Assignment.prototype.setAutoapprove = function(value) {
-  jspb.Message.setProto3BooleanField(this, 6, value);
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -2120,7 +1978,7 @@ proto.library.Assignment.prototype.getOrder = function() {
 
 /** @param {number} value */
 proto.library.Assignment.prototype.setOrder = function(value) {
-  jspb.Message.setProto3IntField(this, 7, value);
+  jspb.Message.setField(this, 7, value);
 };
 
 
@@ -2376,7 +2234,7 @@ proto.library.Submission.prototype.getId = function() {
 
 /** @param {number} value */
 proto.library.Submission.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -2391,7 +2249,7 @@ proto.library.Submission.prototype.getAssignmentid = function() {
 
 /** @param {number} value */
 proto.library.Submission.prototype.setAssignmentid = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -2406,7 +2264,7 @@ proto.library.Submission.prototype.getUserid = function() {
 
 /** @param {number} value */
 proto.library.Submission.prototype.setUserid = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -2421,7 +2279,7 @@ proto.library.Submission.prototype.getGroupid = function() {
 
 /** @param {number} value */
 proto.library.Submission.prototype.setGroupid = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -2436,7 +2294,7 @@ proto.library.Submission.prototype.getScore = function() {
 
 /** @param {number} value */
 proto.library.Submission.prototype.setScore = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  jspb.Message.setField(this, 5, value);
 };
 
 
@@ -2451,7 +2309,7 @@ proto.library.Submission.prototype.getScoreobjects = function() {
 
 /** @param {string} value */
 proto.library.Submission.prototype.setScoreobjects = function(value) {
-  jspb.Message.setProto3StringField(this, 6, value);
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -2466,7 +2324,7 @@ proto.library.Submission.prototype.getBuildinfo = function() {
 
 /** @param {string} value */
 proto.library.Submission.prototype.setBuildinfo = function(value) {
-  jspb.Message.setProto3StringField(this, 7, value);
+  jspb.Message.setField(this, 7, value);
 };
 
 
@@ -2481,7 +2339,7 @@ proto.library.Submission.prototype.getCommithash = function() {
 
 /** @param {string} value */
 proto.library.Submission.prototype.setCommithash = function(value) {
-  jspb.Message.setProto3StringField(this, 8, value);
+  jspb.Message.setField(this, 8, value);
 };
 
 
@@ -2864,7 +2722,7 @@ proto.library.Group.prototype.getId = function() {
 
 /** @param {number} value */
 proto.library.Group.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -2879,7 +2737,7 @@ proto.library.Group.prototype.getName = function() {
 
 /** @param {string} value */
 proto.library.Group.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -2894,7 +2752,7 @@ proto.library.Group.prototype.getStatus = function() {
 
 /** @param {number} value */
 proto.library.Group.prototype.setStatus = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -2909,7 +2767,7 @@ proto.library.Group.prototype.getCourseid = function() {
 
 /** @param {number} value */
 proto.library.Group.prototype.setCourseid = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -3249,7 +3107,7 @@ proto.library.Course.prototype.getId = function() {
 
 /** @param {number} value */
 proto.library.Course.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -3264,7 +3122,7 @@ proto.library.Course.prototype.getName = function() {
 
 /** @param {string} value */
 proto.library.Course.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -3279,7 +3137,7 @@ proto.library.Course.prototype.getCode = function() {
 
 /** @param {string} value */
 proto.library.Course.prototype.setCode = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -3294,7 +3152,7 @@ proto.library.Course.prototype.getYear = function() {
 
 /** @param {number} value */
 proto.library.Course.prototype.setYear = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -3309,7 +3167,7 @@ proto.library.Course.prototype.getTag = function() {
 
 /** @param {string} value */
 proto.library.Course.prototype.setTag = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  jspb.Message.setField(this, 5, value);
 };
 
 
@@ -3324,7 +3182,7 @@ proto.library.Course.prototype.getProvider = function() {
 
 /** @param {string} value */
 proto.library.Course.prototype.setProvider = function(value) {
-  jspb.Message.setProto3StringField(this, 6, value);
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -3339,7 +3197,7 @@ proto.library.Course.prototype.getDirectoryid = function() {
 
 /** @param {number} value */
 proto.library.Course.prototype.setDirectoryid = function(value) {
-  jspb.Message.setProto3IntField(this, 7, value);
+  jspb.Message.setField(this, 7, value);
 };
 
 
@@ -3354,7 +3212,7 @@ proto.library.Course.prototype.getEnrolled = function() {
 
 /** @param {!proto.library.Enrollment.Status} value */
 proto.library.Course.prototype.setEnrolled = function(value) {
-  jspb.Message.setProto3EnumField(this, 8, value);
+  jspb.Message.setField(this, 8, value);
 };
 
 
@@ -3631,12 +3489,19 @@ proto.library.Courses.prototype.clearCoursesList = function() {
  * @constructor
  */
 proto.library.RecordWithStatusRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.library.RecordWithStatusRequest.repeatedFields_, null);
 };
 goog.inherits(proto.library.RecordWithStatusRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   proto.library.RecordWithStatusRequest.displayName = 'proto.library.RecordWithStatusRequest';
 }
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.library.RecordWithStatusRequest.repeatedFields_ = [2];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -3667,7 +3532,7 @@ proto.library.RecordWithStatusRequest.prototype.toObject = function(opt_includeI
 proto.library.RecordWithStatusRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    state: jspb.Message.getFieldWithDefault(msg, 2, "")
+    statusesList: jspb.Message.getRepeatedField(msg, 2)
   };
 
   if (includeInstance) {
@@ -3709,8 +3574,8 @@ proto.library.RecordWithStatusRequest.deserializeBinaryFromReader = function(msg
       msg.setId(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setState(value);
+      var value = /** @type {!Array.<!proto.library.Enrollment.Status>} */ (reader.readPackedEnum());
+      msg.setStatusesList(value);
       break;
     default:
       reader.skipField();
@@ -3748,9 +3613,9 @@ proto.library.RecordWithStatusRequest.serializeBinaryToWriter = function(message
       f
     );
   }
-  f = message.getState();
+  f = message.getStatusesList();
   if (f.length > 0) {
-    writer.writeString(
+    writer.writePackedEnum(
       2,
       f
     );
@@ -3769,22 +3634,36 @@ proto.library.RecordWithStatusRequest.prototype.getId = function() {
 
 /** @param {number} value */
 proto.library.RecordWithStatusRequest.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
 /**
- * optional string state = 2;
- * @return {string}
+ * repeated Enrollment.Status statuses = 2;
+ * @return {!Array.<!proto.library.Enrollment.Status>}
  */
-proto.library.RecordWithStatusRequest.prototype.getState = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+proto.library.RecordWithStatusRequest.prototype.getStatusesList = function() {
+  return /** @type {!Array.<!proto.library.Enrollment.Status>} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
 
-/** @param {string} value */
-proto.library.RecordWithStatusRequest.prototype.setState = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+/** @param {!Array.<!proto.library.Enrollment.Status>} value */
+proto.library.RecordWithStatusRequest.prototype.setStatusesList = function(value) {
+  jspb.Message.setField(this, 2, value || []);
+};
+
+
+/**
+ * @param {!proto.library.Enrollment.Status} value
+ * @param {number=} opt_index
+ */
+proto.library.RecordWithStatusRequest.prototype.addStatuses = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 2, value, opt_index);
+};
+
+
+proto.library.RecordWithStatusRequest.prototype.clearStatusesList = function() {
+  this.setStatusesList([]);
 };
 
 
@@ -3938,7 +3817,7 @@ proto.library.UserIDCourseID.prototype.getUserid = function() {
 
 /** @param {number} value */
 proto.library.UserIDCourseID.prototype.setUserid = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -3953,7 +3832,7 @@ proto.library.UserIDCourseID.prototype.getCourseid = function() {
 
 /** @param {number} value */
 proto.library.UserIDCourseID.prototype.setCourseid = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -4095,7 +3974,7 @@ proto.library.StatusCode.prototype.getStatuscode = function() {
 
 /** @param {number} value */
 proto.library.StatusCode.prototype.setStatuscode = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -4110,12 +3989,12 @@ proto.library.StatusCode.prototype.setStatuscode = function(value) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.library.UpdateEnrollmentRequest = function(opt_data) {
+proto.library.EnrollmentRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.library.UpdateEnrollmentRequest, jspb.Message);
+goog.inherits(proto.library.EnrollmentRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.library.UpdateEnrollmentRequest.displayName = 'proto.library.UpdateEnrollmentRequest';
+  proto.library.EnrollmentRequest.displayName = 'proto.library.EnrollmentRequest';
 }
 
 
@@ -4130,8 +4009,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.library.UpdateEnrollmentRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.library.UpdateEnrollmentRequest.toObject(opt_includeInstance, this);
+proto.library.EnrollmentRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.library.EnrollmentRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -4140,15 +4019,15 @@ proto.library.UpdateEnrollmentRequest.prototype.toObject = function(opt_includeI
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.library.UpdateEnrollmentRequest} msg The msg instance to transform.
+ * @param {!proto.library.EnrollmentRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.library.UpdateEnrollmentRequest.toObject = function(includeInstance, msg) {
+proto.library.EnrollmentRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     userid: jspb.Message.getFieldWithDefault(msg, 1, 0),
     courseid: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    status: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    enrolled: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -4162,23 +4041,23 @@ proto.library.UpdateEnrollmentRequest.toObject = function(includeInstance, msg) 
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.library.UpdateEnrollmentRequest}
+ * @return {!proto.library.EnrollmentRequest}
  */
-proto.library.UpdateEnrollmentRequest.deserializeBinary = function(bytes) {
+proto.library.EnrollmentRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.library.UpdateEnrollmentRequest;
-  return proto.library.UpdateEnrollmentRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.library.EnrollmentRequest;
+  return proto.library.EnrollmentRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.library.UpdateEnrollmentRequest} msg The message object to deserialize into.
+ * @param {!proto.library.EnrollmentRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.library.UpdateEnrollmentRequest}
+ * @return {!proto.library.EnrollmentRequest}
  */
-proto.library.UpdateEnrollmentRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.library.EnrollmentRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -4194,8 +4073,8 @@ proto.library.UpdateEnrollmentRequest.deserializeBinaryFromReader = function(msg
       msg.setCourseid(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setStatus(value);
+      var value = /** @type {!proto.library.Enrollment.Status} */ (reader.readEnum());
+      msg.setEnrolled(value);
       break;
     default:
       reader.skipField();
@@ -4210,9 +4089,9 @@ proto.library.UpdateEnrollmentRequest.deserializeBinaryFromReader = function(msg
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.library.UpdateEnrollmentRequest.prototype.serializeBinary = function() {
+proto.library.EnrollmentRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.library.UpdateEnrollmentRequest.serializeBinaryToWriter(this, writer);
+  proto.library.EnrollmentRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -4220,11 +4099,11 @@ proto.library.UpdateEnrollmentRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.library.UpdateEnrollmentRequest} message
+ * @param {!proto.library.EnrollmentRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.library.UpdateEnrollmentRequest.serializeBinaryToWriter = function(message, writer) {
+proto.library.EnrollmentRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getUserid();
   if (f !== 0) {
@@ -4240,9 +4119,9 @@ proto.library.UpdateEnrollmentRequest.serializeBinaryToWriter = function(message
       f
     );
   }
-  f = message.getStatus();
-  if (f !== 0) {
-    writer.writeInt32(
+  f = message.getEnrolled();
+  if (f !== 0.0) {
+    writer.writeEnum(
       3,
       f
     );
@@ -4254,14 +4133,14 @@ proto.library.UpdateEnrollmentRequest.serializeBinaryToWriter = function(message
  * optional uint64 userID = 1;
  * @return {number}
  */
-proto.library.UpdateEnrollmentRequest.prototype.getUserid = function() {
+proto.library.EnrollmentRequest.prototype.getUserid = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /** @param {number} value */
-proto.library.UpdateEnrollmentRequest.prototype.setUserid = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+proto.library.EnrollmentRequest.prototype.setUserid = function(value) {
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -4269,29 +4148,29 @@ proto.library.UpdateEnrollmentRequest.prototype.setUserid = function(value) {
  * optional uint64 courseID = 2;
  * @return {number}
  */
-proto.library.UpdateEnrollmentRequest.prototype.getCourseid = function() {
+proto.library.EnrollmentRequest.prototype.getCourseid = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /** @param {number} value */
-proto.library.UpdateEnrollmentRequest.prototype.setCourseid = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+proto.library.EnrollmentRequest.prototype.setCourseid = function(value) {
+  jspb.Message.setField(this, 2, value);
 };
 
 
 /**
- * optional int32 status = 3;
- * @return {number}
+ * optional Enrollment.Status enrolled = 3;
+ * @return {!proto.library.Enrollment.Status}
  */
-proto.library.UpdateEnrollmentRequest.prototype.getStatus = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+proto.library.EnrollmentRequest.prototype.getEnrolled = function() {
+  return /** @type {!proto.library.Enrollment.Status} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
-/** @param {number} value */
-proto.library.UpdateEnrollmentRequest.prototype.setStatus = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+/** @param {!proto.library.Enrollment.Status} value */
+proto.library.EnrollmentRequest.prototype.setEnrolled = function(value) {
+  jspb.Message.setField(this, 3, value);
 };
 
 

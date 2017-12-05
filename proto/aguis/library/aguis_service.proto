@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package library;
 
+import "google/protobuf/timestamp.proto";
+
 message Enrollment {
     uint64 ID = 1;
     //gorm:"unique_index:uid_user_course"
@@ -22,7 +24,7 @@ message Enrollment {
     Status status = 8;
 }
 
-message EnrollemntResponse {
+message EnrollmentResponse {
     repeated Enrollment enrollments = 1;
 }
 
@@ -49,19 +51,16 @@ message RemoteIdentity {
     uint64 userID = 5;
 }
 
-message UsersResponse {
+message Users {
     repeated User Users = 1;
 }
 
 message Void {}
 
-// GetRecordRecord can be used for all type of single record request like User, Course etc
-message GetRecordRequest {
+// RecordRequest is used to make request for a single record for various datatypes
+// such as User, Course, Assignment etc.
+message RecordRequest {
     uint64 ID = 1;
-}
-
-message UpdateUserRequest {
-    User User = 1;
 }
 
 message Assignment {
@@ -69,7 +68,7 @@ message Assignment {
     uint64 courseID = 2;
     string name = 3;
     string language = 4;
-    string deadline = 5;
+    google.protobuf.Timestamp deadline = 5;
     bool autoApprove = 6;
     uint32 order = 7;
     Submission submission = 8;
@@ -122,36 +121,39 @@ message Courses {
 
 message RecordWithStatusRequest {
     uint64 ID = 1; // id can be User ID or Course ID depending //TODO NO! They should be different messages
-    string state = 2; // TODO Avoid string types that are parsed! Use 'repeated Enrollment.Status statuses'
+    repeated Enrollment.Status statuses = 2;
 }
 
+// TODO Remove this; make it use EnrollmentRequest with default value PENDING??
 message UserIDCourseID {
     uint64 userID = 1;
     uint64 courseID = 2;
 }
+
 message StatusCode {
     int32 statuscode = 1;
 }
 
-message UpdateEnrollmentRequest {
+// EnrollmentRequest is
+message EnrollmentRequest {
     uint64 userID = 1;
     uint64 courseID = 2;
-    int32 status = 3;
+    Enrollment.Status enrolled = 3;
 }
 
 service AutograderService {
-    rpc GetUser (GetRecordRequest) returns (User) {}
-    rpc GetUsers (Void) returns (UsersResponse) {}
-    rpc UpdateUser(UpdateUserRequest) returns (User) {}
+    rpc GetUser(RecordRequest) returns (User) {}
+    rpc GetUsers(Void) returns (Users) {}
+    rpc UpdateUser(User) returns (User) {}
 
     rpc CreateCourse(Course) returns (Course) {}
-    rpc GetCourse(GetRecordRequest) returns (Course) {}
+    rpc GetCourse(RecordRequest) returns (Course) {}
     rpc UpdateCourse(Course) returns (Course) {}
     rpc GetCourses(Void) returns (Courses) {}
     rpc GetCoursesWithEnrollment(RecordWithStatusRequest) returns (Courses) {}
-    rpc GetAssignments(GetRecordRequest) returns (Assignments) {}
-    rpc GetEnrollmentsByCourse(RecordWithStatusRequest) returns (EnrollemntResponse) {}
+    rpc GetAssignments(RecordRequest) returns (Assignments) {}
+    rpc GetEnrollmentsByCourse(RecordWithStatusRequest) returns (EnrollmentResponse) {}
 
     rpc CreateEnrollment(UserIDCourseID) returns (StatusCode) {}
-    rpc UpdateEnrollment(UpdateEnrollmentRequest) returns (StatusCode) {}
+    rpc UpdateEnrollment(EnrollmentRequest) returns (StatusCode) {}
 }

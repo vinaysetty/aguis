@@ -2,6 +2,7 @@
 // file: aguis/library/aguis_service.proto
 
 import * as jspb from "google-protobuf";
+import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 
 export class Enrollment extends jspb.Message {
   getId(): number;
@@ -65,23 +66,23 @@ export namespace Enrollment {
   }
 }
 
-export class EnrollemntResponse extends jspb.Message {
+export class EnrollmentResponse extends jspb.Message {
   clearEnrollmentsList(): void;
   getEnrollmentsList(): Array<Enrollment>;
   setEnrollmentsList(value: Array<Enrollment>): void;
   addEnrollments(value?: Enrollment, index?: number): Enrollment;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): EnrollemntResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: EnrollemntResponse): EnrollemntResponse.AsObject;
+  toObject(includeInstance?: boolean): EnrollmentResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: EnrollmentResponse): EnrollmentResponse.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: EnrollemntResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): EnrollemntResponse;
-  static deserializeBinaryFromReader(message: EnrollemntResponse, reader: jspb.BinaryReader): EnrollemntResponse;
+  static serializeBinaryToWriter(message: EnrollmentResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): EnrollmentResponse;
+  static deserializeBinaryFromReader(message: EnrollmentResponse, reader: jspb.BinaryReader): EnrollmentResponse;
 }
 
-export namespace EnrollemntResponse {
+export namespace EnrollmentResponse {
   export type AsObject = {
     enrollmentsList: Array<Enrollment.AsObject>,
   }
@@ -175,23 +176,23 @@ export namespace RemoteIdentity {
   }
 }
 
-export class UsersResponse extends jspb.Message {
+export class Users extends jspb.Message {
   clearUsersList(): void;
   getUsersList(): Array<User>;
   setUsersList(value: Array<User>): void;
   addUsers(value?: User, index?: number): User;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): UsersResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: UsersResponse): UsersResponse.AsObject;
+  toObject(includeInstance?: boolean): Users.AsObject;
+  static toObject(includeInstance: boolean, msg: Users): Users.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: UsersResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): UsersResponse;
-  static deserializeBinaryFromReader(message: UsersResponse, reader: jspb.BinaryReader): UsersResponse;
+  static serializeBinaryToWriter(message: Users, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Users;
+  static deserializeBinaryFromReader(message: Users, reader: jspb.BinaryReader): Users;
 }
 
-export namespace UsersResponse {
+export namespace Users {
   export type AsObject = {
     usersList: Array<User.AsObject>,
   }
@@ -213,45 +214,23 @@ export namespace Void {
   }
 }
 
-export class GetRecordRequest extends jspb.Message {
+export class RecordRequest extends jspb.Message {
   getId(): number;
   setId(value: number): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetRecordRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: GetRecordRequest): GetRecordRequest.AsObject;
+  toObject(includeInstance?: boolean): RecordRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: RecordRequest): RecordRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: GetRecordRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetRecordRequest;
-  static deserializeBinaryFromReader(message: GetRecordRequest, reader: jspb.BinaryReader): GetRecordRequest;
+  static serializeBinaryToWriter(message: RecordRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RecordRequest;
+  static deserializeBinaryFromReader(message: RecordRequest, reader: jspb.BinaryReader): RecordRequest;
 }
 
-export namespace GetRecordRequest {
+export namespace RecordRequest {
   export type AsObject = {
     id: number,
-  }
-}
-
-export class UpdateUserRequest extends jspb.Message {
-  hasUser(): boolean;
-  clearUser(): void;
-  getUser(): User | undefined;
-  setUser(value?: User): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): UpdateUserRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: UpdateUserRequest): UpdateUserRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: UpdateUserRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): UpdateUserRequest;
-  static deserializeBinaryFromReader(message: UpdateUserRequest, reader: jspb.BinaryReader): UpdateUserRequest;
-}
-
-export namespace UpdateUserRequest {
-  export type AsObject = {
-    user?: User.AsObject,
   }
 }
 
@@ -268,8 +247,10 @@ export class Assignment extends jspb.Message {
   getLanguage(): string;
   setLanguage(value: string): void;
 
-  getDeadline(): string;
-  setDeadline(value: string): void;
+  hasDeadline(): boolean;
+  clearDeadline(): void;
+  getDeadline(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setDeadline(value?: google_protobuf_timestamp_pb.Timestamp): void;
 
   getAutoapprove(): boolean;
   setAutoapprove(value: boolean): void;
@@ -298,7 +279,7 @@ export namespace Assignment {
     courseid: number,
     name: string,
     language: string,
-    deadline: string,
+    deadline?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     autoapprove: boolean,
     order: number,
     submission?: Submission.AsObject,
@@ -511,8 +492,10 @@ export class RecordWithStatusRequest extends jspb.Message {
   getId(): number;
   setId(value: number): void;
 
-  getState(): string;
-  setState(value: string): void;
+  clearStatusesList(): void;
+  getStatusesList(): Array<Enrollment.Status>;
+  setStatusesList(value: Array<Enrollment.Status>): void;
+  addStatuses(value: Enrollment.Status, index?: number): Enrollment.Status;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RecordWithStatusRequest.AsObject;
@@ -527,7 +510,7 @@ export class RecordWithStatusRequest extends jspb.Message {
 export namespace RecordWithStatusRequest {
   export type AsObject = {
     id: number,
-    state: string,
+    statusesList: Array<Enrollment.Status>,
   }
 }
 
@@ -575,31 +558,31 @@ export namespace StatusCode {
   }
 }
 
-export class UpdateEnrollmentRequest extends jspb.Message {
+export class EnrollmentRequest extends jspb.Message {
   getUserid(): number;
   setUserid(value: number): void;
 
   getCourseid(): number;
   setCourseid(value: number): void;
 
-  getStatus(): number;
-  setStatus(value: number): void;
+  getEnrolled(): Enrollment.Status;
+  setEnrolled(value: Enrollment.Status): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): UpdateEnrollmentRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: UpdateEnrollmentRequest): UpdateEnrollmentRequest.AsObject;
+  toObject(includeInstance?: boolean): EnrollmentRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: EnrollmentRequest): EnrollmentRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: UpdateEnrollmentRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): UpdateEnrollmentRequest;
-  static deserializeBinaryFromReader(message: UpdateEnrollmentRequest, reader: jspb.BinaryReader): UpdateEnrollmentRequest;
+  static serializeBinaryToWriter(message: EnrollmentRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): EnrollmentRequest;
+  static deserializeBinaryFromReader(message: EnrollmentRequest, reader: jspb.BinaryReader): EnrollmentRequest;
 }
 
-export namespace UpdateEnrollmentRequest {
+export namespace EnrollmentRequest {
   export type AsObject = {
     userid: number,
     courseid: number,
-    status: number,
+    enrolled: Enrollment.Status,
   }
 }
 

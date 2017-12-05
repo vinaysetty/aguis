@@ -2,6 +2,7 @@
 // file: aguis/library/aguis_service.proto
 
 import * as aguis_library_aguis_service_pb from "../../aguis/library/aguis_service_pb";
+import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 export class AutograderService {
   static serviceName = "library.AutograderService";
 }
@@ -11,7 +12,7 @@ export namespace AutograderService {
     static readonly service = AutograderService;
     static readonly requestStream = false;
     static readonly responseStream = false;
-    static readonly requestType = aguis_library_aguis_service_pb.GetRecordRequest;
+    static readonly requestType = aguis_library_aguis_service_pb.RecordRequest;
     static readonly responseType = aguis_library_aguis_service_pb.User;
   }
   export class GetUsers {
@@ -20,14 +21,14 @@ export namespace AutograderService {
     static readonly requestStream = false;
     static readonly responseStream = false;
     static readonly requestType = aguis_library_aguis_service_pb.Void;
-    static readonly responseType = aguis_library_aguis_service_pb.UsersResponse;
+    static readonly responseType = aguis_library_aguis_service_pb.Users;
   }
   export class UpdateUser {
     static readonly methodName = "UpdateUser";
     static readonly service = AutograderService;
     static readonly requestStream = false;
     static readonly responseStream = false;
-    static readonly requestType = aguis_library_aguis_service_pb.UpdateUserRequest;
+    static readonly requestType = aguis_library_aguis_service_pb.User;
     static readonly responseType = aguis_library_aguis_service_pb.User;
   }
   export class CreateCourse {
@@ -43,7 +44,7 @@ export namespace AutograderService {
     static readonly service = AutograderService;
     static readonly requestStream = false;
     static readonly responseStream = false;
-    static readonly requestType = aguis_library_aguis_service_pb.GetRecordRequest;
+    static readonly requestType = aguis_library_aguis_service_pb.RecordRequest;
     static readonly responseType = aguis_library_aguis_service_pb.Course;
   }
   export class UpdateCourse {
@@ -75,7 +76,7 @@ export namespace AutograderService {
     static readonly service = AutograderService;
     static readonly requestStream = false;
     static readonly responseStream = false;
-    static readonly requestType = aguis_library_aguis_service_pb.GetRecordRequest;
+    static readonly requestType = aguis_library_aguis_service_pb.RecordRequest;
     static readonly responseType = aguis_library_aguis_service_pb.Assignments;
   }
   export class GetEnrollmentsByCourse {
@@ -84,7 +85,7 @@ export namespace AutograderService {
     static readonly requestStream = false;
     static readonly responseStream = false;
     static readonly requestType = aguis_library_aguis_service_pb.RecordWithStatusRequest;
-    static readonly responseType = aguis_library_aguis_service_pb.EnrollemntResponse;
+    static readonly responseType = aguis_library_aguis_service_pb.EnrollmentResponse;
   }
   export class CreateEnrollment {
     static readonly methodName = "CreateEnrollment";
@@ -99,7 +100,7 @@ export namespace AutograderService {
     static readonly service = AutograderService;
     static readonly requestStream = false;
     static readonly responseStream = false;
-    static readonly requestType = aguis_library_aguis_service_pb.UpdateEnrollmentRequest;
+    static readonly requestType = aguis_library_aguis_service_pb.EnrollmentRequest;
     static readonly responseType = aguis_library_aguis_service_pb.StatusCode;
   }
 }

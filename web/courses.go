@@ -82,11 +82,10 @@ func ListCourses(db database.Database) (*pb.Courses, error) {
 // enrollment status.
 // If status query param is provided, lists only courses of the student filtered by the query param.
 func ListCoursesWithEnrollment(request *pb.RecordWithStatusRequest, db database.Database) (*pb.Courses, error) {
-	//TODO We should fix the RecordWithStatusRequest to pass Enrollment_Status instead of State - to make it type safe.
-	// That is, we won't need to parse the requst.State object.
-	statuses, err := parseEnrollmentStatus(request.State)
-	if err != nil {
-		return nil, err
+	//TODO Not sure we need this nil check?? Make test case to check if we need it. Maybe database query will do the right thing, even with nil input for the statuses argument.
+	statuses := request.GetStatuses()
+	if statuses == nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid status query")
 	}
 
 	courses, err := db.GetCoursesByUser(request.ID, statuses...)
@@ -97,7 +96,7 @@ func ListCoursesWithEnrollment(request *pb.RecordWithStatusRequest, db database.
 }
 
 // ListAssignments lists the assignments for the provided course.
-func ListAssignments(request *pb.GetRecordRequest, db database.Database) (*pb.Assignments, error) {
+func ListAssignments(request *pb.RecordRequest, db database.Database) (*pb.Assignments, error) {
 	assignments, err := db.GetAssignmentsByCourse(request.ID)
 	if err != nil {
 		return nil, err
@@ -187,13 +186,12 @@ func CreateEnrollment(ucid *pb.UserIDCourseID, db database.Database) (*pb.Status
 }
 
 // UpdateEnrollment accepts or rejects a user to enroll in a course.
-func UpdateEnrollment(req *pb.UpdateEnrollmentRequest, db database.Database) (*pb.StatusCode, error) {
+func UpdateEnrollment(req *pb.EnrollmentRequest, db database.Database) (*pb.StatusCode, error) {
 	userID := req.UserID
 	courseID := req.CourseID
-	enroll_status := uint(req.Status)
-	//TODO Make UpdateEnrollmentRequest use Enrollment_Status to make it type safe
-	// TODO Make validation take place as method on UpdateEnrollmentRequest and so on...
-	if enroll_status > pb.Enrollment_Teacher || userID == 0 || courseID == 0 {
+	enrollmentStatus := req.GetEnrolled()
+	// TODO Make validation take place as method on EnrollmentRequest and so on...
+	if enrollmentStatus > pb.Enrollment_Teacher || userID == 0 || courseID == 0 {
 		return &pb.StatusCode{Statuscode: int32(codes.InvalidArgument)},
 			status.Errorf(codes.InvalidArgument, "invalid payload")
 	}
@@ -216,13 +214,13 @@ func UpdateEnrollment(req *pb.UpdateEnrollmentRequest, db database.Database) (*p
 			status.Errorf(codes.PermissionDenied, "unauthorized")
 	}
 
-	//TODO make these use pb.Enrollment_Status
-	switch enroll_status {
-	case models.Student:
+	//TODO consider to move this to a generic db method that takes Enrollment_Status as argument
+	switch enrollmentStatus {
+	case pb.Enrollment_Student:
 		err = db.EnrollStudent(userID, courseID)
-	case models.Teacher:
+	case pb.Enrollment_Teacher:
 		err = db.EnrollTeacher(userID, courseID)
-	case models.Rejected:
+	case pb.Enrollment_Rejected:
 		err = db.RejectEnrollment(userID, courseID)
 	}
 	if err != nil {
@@ -234,7 +232,7 @@ func UpdateEnrollment(req *pb.UpdateEnrollmentRequest, db database.Database) (*p
 }
 
 // GetCourse find course by id and return JSON object.
-func GetCourse(query *pb.GetRecordRequest, db database.Database) (*pb.Course, error) {
+func GetCourse(query *pb.RecordRequest, db database.Database) (*pb.Course, error) {
 	course, err := db.GetCourse(query.ID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -446,12 +444,11 @@ func UpdateCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
 }
 
 // GetEnrollmentsByCourse get all enrollments for a course.
-func GetEnrollmentsByCourse(request *pb.RecordWithStatusRequest, db database.Database) (*pb.EnrollemntResponse, error) {
-	//TODO We should fix the RecordWithStatusRequest to pass Enrollment_Status instead of State - to make it type safe.
-	// That is, we won't need to parse the requst.State object.
-	statuses, err := parseEnrollmentStatus(request.State)
-	if err != nil {
-		return nil, err
+func GetEnrollmentsByCourse(request *pb.RecordWithStatusRequest, db database.Database) (*pb.EnrollmentResponse, error) {
+	//TODO Not sure we need this nil check?? Make test case to check if we need it. Maybe database query will do the right thing, even with nil input for the statuses argument.
+	statuses := request.GetStatuses()
+	if statuses == nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid status query")
 	}
 
 	enrollments, err := db.GetEnrollmentsByCourse(request.ID, statuses...)
@@ -465,7 +462,7 @@ func GetEnrollmentsByCourse(request *pb.RecordWithStatusRequest, db database.Dat
 			return nil, err
 		}
 	}
-	return &pb.EnrollemntResponse{Enrollments: enrollments}, nil
+	return &pb.EnrollmentResponse{Enrollments: enrollments}, nil
 }
 
 // NewGroup creates a new group under a course
@@ -656,58 +653,58 @@ func GetEnrollmentsByCourse(request *pb.RecordWithStatusRequest, db database.Dat
 //	}
 //}
 
-// convert a model Course to proto Course
-func toProtoCourse(course *models.Course) *pb.Course {
-	pc := &pb.Course{
-		Id:          course.ID,
-		Name:        course.Name,
-		Code:        course.Code,
-		Provider:    course.Provider,
-		Tag:         course.Tag,
-		Year:        uint32(course.Year),
-		Directoryid: course.DirectoryID,
-		Enrolled:    int32(course.Enrolled),
-	}
-	return pc
-}
+// // convert a model Course to proto Course
+// func toProtoCourse(course *models.Course) *pb.Course {
+// 	pc := &pb.Course{
+// 		Id:          course.ID,
+// 		Name:        course.Name,
+// 		Code:        course.Code,
+// 		Provider:    course.Provider,
+// 		Tag:         course.Tag,
+// 		Year:        uint32(course.Year),
+// 		Directoryid: course.DirectoryID,
+// 		Enrolled:    int32(course.Enrolled),
+// 	}
+// 	return pc
+// }
 
-// convert a model Assignment to proto Assignment
-func toProtoAssignment(asg *models.Assignment) *pb.Assignment {
-	pa := &pb.Assignment{
-		Id:          asg.ID,
-		Name:        asg.Name,
-		Courseid:    asg.CourseID,
-		Language:    asg.Language,
-		Autoapprove: asg.AutoApprove,
-		Deadline:    asg.Deadline.Format("2006-01-02 15:04:05"),
-		Order:       uint32(asg.Order),
-		Submission:  toProtoSubmission(asg.Submission),
-	}
-	return pa
-}
+// // convert a model Assignment to proto Assignment
+// func toProtoAssignment(asg *models.Assignment) *pb.Assignment {
+// 	pa := &pb.Assignment{
+// 		Id:          asg.ID,
+// 		Name:        asg.Name,
+// 		Courseid:    asg.CourseID,
+// 		Language:    asg.Language,
+// 		Autoapprove: asg.AutoApprove,
+// 		Deadline:    asg.Deadline.Format("2006-01-02 15:04:05"),
+// 		Order:       uint32(asg.Order),
+// 		Submission:  toProtoSubmission(asg.Submission),
+// 	}
+// 	return pa
+// }
 
-func toProtoSubmission(submission *models.Submission) *pb.Submission {
-	ps := &pb.Submission{
-		Id:           submission.ID,
-		Userid:       submission.UserID,
-		Assignmentid: submission.AssignmentID,
-		Groupid:      submission.GroupID,
-		Buildinfo:    submission.BuildInfo,
-		Score:        uint32(submission.Score),
-		Scoreobjects: submission.ScoreObjects,
-		Commithash:   submission.CommitHash,
-	}
-	return ps
-}
+// func toProtoSubmission(submission *models.Submission) *pb.Submission {
+// 	ps := &pb.Submission{
+// 		Id:           submission.ID,
+// 		Userid:       submission.UserID,
+// 		Assignmentid: submission.AssignmentID,
+// 		Groupid:      submission.GroupID,
+// 		Buildinfo:    submission.BuildInfo,
+// 		Score:        uint32(submission.Score),
+// 		Scoreobjects: submission.ScoreObjects,
+// 		Commithash:   submission.CommitHash,
+// 	}
+// 	return ps
+// }
 
-func toProtoEnrollment(enrollment *models.Enrollment) *pb.Enrollment {
-	pe := &pb.Enrollment{
-		Id:       enrollment.ID,
-		Userid:   enrollment.UserID,
-		Courseid: enrollment.CourseID,
-		Groupid:  enrollment.GroupID,
-		User:     toProtoUser(enrollment.User),
-		Status:   uint32(enrollment.Status),
-	}
-	return pe
-}
+// func toProtoEnrollment(enrollment *models.Enrollment) *pb.Enrollment {
+// 	pe := &pb.Enrollment{
+// 		Id:       enrollment.ID,
+// 		Userid:   enrollment.UserID,
+// 		Courseid: enrollment.CourseID,
+// 		Groupid:  enrollment.GroupID,
+// 		User:     toProtoUser(enrollment.User),
+// 		Status:   uint32(enrollment.Status),
+// 	}
+// 	return pe
+// }

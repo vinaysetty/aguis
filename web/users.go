@@ -2,13 +2,13 @@ package web
 
 import (
 	"github.com/autograde/aguis/database"
-	"github.com/autograde/aguis/models"
 	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
 	"github.com/jinzhu/gorm"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
+//TODO remove, only used by users_test.go; can just use pb.User
 // UpdateUserRequest updates a user object in the database.
 type UpdateUserRequest struct {
 	Name      string `json:"name"`
@@ -18,7 +18,7 @@ type UpdateUserRequest struct {
 	IsAdmin   *bool  `json:"isadmin"`
 }
 
-//
+//TODO How can we get the current user with gRPC???
 //// GetSelf redirects to GetUser with the current user's id.
 //func GetSelf() echo.HandlerFunc {
 //	return func(c echo.Context) error {
@@ -27,24 +27,21 @@ type UpdateUserRequest struct {
 //		return c.Redirect(http.StatusFound, fmt.Sprintf("/api/v1/users/%d", user.ID))
 //	}
 //}
-//
+
 // GetUser returns information about the provided user id.
-func GetUser(query *pb.GetRecordRequest, db database.Database) (*pb.User, error) {
-	user, err := db.GetUser(query.Id)
+func GetUser(query *pb.RecordRequest, db database.Database) (*pb.User, error) {
+	user, err := db.GetUser(query.ID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, status.Errorf(codes.NotFound, "User not found")
 		}
 		return nil, err
 	}
-
-	return toProtoUser(user), nil
+	return user, nil
 }
 
 // GetUsers returns all the users in the database.
-func GetUsers(db database.Database) (*pb.UsersResponse, error) {
-
-	var results []*pb.User
+func GetUsers(db database.Database) (*pb.Users, error) {
 	users, err := db.GetUsers()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -52,30 +49,31 @@ func GetUsers(db database.Database) (*pb.UsersResponse, error) {
 		}
 		return nil, err
 	}
-	for _, u := range users {
-		results = append(results, toProtoUser(u))
-	}
-	return &pb.UsersResponse{Users: results}, nil
+	return &pb.Users{Users: users}, nil
 }
 
-// UpdateUser promotes a user to an administrator
-func UpdateUser(userReq *pb.UpdateUserRequest, db database.Database) (*pb.User, error) {
-	user, err := db.GetUser(userReq.User.Id)
+// UpdateUser promotes a user to an administrator or makes other changes to the user database entry.
+func UpdateUser(userReq *pb.User, db database.Database) (*pb.User, error) {
+	user, err := db.GetUser(userReq.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	user.Name = userReq.User.Name
-	user.Email = userReq.User.Email
-	user.AvatarURL = userReq.User.Avatarurl
-	user.StudentID = userReq.User.Studentid
-	user.IsAdmin = userReq.User.Isadmin
+	user.Name = userReq.Name
+	user.Email = userReq.Email
+	user.AvatarURL = userReq.AvatarURL
+	user.StudentID = userReq.StudentID
+	user.IsAdmin = userReq.IsAdmin
 	if err := db.UpdateUser(user); err != nil {
 		return nil, err
 	}
-
-	return userReq.User, nil
+	return user, nil
 }
+
+//TODO Move this to groups.go
+// GetGroupByUserAndCourse returns a single group of a user for a course
+// func GetGroupByUserAndCourse(db database.Database) (*pb.Group, error) {
+// }
 
 //
 //// GetGroupByUserAndCourse returns a single group of a user for a course
@@ -106,15 +104,3 @@ func UpdateUser(userReq *pb.UpdateUserRequest, db database.Database) (*pb.User, 
 //		return c.NoContent(http.StatusNotFound)
 //	}
 //}
-
-func toProtoUser(user *models.User) *pb.User {
-	pu := &pb.User{
-		Id:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		Studentid: user.StudentID,
-		Avatarurl: user.AvatarURL,
-		Isadmin:   user.IsAdmin,
-	}
-	return pu
-}
