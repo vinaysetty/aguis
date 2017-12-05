@@ -225,11 +225,13 @@ class AutoGrader extends React.Component<IAutoGraderProps, IAutoGraderState> {
             { name: "Your profile", uri: "/app/user" },
             { name: "Help", uri: "/app/help" },
             { name: "#separator" },
-            { name: "Manage courses", uri: "app/admin/courses" },
-            { name: "Manage users", uri: "app/admin/users" },
-            { name: "#separator" },
             { name: "Sign out", uri: "app/login/logout" },
         ];
+        if (this.state.curUser && this.state.curUser.isadmin) {
+            userLinks.push({ name: "Manage courses", uri: "app/admin/courses" });
+            userLinks.push({ name: "Manage users", uri: "app/admin/users" });
+            userLinks.push({ name: "#separator" });
+        }
         switch (name) {
             case "frontpage":
                 body = (
