@@ -77,13 +77,7 @@ func ListCourses(db database.Database) (*pb.Courses, error) {
 // enrollment status.
 // If status query param is provided, lists only courses of the student filtered by the query param.
 func ListCoursesWithEnrollment(request *pb.RecordWithStatusRequest, db database.Database) (*pb.Courses, error) {
-	//TODO Not sure we need this nil check?? Make test case to check if we need it. Maybe database query will do the right thing, even with nil input for the statuses argument.
-	statuses := request.GetStatuses()
-	// if statuses == nil {
-	// 	return nil, status.Errorf(codes.InvalidArgument, "invalid status query")
-	// }
-
-	courses, err := db.GetCoursesByUser(request.ID, statuses...)
+	courses, err := db.GetCoursesByUser(request.ID, request.Statuses...)
 	if err != nil {
 		return nil, err
 	}
@@ -440,13 +434,7 @@ func UpdateCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
 
 // GetEnrollmentsByCourse get all enrollments for a course.
 func GetEnrollmentsByCourse(request *pb.RecordWithStatusRequest, db database.Database) (*pb.EnrollmentResponse, error) {
-	//TODO Not sure we need this nil check?? Make test case to check if we need it. Maybe database query will do the right thing, even with nil input for the statuses argument.
-	statuses := request.GetStatuses()
-	if statuses == nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid status query")
-	}
-
-	enrollments, err := db.GetEnrollmentsByCourse(request.ID, statuses...)
+	enrollments, err := db.GetEnrollmentsByCourse(request.ID, request.Statuses...)
 	if err != nil {
 		return nil, err
 	}

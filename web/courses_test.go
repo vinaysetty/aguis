@@ -156,7 +156,7 @@ func TestNewCourse(t *testing.T) {
 	if !reflect.DeepEqual(enrollment, wantEnrollment) {
 		t.Errorf("have enrollment %+v want %+v", enrollment, wantEnrollment)
 	}
-	//TODO FIX THIS: Doesnotpass
+	//TODO FIX THIS: Does not pass anymore
 	// if len(f.Hooks) != 4 {
 	// 	t.Errorf("have %d hooks want %d", len(f.Hooks), 4)
 	// }
