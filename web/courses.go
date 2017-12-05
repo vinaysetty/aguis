@@ -169,11 +169,11 @@ func NewCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
 	return crs, nil
 }
 
-// CreateEnrollment enrolls a user in a course.
-func CreateEnrollment(ucid *pb.UserIDCourseID, db database.Database) (*pb.StatusCode, error) {
+// CreateEnrollment enrolls a user in a course and marks user enrollment as pending.
+func CreateEnrollment(req *pb.EnrollmentRequest, db database.Database) (*pb.StatusCode, error) {
 	enrollment := pb.Enrollment{
-		UserID:   ucid.UserID,
-		CourseID: ucid.CourseID,
+		UserID:   req.UserID,
+		CourseID: req.CourseID,
 	}
 	if err := db.CreateEnrollment(&enrollment); err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -204,7 +204,7 @@ func UpdateEnrollment(req *pb.EnrollmentRequest, db database.Database) (*pb.Stat
 		return &pb.StatusCode{Statuscode: int32(codes.Aborted)}, err
 	}
 
-	// TODO get logged in user in stead of hard coding
+	// TODO get logged in user instead of hard coding
 	user, err := db.GetUser(1)
 	// TODO: This check should be performed in AccessControl.
 	if !user.IsAdmin {

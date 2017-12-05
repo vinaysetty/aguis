@@ -4,30 +4,6 @@ package library;
 
 import "google/protobuf/timestamp.proto";
 
-message Enrollment {
-    uint64 ID = 1;
-    //gorm:"unique_index:uid_user_course"
-    uint64 courseID = 2;
-    //gorm:"unique_index:uid_user_course"
-    uint64 userID = 3;
-    uint64 groupID = 4;
-    User user = 5;
-    Course course = 6;
-    Group group = 7;
-    enum Status {
-        None     = 0;
-        Pending  = 1;
-        Rejected = 2;
-        Student  = 3;
-        Teacher  = 4;
-    }
-    Status status = 8;
-}
-
-message EnrollmentResponse {
-    repeated Enrollment enrollments = 1;
-}
-
 message User {
     uint64 ID = 1;
     bool isAdmin = 2;
@@ -119,26 +95,46 @@ message Courses {
     repeated Course Courses = 1;
 }
 
+message Enrollment {
+    uint64 ID = 1;
+    //gorm:"unique_index:uid_user_course"
+    uint64 courseID = 2;
+    //gorm:"unique_index:uid_user_course"
+    uint64 userID = 3;
+    uint64 groupID = 4;
+    User user = 5;
+    Course course = 6;
+    Group group = 7;
+    enum Status {
+        None     = 0;
+        Pending  = 1;
+        Rejected = 2;
+        Student  = 3;
+        Teacher  = 4;
+    }
+    Status status = 8;
+}
+
+// EnrollmentRequest is used to create and update enrollments.
+// When used to create enrollment, the enrolled field is ignored.
+// Only teachers and admins can enroll students.
+message EnrollmentRequest {
+    uint64 userID = 1;
+    uint64 courseID = 2;
+    Enrollment.Status enrolled = 3;
+}
+
+message EnrollmentResponse {
+    repeated Enrollment enrollments = 1;
+}
+
 message RecordWithStatusRequest {
     uint64 ID = 1; // id can be User ID or Course ID depending //TODO NO! They should be different messages
     repeated Enrollment.Status statuses = 2;
 }
 
-// TODO Remove this; make it use EnrollmentRequest with default value PENDING??
-message UserIDCourseID {
-    uint64 userID = 1;
-    uint64 courseID = 2;
-}
-
 message StatusCode {
     int32 statuscode = 1;
-}
-
-// EnrollmentRequest is
-message EnrollmentRequest {
-    uint64 userID = 1;
-    uint64 courseID = 2;
-    Enrollment.Status enrolled = 3;
 }
 
 service AutograderService {
@@ -154,6 +150,6 @@ service AutograderService {
     rpc GetAssignments(RecordRequest) returns (Assignments) {}
     rpc GetEnrollmentsByCourse(RecordWithStatusRequest) returns (EnrollmentResponse) {}
 
-    rpc CreateEnrollment(UserIDCourseID) returns (StatusCode) {}
+    rpc CreateEnrollment(EnrollmentRequest) returns (StatusCode) {}
     rpc UpdateEnrollment(EnrollmentRequest) returns (StatusCode) {}
 }

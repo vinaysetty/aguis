@@ -89,3 +89,37 @@ func DeleteGroup(db database.Database) echo.HandlerFunc {
 		return c.NoContent(http.StatusOK)
 	}
 }
+
+// GetGroupByUserAndCourse returns a single group of a user for a course
+// func GetGroupByUserAndCourse(db database.Database) (*pb.Group, error) {
+// }
+
+//
+//// GetGroupByUserAndCourse returns a single group of a user for a course
+//func GetGroupByUserAndCourse(db database.Database) echo.HandlerFunc {
+//	return func(c echo.Context) error {
+//		uid, err := parseUint(c.Param("uid"))
+//		if err != nil {
+//			return err
+//		}
+//		cid, err := parseUint(c.Param("cid"))
+//		if err != nil {
+//			return nil
+//		}
+//		enrollment, err := db.GetEnrollmentByCourseAndUser(cid, uid)
+//		if err != nil {
+//			if err == gorm.ErrRecordNotFound {
+//				return c.NoContent(http.StatusNotFound)
+//			}
+//			return err
+//		}
+//		if enrollment.GroupID > 0 {
+//			group, err := db.GetGroup(enrollment.GroupID)
+//			if err != nil {
+//				return nil
+//			}
+//			return c.JSONPretty(http.StatusFound, group, "\t")
+//		}
+//		return c.NoContent(http.StatusNotFound)
+//	}
+//}

@@ -100,5 +100,4 @@ func (s *AutograderService) UpdateEnrollment(
 func SetGrpcHeaderAndTrailer(ctx context.Context) {
 	grpc.SendHeader(ctx, metadata.Pairs("Pre-Response-Metadata", "Is-sent-as-headers-unary"))
 	grpc.SetTrailer(ctx, metadata.Pairs("Post-Response-Metadata", "Is-sent-as-trailers-unary"))
-
 }

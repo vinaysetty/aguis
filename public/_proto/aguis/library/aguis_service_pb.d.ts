@@ -514,30 +514,6 @@ export namespace RecordWithStatusRequest {
   }
 }
 
-export class UserIDCourseID extends jspb.Message {
-  getUserid(): number;
-  setUserid(value: number): void;
-
-  getCourseid(): number;
-  setCourseid(value: number): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): UserIDCourseID.AsObject;
-  static toObject(includeInstance: boolean, msg: UserIDCourseID): UserIDCourseID.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: UserIDCourseID, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): UserIDCourseID;
-  static deserializeBinaryFromReader(message: UserIDCourseID, reader: jspb.BinaryReader): UserIDCourseID;
-}
-
-export namespace UserIDCourseID {
-  export type AsObject = {
-    userid: number,
-    courseid: number,
-  }
-}
-
 export class StatusCode extends jspb.Message {
   getStatuscode(): number;
   setStatuscode(value: number): void;

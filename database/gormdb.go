@@ -337,7 +337,7 @@ func (db *GormDB) CreateEnrollment(enrollment *pb.Enrollment) error {
 	if user+course != 2 {
 		return gorm.ErrRecordNotFound
 	}
-
+	// make sure to mark enrollment status as pending, independent of what is supplied
 	enrollment.Status = pb.Enrollment_Pending
 	return db.conn.Create(&enrollment).Error
 }
