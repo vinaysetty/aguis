@@ -1,7 +1,6 @@
 #!/bin/bash
 
 mkdir -p ./public/_proto
-mkdir -p ./proto/_proto
 
 if [[ "$GOBIN" == "" ]]; then
   if [[ "$GOPATH" == "" ]]; then
@@ -17,8 +16,8 @@ fi
 protoc \
   --plugin=protoc-gen-ts=./public/node_modules/.bin/protoc-gen-ts \
   --plugin=protoc-gen-go=${GOBIN}/protoc-gen-go \
-  -I ./proto \
+  -I ./ag \
   --js_out=import_style=commonjs,binary:./public/_proto \
-  --go_out=plugins=grpc:./proto/_proto \
+  --go_out=plugins=grpc:./ag \
   --ts_out=service=true:./public/_proto \
-  ./proto/aguis/library/aguis_service.proto
+  ./ag/ag_service.proto

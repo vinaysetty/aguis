@@ -8,9 +8,9 @@ import (
 	"reflect"
 	"testing"
 
+	pb "github.com/autograde/aguis/ag"
 	"github.com/autograde/aguis/database"
 	"github.com/autograde/aguis/models"
-	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/sirupsen/logrus"

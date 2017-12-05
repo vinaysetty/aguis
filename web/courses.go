@@ -11,7 +11,7 @@ import (
 	//"github.com/autograde/aguis/scm"
 	//"github.com/jinzhu/gorm"
 	//"github.com/sirupsen/logrus"
-	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
+	pb "github.com/autograde/aguis/ag"
 	"github.com/jinzhu/gorm"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

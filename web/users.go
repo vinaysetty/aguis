@@ -1,8 +1,8 @@
 package web
 
 import (
+	pb "github.com/autograde/aguis/ag"
 	"github.com/autograde/aguis/database"
-	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
 	"github.com/jinzhu/gorm"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

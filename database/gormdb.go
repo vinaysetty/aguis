@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
+	pb "github.com/autograde/aguis/ag"
 	"github.com/autograde/aguis/models"
-	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
 	"github.com/jinzhu/gorm"
 )
 

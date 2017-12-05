@@ -1,8 +1,8 @@
 package grpcutil
 
 import (
+	pb "github.com/autograde/aguis/ag"
 	"github.com/autograde/aguis/database"
-	pb "github.com/autograde/aguis/proto/_proto/aguis/library"
 	"github.com/autograde/aguis/web"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
