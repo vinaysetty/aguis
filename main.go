@@ -8,8 +8,8 @@ import (
 
 	pb "github.com/autograde/aguis/ag"
 	"github.com/autograde/aguis/database"
-	"github.com/autograde/aguis/grpcutil"
 	"github.com/autograde/aguis/logger"
+	"github.com/autograde/aguis/web"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/sirupsen/logrus"
@@ -43,7 +43,7 @@ func main() {
 	}()
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterAutograderServiceServer(grpcServer, grpcutil.NewAutograderService(db))
+	pb.RegisterAutograderServiceServer(grpcServer, web.NewAutograderService(db))
 	wrappedServer := grpcweb.WrapServer(grpcServer)
 	handler := func(resp http.ResponseWriter, req *http.Request) {
 		wrappedServer.ServeHttp(resp, req)
