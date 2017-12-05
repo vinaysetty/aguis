@@ -3,6 +3,7 @@ package web
 import (
 	"net/http"
 
+	pb "github.com/autograde/aguis/ag"
 	"github.com/autograde/aguis/database"
 	"github.com/autograde/aguis/models"
 	"github.com/jinzhu/gorm"
@@ -23,11 +24,14 @@ func PatchGroup(db database.Database) echo.HandlerFunc {
 			}
 			return err
 		}
-		var ngrp UpdateGroupRequest
-		if err := c.Bind(&ngrp); err != nil {
+		// UpdateGroupRequest updates group
+		var ngrp struct {
+			Status pb.Enrollment_Status `json:"status"`
+		}
+		if err := c.Bind(&ngrp); err != nil { //TODO should be replaced with some grpc args
 			return err
 		}
-		if ngrp.Status > models.Teacher {
+		if ngrp.Status > pb.Enrollment_Teacher {
 			return echo.NewHTTPError(http.StatusBadRequest, "invalid payload")
 		}
 
@@ -38,7 +42,7 @@ func PatchGroup(db database.Database) echo.HandlerFunc {
 			return c.NoContent(http.StatusForbidden)
 		}
 
-		if err := db.UpdateGroupStatus(&models.Group{
+		if err := db.UpdateGroupStatus(&pb.Group{
 			ID:     oldgrp.ID,
 			Status: ngrp.Status,
 		}); err != nil {
@@ -80,7 +84,7 @@ func DeleteGroup(db database.Database) echo.HandlerFunc {
 			}
 			return err
 		}
-		if group.Status > models.Rejected {
+		if group.Status > pb.Enrollment_Rejected {
 			return echo.NewHTTPError(http.StatusForbidden, "accepted group cannot be deleted")
 		}
 		if err := db.DeleteGroup(gid); err != nil {

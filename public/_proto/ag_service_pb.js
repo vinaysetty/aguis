@@ -2056,7 +2056,7 @@ proto.ag.Group.deserializeBinaryFromReader = function(msg, reader) {
       msg.setName(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readUint32());
+      var value = /** @type {!proto.ag.Enrollment.Status} */ (reader.readEnum());
       msg.setStatus(value);
       break;
     case 4:
@@ -2117,8 +2117,8 @@ proto.ag.Group.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getStatus();
-  if (f !== 0) {
-    writer.writeUint32(
+  if (f !== 0.0) {
+    writer.writeEnum(
       3,
       f
     );
@@ -2180,15 +2180,15 @@ proto.ag.Group.prototype.setName = function(value) {
 
 
 /**
- * optional uint32 status = 3;
- * @return {number}
+ * optional Enrollment.Status status = 3;
+ * @return {!proto.ag.Enrollment.Status}
  */
 proto.ag.Group.prototype.getStatus = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {!proto.ag.Enrollment.Status} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
-/** @param {number} value */
+/** @param {!proto.ag.Enrollment.Status} value */
 proto.ag.Group.prototype.setStatus = function(value) {
   jspb.Message.setField(this, 3, value);
 };

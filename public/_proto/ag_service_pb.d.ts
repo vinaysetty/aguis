@@ -279,8 +279,8 @@ export class Group extends jspb.Message {
   getName(): string;
   setName(value: string): void;
 
-  getStatus(): number;
-  setStatus(value: number): void;
+  getStatus(): Enrollment.Status;
+  setStatus(value: Enrollment.Status): void;
 
   getCourseid(): number;
   setCourseid(value: number): void;
@@ -309,7 +309,7 @@ export namespace Group {
   export type AsObject = {
     id: number,
     name: string,
-    status: number,
+    status: Enrollment.Status,
     courseid: number,
     usersList: Array<User.AsObject>,
     enrollmentsList: Array<Enrollment.AsObject>,

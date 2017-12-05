@@ -64,11 +64,6 @@ func (grp *NewGroupRequest) valid() bool {
 		len(grp.UserIDs) > 0
 }
 
-// UpdateGroupRequest updates group
-type UpdateGroupRequest struct {
-	Status uint `json:"status"`
-}
-
 // ListCourses returns a JSON object containing all the courses in the database.
 func ListCourses(db database.Database) (*pb.Courses, error) {
 	courses, err := db.GetCourses()

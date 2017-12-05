@@ -8,4 +8,7 @@ debug
 github-meling.sh
 public/dist/bundle.js
 public/dist/bundle.js.map
+misc/localhost.key
+misc/localhost.crt
+
 

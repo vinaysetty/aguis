@@ -70,7 +70,7 @@ message Group {
     // group name under the same course must be unique
     //gorm:"unique_index:idx_unique_group_name"
     string name = 2;
-    uint32 status = 3;
+    Enrollment.Status status = 3;
     //gorm:"unique_index:idx_unique_group_name"
     uint64 CourseID = 4;
     repeated User Users = 5;

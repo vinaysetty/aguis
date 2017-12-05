@@ -3,17 +3,18 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/autograde/aguis/logger"
-	"github.com/labstack/echo"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"os/signal"
 	"path/filepath"
 	"time"
+
+	"github.com/autograde/aguis/logger"
+	"github.com/labstack/echo"
+	"github.com/sirupsen/logrus"
 )
 
-func main() {
+func TODOmain() {
 	var (
 		httpAddr = flag.String("http.addr", ":8080", "HTTP listen address")
 		public   = flag.String("http.public", "public", "directory to server static files from")
