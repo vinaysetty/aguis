@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/autograde/aguis/models"
+	pb "github.com/autograde/aguis/ag"
 	"github.com/autograde/aguis/web"
 	"github.com/autograde/aguis/web/auth"
 	"github.com/labstack/echo"
@@ -26,7 +26,7 @@ func TestGetSelf(t *testing.T) {
 	e := echo.New()
 	c := e.NewContext(r, w)
 
-	user := &models.User{ID: 1}
+	user := &pb.User{ID: 1}
 	c.Set(auth.UserKey, user)
 
 	userHandler := web.GetSelf()
@@ -54,16 +54,16 @@ func TestGetUser(t *testing.T) {
 
 	// Create first user (the admin).
 	if err := db.CreateUserFromRemoteIdentity(
-		&models.User{},
-		&models.RemoteIdentity{},
+		&pb.User{},
+		&pb.RemoteIdentity{},
 	); err != nil {
 		t.Fatal(err)
 	}
 
-	var user models.User
+	var user pb.User
 	if err := db.CreateUserFromRemoteIdentity(
 		&user,
-		&models.RemoteIdentity{
+		&pb.RemoteIdentity{
 			Provider:    provider,
 			AccessToken: accessToken,
 		},
@@ -89,7 +89,7 @@ func TestGetUser(t *testing.T) {
 		t.Error(err)
 	}
 
-	var foundUser *models.User
+	var foundUser *pb.User
 	if err := json.Unmarshal(w.Body.Bytes(), &foundUser); err != nil {
 		t.Fatal(err)
 	}
@@ -113,19 +113,19 @@ func TestGetUsers(t *testing.T) {
 	db, cleanup := setup(t)
 	defer cleanup()
 
-	var user1 models.User
+	var user1 pb.User
 	if err := db.CreateUserFromRemoteIdentity(
 		&user1,
-		&models.RemoteIdentity{
+		&pb.RemoteIdentity{
 			Provider: github,
 		},
 	); err != nil {
 		t.Fatal(err)
 	}
-	var user2 models.User
+	var user2 pb.User
 	if err := db.CreateUserFromRemoteIdentity(
 		&user2,
-		&models.RemoteIdentity{
+		&pb.RemoteIdentity{
 			Provider: gitlab,
 		},
 	); err != nil {
@@ -142,7 +142,7 @@ func TestGetUsers(t *testing.T) {
 		t.Error(err)
 	}
 
-	var foundUsers []*models.User
+	var foundUsers []*pb.User
 	if err := json.Unmarshal(w.Body.Bytes(), &foundUsers); err != nil {
 		t.Fatal(err)
 	}
@@ -152,7 +152,7 @@ func TestGetUsers(t *testing.T) {
 	user2.RemoteIdentities = nil
 	// First user should be admin.
 	user1.IsAdmin = true
-	wantUsers := []*models.User{&user1, &user2}
+	wantUsers := []*pb.User{&user1, &user2}
 	if !reflect.DeepEqual(foundUsers, wantUsers) {
 		t.Errorf("have users %+v want %+v", foundUsers, wantUsers)
 	}
@@ -181,10 +181,10 @@ func TestGetEnrollmentsByCourse(t *testing.T) {
 	db, cleanup := setup(t)
 	defer cleanup()
 
-	var users []*models.User
+	var users []*pb.User
 	for _, u := range allUsers {
-		var user models.User
-		if err := db.CreateUserFromRemoteIdentity(&user, &models.RemoteIdentity{
+		var user pb.User
+		if err := db.CreateUserFromRemoteIdentity(&user, &pb.RemoteIdentity{
 			Provider:    u.provider,
 			RemoteID:    u.remoteID,
 			AccessToken: u.secret,
@@ -210,7 +210,7 @@ func TestGetEnrollmentsByCourse(t *testing.T) {
 	osUsers := users[3:7]
 
 	for _, user := range wantUsers {
-		if err := db.CreateEnrollment(&models.Enrollment{
+		if err := db.CreateEnrollment(&pb.Enrollment{
 			UserID:   user.ID,
 			CourseID: allCourses[0].ID,
 		}); err != nil {
@@ -222,7 +222,7 @@ func TestGetEnrollmentsByCourse(t *testing.T) {
 	}
 
 	for _, user := range osUsers {
-		if err := db.CreateEnrollment(&models.Enrollment{
+		if err := db.CreateEnrollment(&pb.Enrollment{
 			UserID:   user.ID,
 			CourseID: allCourses[1].ID,
 		}); err != nil {
@@ -250,11 +250,11 @@ func TestGetEnrollmentsByCourse(t *testing.T) {
 		t.Error(err)
 	}
 
-	var foundEnrollments []*models.Enrollment
+	var foundEnrollments []*pb.Enrollment
 	if err := json.Unmarshal(w.Body.Bytes(), &foundEnrollments); err != nil {
 		t.Fatal(err)
 	}
-	var foundUsers []*models.User
+	var foundUsers []*pb.User
 	for _, e := range foundEnrollments {
 		// Remote identities should not be loaded.
 		e.User.RemoteIdentities = nil
@@ -274,8 +274,8 @@ func TestPatchUser(t *testing.T) {
 	db, cleanup := setup(t)
 	defer cleanup()
 
-	var user models.User
-	var remoteIdentity models.RemoteIdentity
+	var user pb.User
+	var remoteIdentity pb.RemoteIdentity
 	if err := db.CreateUserFromRemoteIdentity(
 		&user, &remoteIdentity,
 	); err != nil {
@@ -368,11 +368,11 @@ func TestPatchUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	wantUser := &models.User{
+	wantUser := &pb.User{
 		ID:               withName.ID,
 		Name:             "Scrooge McDuck",
 		IsAdmin:          true,
-		RemoteIdentities: []*models.RemoteIdentity{&remoteIdentity},
+		RemoteIdentities: []*pb.RemoteIdentity{&remoteIdentity},
 	}
 	if !reflect.DeepEqual(withName, wantUser) {
 		t.Errorf("have users %+v want %+v", withName, wantUser)

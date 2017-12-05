@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	pb "github.com/autograde/aguis/ag"
 	"github.com/autograde/aguis/database"
-	"github.com/autograde/aguis/models"
 	"github.com/autograde/aguis/scm"
 	"github.com/autograde/aguis/web"
 	"github.com/jinzhu/gorm"
@@ -209,14 +209,14 @@ func OAuth2Callback(db database.Database) echo.HandlerFunc {
 		user, err := db.GetUserByRemoteIdentity(provider, remoteID, externalUser.AccessToken)
 		if err == gorm.ErrRecordNotFound {
 			// Create new user.
-			user = &models.User{
+			user = &pb.User{
 				Name:      externalUser.Name,
 				Email:     externalUser.Email,
 				AvatarURL: externalUser.AvatarURL,
 			}
 			if err := db.CreateUserFromRemoteIdentity(
 				user,
-				&models.RemoteIdentity{
+				&pb.RemoteIdentity{
 					Provider:    provider,
 					RemoteID:    remoteID,
 					AccessToken: externalUser.AccessToken,
