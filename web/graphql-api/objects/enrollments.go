@@ -26,6 +26,9 @@ var EnrollmentType = graphql.NewObject(graphql.ObjectConfig{
 				return nil, nil
 			},
 		},
+		"user": &graphql.Field{
+			Type: UserType,
+		},
 		"userID": &graphql.Field{
 			Type: graphql.Int,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
