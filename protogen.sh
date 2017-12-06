@@ -15,9 +15,10 @@ fi
 
 protoc \
   --plugin=protoc-gen-ts=./public/node_modules/.bin/protoc-gen-ts \
-  --plugin=protoc-gen-go=${GOBIN}/protoc-gen-go \
+  --plugin=protoc-gen-go=${GOBIN}/protoc-gen-gogo \
   -I ./ag \
+  -I $GOPATH/src \
   --js_out=import_style=commonjs,binary:./public/_proto \
-  --go_out=plugins=grpc:./ag \
+  --gogo_out=plugins=grpc:./ag \
   --ts_out=service=true:./public/_proto \
   ./ag/ag_service.proto

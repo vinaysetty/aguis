@@ -3,6 +3,7 @@ syntax = "proto3";
 package ag;
 
 import "google/protobuf/timestamp.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
 message User {
     uint64 ID = 1;
@@ -18,25 +19,15 @@ message User {
 
 message RemoteIdentity {
     uint64 ID = 1;
-    //gorm:"unique_index:uid_provider_remote_id"
-    string provider = 2;
-    //gorm:"unique_index:uid_provider_remote_id"
-    uint64 remoteID = 3;
-    // TODO: should this be included here?
+    string provider = 2 [(gogoproto.moretags) = "gorm:\"unique_index:uid_provider_remote_id\""];
+    uint64 remoteID = 3 [(gogoproto.moretags) = "gorm:\"unique_index:uid_provider_remote_id\""];
+    // TODO: should the accessToken be included here?
     string accessToken = 4;
     uint64 userID = 5;
 }
 
 message Users {
     repeated User Users = 1;
-}
-
-message Void {}
-
-// RecordRequest is used to make request for a single record for various datatypes
-// such as User, Course, Assignment etc.
-message RecordRequest {
-    uint64 ID = 1;
 }
 
 message Assignment {
@@ -68,11 +59,9 @@ message Assignments {
 message Group {
     uint64 ID = 1;
     // group name under the same course must be unique
-    //gorm:"unique_index:idx_unique_group_name"
-    string name = 2;
-    Enrollment.Status status = 3;
-    //gorm:"unique_index:idx_unique_group_name"
-    uint64 CourseID = 4;
+    string name = 2 [(gogoproto.moretags) = "gorm:\"unique_index:idx_unique_group_name\""];
+    uint64 CourseID = 3 [(gogoproto.moretags) = "gorm:\"unique_index:idx_unique_group_name\""];
+    Enrollment.Status status = 4;
     repeated User Users = 5;
     repeated Enrollment Enrollments = 6;
 }
@@ -97,10 +86,8 @@ message Courses {
 
 message Enrollment {
     uint64 ID = 1;
-    //gorm:"unique_index:uid_user_course"
-    uint64 courseID = 2;
-    //gorm:"unique_index:uid_user_course"
-    uint64 userID = 3;
+    uint64 courseID = 2 [(gogoproto.moretags) = "gorm:\"unique_index:uid_user_course\""];
+    uint64 userID = 3 [(gogoproto.moretags) = "gorm:\"unique_index:uid_user_course\""];
     uint64 groupID = 4;
     User user = 5;
     Course course = 6;
@@ -128,10 +115,25 @@ message EnrollmentResponse {
     repeated Enrollment enrollments = 1;
 }
 
+// RecordRequest is used to make request for a single record for
+// different datatypes such as User, Course, Assignment etc.
+// Hence, the ID field can be UserID or CourseID, or some other ID.
+message RecordRequest {
+    uint64 ID = 1;
+}
+
+// RecordWithStatusRequest is used to make request for records for
+// different datatypes such as Courses and EnrollmentResponse.
+// Hence, the ID field can be UserID or CourseID, or some other ID.
+//
+// TODO This message type can be merged with RecordRequest, since
+// all fields are optional, and hence we don't need to use the statuses field.
 message RecordWithStatusRequest {
-    uint64 ID = 1; // id can be User ID or Course ID depending //TODO NO! They should be different messages
+    uint64 ID = 1;
     repeated Enrollment.Status statuses = 2;
 }
+
+message Void {}
 
 message StatusCode {
     int32 statuscode = 1;

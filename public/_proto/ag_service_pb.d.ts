@@ -3,6 +3,7 @@
 
 import * as jspb from "google-protobuf";
 import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
+import * as github_com_gogo_protobuf_gogoproto_gogo_pb from "./github.com/gogo/protobuf/gogoproto/gogo_pb";
 
 export class User extends jspb.Message {
   getId(): number;
@@ -111,42 +112,6 @@ export class Users extends jspb.Message {
 export namespace Users {
   export type AsObject = {
     usersList: Array<User.AsObject>,
-  }
-}
-
-export class Void extends jspb.Message {
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Void.AsObject;
-  static toObject(includeInstance: boolean, msg: Void): Void.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: Void, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Void;
-  static deserializeBinaryFromReader(message: Void, reader: jspb.BinaryReader): Void;
-}
-
-export namespace Void {
-  export type AsObject = {
-  }
-}
-
-export class RecordRequest extends jspb.Message {
-  getId(): number;
-  setId(value: number): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): RecordRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: RecordRequest): RecordRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: RecordRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): RecordRequest;
-  static deserializeBinaryFromReader(message: RecordRequest, reader: jspb.BinaryReader): RecordRequest;
-}
-
-export namespace RecordRequest {
-  export type AsObject = {
-    id: number,
   }
 }
 
@@ -279,11 +244,11 @@ export class Group extends jspb.Message {
   getName(): string;
   setName(value: string): void;
 
-  getStatus(): Enrollment.Status;
-  setStatus(value: Enrollment.Status): void;
-
   getCourseid(): number;
   setCourseid(value: number): void;
+
+  getStatus(): Enrollment.Status;
+  setStatus(value: Enrollment.Status): void;
 
   clearUsersList(): void;
   getUsersList(): Array<User>;
@@ -309,8 +274,8 @@ export namespace Group {
   export type AsObject = {
     id: number,
     name: string,
-    status: Enrollment.Status,
     courseid: number,
+    status: Enrollment.Status,
     usersList: Array<User.AsObject>,
     enrollmentsList: Array<Enrollment.AsObject>,
   }
@@ -516,6 +481,26 @@ export namespace EnrollmentResponse {
   }
 }
 
+export class RecordRequest extends jspb.Message {
+  getId(): number;
+  setId(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RecordRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: RecordRequest): RecordRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: RecordRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RecordRequest;
+  static deserializeBinaryFromReader(message: RecordRequest, reader: jspb.BinaryReader): RecordRequest;
+}
+
+export namespace RecordRequest {
+  export type AsObject = {
+    id: number,
+  }
+}
+
 export class RecordWithStatusRequest extends jspb.Message {
   getId(): number;
   setId(value: number): void;
@@ -539,6 +524,22 @@ export namespace RecordWithStatusRequest {
   export type AsObject = {
     id: number,
     statusesList: Array<Enrollment.Status>,
+  }
+}
+
+export class Void extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Void.AsObject;
+  static toObject(includeInstance: boolean, msg: Void): Void.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Void, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Void;
+  static deserializeBinaryFromReader(message: Void, reader: jspb.BinaryReader): Void;
+}
+
+export namespace Void {
+  export type AsObject = {
   }
 }
 
