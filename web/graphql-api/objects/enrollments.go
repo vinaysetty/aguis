@@ -5,6 +5,10 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
+func init() {
+	EnrollmentType.AddFieldConfig("user", &graphql.Field{Type: UserType})
+}
+
 var EnrollmentType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Enrollment",
 	Fields: graphql.Fields{
@@ -25,9 +29,6 @@ var EnrollmentType = graphql.NewObject(graphql.ObjectConfig{
 				}
 				return nil, nil
 			},
-		},
-		"user": &graphql.Field{
-			Type: UserType,
 		},
 		"userID": &graphql.Field{
 			Type: graphql.Int,
