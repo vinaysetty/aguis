@@ -426,6 +426,13 @@ func UpdateCourse(crs *pb.Course, db database.Database) (*pb.Course, error) {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid payload")
 	}
 
+	course.Name = crs.Name
+	course.Code = crs.Code
+	course.Year = crs.Year
+	course.Tag = crs.Tag
+	course.Provider = crs.Provider
+	course.DirectoryID = crs.DirectoryID
+
 	if err := db.UpdateCourse(course); err != nil {
 		return nil, err
 	}

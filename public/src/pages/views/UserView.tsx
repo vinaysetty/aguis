@@ -1,9 +1,11 @@
 import * as React from "react";
 import { BootstrapButton, BootstrapClass, DynamicTable, Search } from "../../components";
 import { ILink, NavigationManager, UserManager } from "../../managers";
-import { CourseUserState, IUser, IUserRelation } from "../../models";
+import { IUserRelation } from "../../models";
 
 import { LiDropDownMenu } from "../../components/navigation/LiDropDownMenu";
+
+import {Enrollment} from "../../../_proto/ag_service_pb";
 
 interface IUserViewerProps {
     users: IUserRelation[];
@@ -72,7 +74,7 @@ export class UserView extends React.Component<IUserViewerProps, IUserViewerState
 
     private renderRow(user: IUserRelation): Array<string | JSX.Element> {
         const selector: Array<string | JSX.Element> = [];
-        if (user.link.state === CourseUserState.teacher) {
+        if (user.link.state === Enrollment.Status.Teacher) {
             selector.push(<span className="text-muted">{user.user.name}</span>);
         } else {
             selector.push(user.user.name);

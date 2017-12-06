@@ -1,8 +1,9 @@
 import * as React from "react";
-import { CourseManager, ILink, NavigationManager, UserManager } from "../../managers";
-import { CourseUserState, ICourse, ICourseUserLink, IUser, IUserRelation } from "../../models";
+import { CourseManager, ILink, NavigationManager } from "../../managers";
+import { ICourse, IUserRelation } from "../../models";
 
-import { DynamicTable } from "../../components";
+import {Enrollment} from "../../../_proto/ag_service_pb";
+
 import { ActionType, UserView } from "./UserView";
 
 interface IUserViewerProps {
@@ -35,7 +36,7 @@ export class MemberView extends React.Component<IUserViewerProps, {}> {
             ActionType.Menu,
             (user: IUserRelation) => {
                 const links = [];
-                if (user.link.state === CourseUserState.teacher) {
+                if (user.link.state === Enrollment.Status.Teacher) {
                     links.push({ name: "This is a teacher", extra: "primary" });
                 } else {
                     links.push({ name: "Make Teacher", uri: "teacher", extra: "primary" });
@@ -74,10 +75,10 @@ export class MemberView extends React.Component<IUserViewerProps, {}> {
     public handleAction(userRel: IUserRelation, link: ILink) {
         switch (link.uri) {
             case "accept":
-                this.props.courseMan.changeUserState(userRel.link, CourseUserState.student);
+                this.props.courseMan.changeUserState(userRel.link, Enrollment.Status.Student);
                 break;
             case "reject":
-                this.props.courseMan.changeUserState(userRel.link, CourseUserState.rejected);
+                this.props.courseMan.changeUserState(userRel.link, Enrollment.Status.Rejected);
                 break;
             case "teacher":
                 if (confirm(
@@ -86,7 +87,7 @@ export class MemberView extends React.Component<IUserViewerProps, {}> {
 Do you want to continue assigning:
 ${userRel.user.name} as a teacher?`,
                 )) {
-                    this.props.courseMan.changeUserState(userRel.link, CourseUserState.teacher);
+                    this.props.courseMan.changeUserState(userRel.link, Enrollment.Status.Teacher);
                 }
                 break;
         }

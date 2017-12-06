@@ -3,11 +3,13 @@ import * as React from "react";
 import { CourseManager } from "../../managers/CourseManager";
 import { NavigationManager } from "../../managers/NavigationManager";
 import {
-    CourseUserState, ICourse, ICourseGroup, IError,
+    ICourse, ICourseGroup, IError,
     INewGroup, isError, IStatusCode, IUser, IUserRelation,
 } from "../../models";
 
 import { Search } from "../../components";
+
+import {Enrollment} from "../../../_proto/ag_service_pb";
 
 interface IGroupProp {
     className: string;
@@ -233,7 +235,7 @@ class GroupForm extends React.Component<IGroupProp, IGroupState> {
         if (this.state.selectedStudents.length === 0) {
             errors.push("Group mush have members.");
         }
-        if (this.state.curUser && this.state.curUser.link.state === CourseUserState.student &&
+        if (this.state.curUser && this.state.curUser.link.state === Enrollment.Status.Student &&
             !this.isCurrentStudentSelected(this.state.curUser)) {
             errors.push("You must be a member of the group");
         }

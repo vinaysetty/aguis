@@ -1,8 +1,6 @@
-import {Assignment, Course, Enrollment, User} from "../../_proto/aguis/library/aguis_service_pb";
+import {Assignment, Course, Enrollment, User} from "../../_proto/ag_service_pb";
 import {
     CourseGroupStatus,
-    CourseUserState,
-    courseUserStateToString,
     IAssignment,
     IBuildInfo,
     ICourse,
@@ -30,7 +28,6 @@ import {
 } from "../managers";
 
 import { IMap, mapify } from "../map";
-import { combinePath } from "../NavigationHelper";
 import {GrpcHelper} from "./GrpcHelper";
 import { ILogger } from "./LogManager";
 
@@ -61,9 +58,9 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
         // throw new Error("Method not implemented.");
     }
 
-    public async getCoursesFor(user: IUser, state?: CourseUserState[]): Promise<ICourseEnrollemtnt[]> {
+    public async getCoursesFor(user: IUser, state?: Enrollment.Status[]): Promise<ICourseEnrollemtnt[]> {
         // TODO: Fix to use correct url request
-        const status = state ? courseUserStateToString(state) : "";
+        // const status = state ? courseUserStateToString(state) : "";
         // const result = await this.helper.get<ICourseWithEnrollStatus[]>("/users/" + user.id + "/courses" + status);
         const result = await this.grpcHelper.getCoursesWithEnrollment(user.id, status);
         if (result.statusCode !== 0 || !result.data) {
@@ -86,8 +83,8 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
         return arr;
     }
 
-    public async getUsersForCourse(course: ICourse, state?: CourseUserState[]): Promise<IUserEnrollment[]> {
-        const status = state ? courseUserStateToString(state) : "";
+    public async getUsersForCourse(course: ICourse, state?: Enrollment.Status[]): Promise<IUserEnrollment[]> {
+        // const status = state ? courseUserStateToString(state) : "";
         const result = await this.grpcHelper.getEnrollmentsByCourse(course.id, status);
         if (result.statusCode !== 0 || !result.data) {
             this.handleError(result, "getUserForCourse");
@@ -134,7 +131,7 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
         return false;
     }
 
-    public async changeUserState(link: ICourseUserLink, state: CourseUserState): Promise<boolean> {
+    public async changeUserState(link: ICourseUserLink, state: Enrollment.Status): Promise<boolean> {
         const result = await this.grpcHelper.updateEnrollment(link.userid, link.courseId, state);
         if (result.statusCode === 0) {
             return true;
@@ -448,11 +445,16 @@ export class ServerProvider implements IUserProvider, ICourseProvider {
 
     // this method convert a grpc Assignment to IAssignment
     private toIAssignment(assg: Assignment): IAssignment {
+        let deadline = assg.getDeadline();
+        let date: Date = new Date();
+        if (deadline) {
+            date = deadline.toDate();
+        }
         const iassgn: IAssignment = {
             id: assg.getId(),
             name: assg.getName(),
             courseid: assg.getCourseid(),
-            deadline: new Date(assg.getDeadline()),
+            deadline: date,
         };
         return  iassgn;
     }

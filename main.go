@@ -18,13 +18,15 @@ import (
 
 func main() {
 	var (
-		httpAddr = flag.String("http.addr", ":8090", "HTTP listen address")
-		//public          = flag.String("http.public", "public", "directory to server static files from")
+		grpcAddr = flag.String("grpc.addr", ":8090", "gRPC listen address")
 		dbFile          = flag.String("database.file", tempFile("ag.db"), "database file")
-		enableTls       = flag.Bool("enable_tls", true, "Use TLS - required for HTTP2.")
+		enableTLS       = flag.Bool("enable_tls", true, "Use TLS - required for HTTP2.")
 		tlsCertFilePath = flag.String("tls_cert_file", "misc/localhost.crt", "Path to the CRT/PEM file.")
 		tlsKeyFilePath  = flag.String("tls_key_file", "misc/localhost.key", "Path to the private key file.")
 
+		// flag variables for HTTP web server
+		httpAddr = flag.String("http.addr", ":8080", "HTTP listen address")
+		public   = flag.String("http.public", "public", "directory to server static files from")
 		//baseURL = flag.String("service.url", "localhost", "service base url")
 		//fake = flag.Bool("provider.fake", false, "enable fake provider")
 	)
@@ -50,12 +52,17 @@ func main() {
 	}
 
 	httpServer := http.Server{
-		Addr:    *httpAddr,
+		Addr:    *grpcAddr,
 		Handler: http.HandlerFunc(handler),
 	}
 
-	l.Infof("Starting server at %v with TLS: %t", *httpAddr, *enableTls)
-	if *enableTls {
+	// Start HTTP Web server
+	go func() {
+		web.NewWebServer(l, *public, *httpAddr)
+	}()
+
+	l.Infof("Starting server at %v with TLS: %t", *grpcAddr, *enableTLS)
+	if *enableTLS {
 		if err := httpServer.ListenAndServeTLS(*tlsCertFilePath, *tlsKeyFilePath); err != nil {
 			l.WithError(err).Fatal("failed starting http2 server")
 		}

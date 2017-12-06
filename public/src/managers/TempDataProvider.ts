@@ -1,11 +1,9 @@
 import {
     CourseGroupStatus,
-    CourseUserState,
     IAssignment,
     ICourse,
     ICourseGroup,
     ICourseUserLink,
-    ICourseWithEnrollStatus,
     IError,
     INewGroup,
     IOrganization,
@@ -13,12 +11,12 @@ import {
     ISubmission,
     IUser,
 } from "../models";
-import { ICourseProvider } from "./CourseManager";
 
 import { IMap, MapHelper, mapify } from "../map";
-import { IUserProvider } from "./UserManager";
 
 import { ICourseEnrollemtnt, IUserEnrollment } from "../managers";
+
+import {Enrollment} from "../../_proto/ag_service_pb";
 
 interface IDummyUser extends IUser {
     password: string;
@@ -110,7 +108,7 @@ export class TempDataProvider {
         this.localCourseStudent.push({
             courseId: course.id,
             userid: user.id,
-            state: CourseUserState.pending,
+            state: Enrollment.Status.Pending,
         });
         return true;
     }
@@ -120,10 +118,10 @@ export class TempDataProvider {
      * @param course The course userlinks should be retrived from
      * @param state Optinal. The state of the relation, all if not present
      */
-    public async getUserLinksForCourse(course: ICourse, state?: CourseUserState[]): Promise<ICourseUserLink[]> {
+    public async getUserLinksForCourse(course: ICourse, state?: Enrollment.Status[]): Promise<ICourseUserLink[]> {
         const users: ICourseUserLink[] = [];
         for (const c of await this.getCoursesStudent()) {
-            if (course.id === c.courseId && (state === undefined || c.state === CourseUserState.student)) {
+            if (course.id === c.courseId && (state === undefined || c.state === Enrollment.Status.Student)) {
                 users.push(c);
             }
         }
@@ -142,7 +140,7 @@ export class TempDataProvider {
         return returnUsers;
     }
 
-    public async getUsersForCourse(course: ICourse, state?: CourseUserState[])
+    public async getUsersForCourse(course: ICourse, state?: Enrollment.Status[])
         : Promise<IUserEnrollment[]> {
         const courseStds: ICourseUserLink[] =
             await this.getUserLinksForCourse(course, state);
@@ -173,7 +171,7 @@ export class TempDataProvider {
         throw new Error("Method not implemented");
     }
 
-    public async changeUserState(link: ICourseUserLink, state: CourseUserState): Promise<boolean> {
+    public async changeUserState(link: ICourseUserLink, state: Enrollment.Status): Promise<boolean> {
         link.state = state;
         return true;
     }
@@ -202,11 +200,11 @@ export class TempDataProvider {
         return this.currentLoggedIn;
     }
 
-    public async getCoursesFor(user: IUser, state?: CourseUserState[]): Promise<ICourseEnrollemtnt[]> {
+    public async getCoursesFor(user: IUser, state?: Enrollment.Status[]): Promise<ICourseEnrollemtnt[]> {
         const cLinks: ICourseUserLink[] = [];
         const temp = await this.getCoursesStudent();
         for (const c of temp) {
-            if (user.id === c.userid && (state === undefined || c.state === CourseUserState.student)) {
+            if (user.id === c.userid && (state === undefined || c.state === Enrollment.Status.Student)) {
                 cLinks.push(c);
             }
         }

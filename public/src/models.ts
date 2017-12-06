@@ -1,3 +1,4 @@
+import {Enrollment} from "../_proto/ag_service_pb";
 export interface IUser {
     id: number;
     name: string;
@@ -96,7 +97,7 @@ export interface IBuildInfo {
 }
 
 export interface ICourseWithEnrollStatus extends ICourse {
-    enrolled: CourseUserState;
+    enrolled: Enrollment.Status;
 }
 
 /**
@@ -128,12 +129,12 @@ export interface IAssignmentGroup {
 /**
  * A description of the relation between a user and a course
  */
-export enum CourseUserState {
-    pending = 0,
-    rejected = 1,
-    student = 2,
-    teacher = 3,
-}
+// export enum CourseUserState {
+//     pending = 0,
+//     rejected = 1,
+//     student = 2,
+//     teacher = 3,
+// }
 
 /**
  * Status of a course group
@@ -145,22 +146,22 @@ export enum CourseGroupStatus {
     deleted = 3,
 }
 
-export function courseUserStateToString(state: CourseUserState[]): string {
-    return state.map((sta) => {
-        switch (sta) {
-            case CourseUserState.pending:
-                return "pending";
-            case CourseUserState.rejected:
-                return "rejected";
-            case CourseUserState.student:
-                return "student";
-            case CourseUserState.teacher:
-                return "teacher";
-            default:
-                return "";
-        }
-    }).join(",");
-}
+// export function courseUserStateToString(state: CourseUserState[]): string {
+//     return state.map((sta) => {
+//         switch (sta) {
+//             case CourseUserState.pending:
+//                 return "pending";
+//             case CourseUserState.rejected:
+//                 return "rejected";
+//             case CourseUserState.student:
+//                 return "student";
+//             case CourseUserState.teacher:
+//                 return "teacher";
+//             default:
+//                 return "";
+//         }
+//     }).join(",");
+// }
 
 /**
  * The relation description between a user and course
@@ -168,7 +169,7 @@ export function courseUserStateToString(state: CourseUserState[]): string {
 export interface ICourseUserLink {
     userid: number;
     courseId: number;
-    state: CourseUserState;
+    state: Enrollment.Status;
 }
 
 /**

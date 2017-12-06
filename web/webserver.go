@@ -1,45 +1,30 @@
-package main
+package web
 
 import (
 	"context"
-	"flag"
 	"net/http"
 	"os"
 	"os/signal"
 	"path/filepath"
 	"time"
 
-	"github.com/autograde/aguis/logger"
 	"github.com/labstack/echo"
 	"github.com/sirupsen/logrus"
 )
 
-func TODOmain() {
-	var (
-		httpAddr = flag.String("http.addr", ":8080", "HTTP listen address")
-		public   = flag.String("http.public", "public", "directory to server static files from")
+func NewWebServer(l logrus.FieldLogger, public, httpAddr string) {
 
-		//baseURL  = flag.String("service.url", "localhost", "service base url")
-
-		//fake = flag.Bool("provider.fake", false, "enable fake provider")
-	)
-
-	flag.Parse()
-
-	l := logrus.New()
-	l.Formatter = logger.NewDevFormatter(l.Formatter)
-
-	entryPoint := filepath.Join(*public, "index.html")
+	entryPoint := filepath.Join(public, "index.html")
 	if !fileExists(entryPoint) {
 		l.WithField("path", entryPoint).Warn("could not find file")
 	}
 
-	e := newWebServer()
-	registerFrontend(e, entryPoint, *public)
-	runWebServer(l, e, *httpAddr)
+	e := newServer()
+	registerFrontend(e, entryPoint, public)
+	runWebServer(l, e, httpAddr)
 }
 
-func newWebServer() *echo.Echo {
+func newServer() *echo.Echo {
 	e := echo.New()
 	e.HideBanner = true
 	return e

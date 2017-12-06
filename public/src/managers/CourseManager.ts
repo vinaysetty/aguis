@@ -1,7 +1,6 @@
 import { IMap, MapHelper } from "../map";
 import {
     CourseGroupStatus,
-    CourseUserState,
     IAssignment,
     ICourse,
     ICourseGroup,
@@ -23,15 +22,17 @@ import {
 import { UserManager } from "../managers";
 import { ILogger } from "./LogManager";
 
+import {Enrollment} from "../../_proto/ag_service_pb";
+
 export interface ICourseProvider {
     getCourses(): Promise<ICourse[]>;
     getAssignments(courseId: number): Promise<IMap<IAssignment>>;
     // getCoursesStudent(): Promise<ICourseUserLink[]>;
-    getCoursesFor(user: IUser, state?: CourseUserState[]): Promise<ICourseEnrollemtnt[]>;
-    getUsersForCourse(course: ICourse, state?: CourseUserState[]): Promise<IUserEnrollment[]>;
+    getCoursesFor(user: IUser, state?: Enrollment.Status[]): Promise<ICourseEnrollemtnt[]>;
+    getUsersForCourse(course: ICourse, state?: Enrollment.Status[]): Promise<IUserEnrollment[]>;
 
     addUserToCourse(user: IUser, course: ICourse): Promise<boolean>;
-    changeUserState(link: ICourseUserLink, state: CourseUserState): Promise<boolean>;
+    changeUserState(link: ICourseUserLink, state: Enrollment.Status): Promise<boolean>;
 
     createNewCourse(courseData: INewCourse): Promise<ICourse | IError>;
     getCourse(id: number): Promise<ICourse | null>;
@@ -72,13 +73,13 @@ export interface ICourseEnrollemtnt extends IEnrollment {
 
 export interface IUserEnrollment extends IEnrollment {
     user: IUser;
-    status: CourseUserState;
+    status: Enrollment.Status;
 }
 
 export interface IEnrollment {
     userid: number;
     courseid: number;
-    status?: CourseUserState;
+    status?: Enrollment.Status;
 
     course?: ICourse;
     user?: IUser;
@@ -152,7 +153,7 @@ export class CourseManager {
      * @param user The user to get courses to
      * @param state Optional. The state the relations should be in, all if not present
      */
-    public async getCoursesFor(user: IUser, state?: CourseUserState[]): Promise<ICourse[]> {
+    public async getCoursesFor(user: IUser, state?: Enrollment.Status[]): Promise<ICourse[]> {
         return (await this.courseProvider.getCoursesFor(user, state)).map((ele) => ele.course);
     }
 
@@ -186,7 +187,7 @@ export class CourseManager {
      * @param link The link to change state of
      * @param state The new state of the relation
      */
-    public async changeUserState(link: ICourseUserLink, state: CourseUserState): Promise<boolean> {
+    public async changeUserState(link: ICourseUserLink, state: Enrollment.Status): Promise<boolean> {
         return this.courseProvider.changeUserState(link, state);
     }
 
@@ -255,7 +256,7 @@ export class CourseManager {
      * a single student
      * @param student The student to load the information for
      */
-    public async getStudentCourses(student: IUser, state?: CourseUserState[]): Promise<IUserCourse[]> {
+    public async getStudentCourses(student: IUser, state?: Enrollment.Status[]): Promise<IUserCourse[]> {
         const links: IUserCourse[] = [];
         const userCourses = await this.courseProvider.getCoursesFor(student, state);
         for (const course of userCourses) {
@@ -282,7 +283,7 @@ export class CourseManager {
     public async getUsersForCourse(
         course: ICourse,
         userMan: UserManager,
-        state?: CourseUserState[]): Promise<IUserRelation[]> {
+        state?: Enrollment.Status[]): Promise<IUserRelation[]> {
 
         return (await this.courseProvider.getUsersForCourse(course, state)).map<IUserRelation>((user) => {
             return {

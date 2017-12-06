@@ -6,7 +6,7 @@ import { ILink, NavigationManager } from "../managers/NavigationManager";
 import { UserManager } from "../managers/UserManager";
 
 import {
-    CourseUserState, ICourse, ICourseGroup, isError,
+    ICourse, ICourseGroup, isError,
     IStudentSubmission, IUser, IUserCourse, IUserRelation,
 } from "../models";
 
@@ -18,6 +18,8 @@ import { INavInfo } from "../NavigationHelper";
 import { CollapsableNavMenu } from "../components/navigation/CollapsableNavMenu";
 import { ILinkCollection } from "../managers";
 import { EnrollmentView } from "./views/EnrollmentView";
+
+import { Enrollment } from "../../_proto/ag_service_pb";
 
 export class StudentPage extends ViewPage {
     private navMan: NavigationManager;
@@ -124,7 +126,7 @@ export class StudentPage extends ViewPage {
                 return <GroupInfo group={grp} course={course} />;
             } else {
                 const students = await this.courseMan
-                    .getUsersForCourse(course, this.userMan, [CourseUserState.student, CourseUserState.teacher]);
+                    .getUsersForCourse(course, this.userMan, [Enrollment.Status.Student, Enrollment.Status.Teacher]);
                 return <GroupForm className="form-horizontal"
                     students={students}
                     course={course}
@@ -190,7 +192,7 @@ export class StudentPage extends ViewPage {
     private onlyActiveCourses(studentCourse: IUserCourse[]): IUserCourse[] {
         const temp: IUserCourse[] = [];
         studentCourse.forEach((a) => {
-            if (a.link && (a.link.state === CourseUserState.student || a.link.state === CourseUserState.teacher)) {
+            if (a.link && (a.link.state === Enrollment.Status.Student || a.link.state === Enrollment.Status.Teacher)) {
                 temp.push(a);
             }
         });
@@ -202,8 +204,8 @@ export class StudentPage extends ViewPage {
         if (curUser) {
             this.courses = await this.courseMan.getStudentCourses(curUser,
                 [
-                    CourseUserState.student,
-                    CourseUserState.teacher,
+                    Enrollment.Status.Student,
+                    Enrollment.Status.Teacher,
                 ]);
             this.activeCourses = this.onlyActiveCourses(this.courses);
         }

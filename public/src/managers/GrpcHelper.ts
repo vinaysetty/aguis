@@ -4,19 +4,17 @@ import {
     Assignments,
     Course,
     Courses,
-    EnrollemntResponse,
-    GetRecordRequest,
+    EnrollmentRequest,
+    EnrollmentResponse,
+    RecordRequest,
     RecordWithStatusRequest,
     StatusCode,
-    UpdateEnrollmentRequest,
-    UpdateUserRequest,
     User,
-    UserIDCourseID,
-    UsersResponse,
+    Users,
     Void,
-} from "../../_proto/aguis/library/aguis_service_pb";
-import { AutograderService } from "../../_proto/aguis/library/aguis_service_pb_service";
-import { CourseUserState, ICourse, INewCourse, IUser } from "../models";
+} from "../../_proto/ag_service_pb";
+import { AutograderService } from "../../_proto/ag_service_pb_service";
+import { ICourse, INewCourse, IUser } from "../models";
 
 declare const USE_TLS: boolean;
 const host = USE_TLS ? "https://localhost:8091" : "http://localhost:8090";
@@ -28,13 +26,13 @@ export interface IGrpcResult<T> {
 
 export class GrpcHelper {
 
-    public getUsers(): Promise<IGrpcResult<UsersResponse>> {
+    public getUsers(): Promise<IGrpcResult<Users>> {
         const usersRequest = new Void();
-        return this.grpcUnary<UsersResponse>(AutograderService.GetUsers, usersRequest);
+        return this.grpcUnary<Users>(AutograderService.GetUsers, usersRequest);
     }
 
     public getUser(id: number): Promise<IGrpcResult<User>> {
-        const userRequest = new GetRecordRequest();
+        const userRequest = new RecordRequest();
         userRequest.setId(id);
         return this.grpcUnary<User>(AutograderService.GetUser, userRequest);
     }
@@ -51,9 +49,9 @@ export class GrpcHelper {
         } else {
             u.setIsadmin(user.isadmin);
         }
-        const userRequest = new UpdateUserRequest();
-        userRequest.setUser(u);
-        return this.grpcUnary<User>(AutograderService.UpdateUser, userRequest);
+        // const userRequest = new UpdateUserRequest();
+        // userRequest.setUser(u);
+        return this.grpcUnary<User>(AutograderService.UpdateUser, u);
     }
 
     public createCourse(course: INewCourse): Promise<IGrpcResult<Course>> {
@@ -80,7 +78,7 @@ export class GrpcHelper {
     }
 
     public getCourse(id: number): Promise<IGrpcResult<Course>> {
-        const query = new GetRecordRequest();
+        const query = new RecordRequest();
         query.setId(id);
         return this.grpcUnary(AutograderService.GetCourse, query);
     }
@@ -90,28 +88,28 @@ export class GrpcHelper {
         return this.grpcUnary<Courses>(AutograderService.GetCourses, usersRequest);
     }
 
-    public getCoursesWithEnrollment(userid: number, state: string): Promise<IGrpcResult<Courses>> {
+    public getCoursesWithEnrollment(userid: number, state: any): Promise<IGrpcResult<Courses>> {
         const courseReq = new RecordWithStatusRequest();
         courseReq.setId(userid);
-        courseReq.setState(state);
+        courseReq.setStatusesList(state);
         return this.grpcUnary<Courses>(AutograderService.GetCoursesWithEnrollment, courseReq);
     }
 
     public getAssignments(courseId: number): Promise<IGrpcResult<Assignments>> {
-        const req = new GetRecordRequest();
+        const req = new RecordRequest();
         req.setId(courseId);
         return this.grpcUnary<Assignments>(AutograderService.GetAssignments, req);
     }
 
-    public getEnrollmentsByCourse(courseid: number, state: string): Promise<IGrpcResult<EnrollemntResponse>> {
+    public getEnrollmentsByCourse(courseid: number, state: any): Promise<IGrpcResult<EnrollmentResponse>> {
         const req = new RecordWithStatusRequest();
         req.setId(courseid);
-        req.setState(state);
-        return this.grpcUnary<EnrollemntResponse>(AutograderService.GetEnrollmentsByCourse, req);
+        req.setStatusesList(state);
+        return this.grpcUnary<EnrollmentResponse>(AutograderService.GetEnrollmentsByCourse, req);
     }
 
     public createEnrollment(userid: number, courseid: number): Promise<IGrpcResult<StatusCode>> {
-        const req = new UserIDCourseID();
+        const req = new EnrollmentRequest();
         req.setUserid(userid);
         req.setCourseid(courseid);
         return this.grpcUnary<StatusCode>(AutograderService.CreateEnrollment, req);
@@ -119,11 +117,11 @@ export class GrpcHelper {
 
     public updateEnrollment(userid: number,
                             courseid: number,
-                            state: CourseUserState): Promise<IGrpcResult<StatusCode>> {
-        const req = new UpdateEnrollmentRequest();
+                            state: any): Promise<IGrpcResult<StatusCode>> {
+        const req = new EnrollmentRequest();
         req.setUserid(userid);
         req.setCourseid(courseid);
-        req.setStatus(state);
+        req.setEnrolled(state);
         return this.grpcUnary<StatusCode>(AutograderService.UpdateEnrollment, req);
     }
 
