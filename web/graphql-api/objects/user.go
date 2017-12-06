@@ -62,6 +62,9 @@ var UserType = graphql.NewObject(graphql.ObjectConfig{
 				return nil, nil
 			},
 		},
+		"enrollments": &graphql.Field{
+			Type: graphql.NewList(EnrollmentType),
+		},
 	},
 })
 
