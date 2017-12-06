@@ -2,55 +2,55 @@ package objects
 
 import (
 	"github.com/autograde/aguis/models"
-	"github.com/graphql-go/graphql"
+	. "github.com/graphql-go/graphql"
 )
 
 func init() {
-	EnrollmentType.AddFieldConfig("user", &graphql.Field{Type: UserType})
+	EnrollmentType.AddFieldConfig("user", &Field{Type: UserType})
 }
 
-var EnrollmentType = graphql.NewObject(graphql.ObjectConfig{
+var EnrollmentType = NewObject(ObjectConfig{
 	Name: "Enrollment",
-	Fields: graphql.Fields{
-		"id": &graphql.Field{
-			Type: graphql.Int,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+	Fields: Fields{
+		"id": &Field{
+			Type: Int,
+			Resolve: func(p ResolveParams) (interface{}, error) {
 				if enroll, ok := p.Source.(*models.Enrollment); ok {
 					return enroll.ID, nil
 				}
 				return nil, nil
 			},
 		},
-		"courseID": &graphql.Field{
-			Type: graphql.Int,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		"courseID": &Field{
+			Type: Int,
+			Resolve: func(p ResolveParams) (interface{}, error) {
 				if enroll, ok := p.Source.(*models.Enrollment); ok {
 					return enroll.CourseID, nil
 				}
 				return nil, nil
 			},
 		},
-		"userID": &graphql.Field{
-			Type: graphql.Int,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		"userID": &Field{
+			Type: Int,
+			Resolve: func(p ResolveParams) (interface{}, error) {
 				if enroll, ok := p.Source.(*models.Enrollment); ok {
 					return enroll.UserID, nil
 				}
 				return nil, nil
 			},
 		},
-		"groupID": &graphql.Field{
-			Type: graphql.Int,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		"groupID": &Field{
+			Type: Int,
+			Resolve: func(p ResolveParams) (interface{}, error) {
 				if enroll, ok := p.Source.(*models.Enrollment); ok {
 					return enroll.GroupID, nil
 				}
 				return nil, nil
 			},
 		},
-		"status": &graphql.Field{
-			Type: graphql.Int,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		"status": &Field{
+			Type: Int,
+			Resolve: func(p ResolveParams) (interface{}, error) {
 				if enroll, ok := p.Source.(*models.Enrollment); ok {
 					return enroll.Status, nil
 				}
