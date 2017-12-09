@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -239,16 +240,14 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 				Type: objects.UserType,
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
-						Type: graphql.Int,
+						Type: graphql.String,
 					},
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if id, ok := p.Args["id"].(uint64); ok {
-						user, err := db.GetUser(id)
-						if err != nil {
-							return err, nil
-						}
-						fmt.Println(user.Name)
+					if id, ok := p.Args["id"].(string); ok {
+						i, _ := strconv.ParseUint(id, 10, 64)
+						user, _ := db.GetUser(i)
+						l.Warn("%s", user.Name)
 						return user, nil
 					}
 					return nil, nil
