@@ -265,14 +265,17 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 					},
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if last, ok := p.Args["first"].(int); ok {
+					if first, ok := p.Args["first"].(int); ok {
 						users, err := db.GetUsers()
 						if err != nil {
 							return err, nil
 						}
-						if last != 0 {
+						if first != 0 {
 							var u []*models.User
-							for i := 0; i <= last; i++ { // TODO: check length of users. May be out of range
+							if first > len(users) {
+								first = len(users)
+							}
+							for i := 0; i < first; i++ {
 								u = append(u, users[i])
 							}
 							return u, nil
