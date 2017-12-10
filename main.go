@@ -16,6 +16,7 @@ import (
 	"github.com/autograde/aguis/ci"
 	"github.com/autograde/aguis/database"
 	"github.com/autograde/aguis/logger"
+	"github.com/autograde/aguis/models"
 	"github.com/autograde/aguis/scm"
 	"github.com/autograde/aguis/web"
 	"github.com/autograde/aguis/web/auth"
@@ -251,6 +252,32 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 							return err, nil
 						}
 						return user, nil
+					}
+					return nil, nil
+				},
+			},
+			"allUsers": &graphql.Field{
+				Type: graphql.NewList(objects.UserType),
+				Args: graphql.FieldConfigArgument{
+					"first": &graphql.ArgumentConfig{
+						Type:         graphql.Int,
+						DefaultValue: 0,
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if last, ok := p.Args["first"].(int); ok {
+						users, err := db.GetUsers()
+						if err != nil {
+							return err, nil
+						}
+						if last != 0 {
+							var u []*models.User
+							for i := 0; i <= last; i++ { // TODO: check length of users. May be out of range
+								u = append(u, users[i])
+							}
+							return u, nil
+						}
+						return users, nil
 					}
 					return nil, nil
 				},
