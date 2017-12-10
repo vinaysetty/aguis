@@ -246,8 +246,10 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if id, ok := p.Args["id"].(string); ok {
 						i, _ := strconv.ParseUint(id, 10, 64)
-						user, _ := db.GetUser(i)
-						l.Warn("%s", user.Name)
+						user, err := db.GetUser(i)
+						if err != nil {
+							return err, nil
+						}
 						return user, nil
 					}
 					return nil, nil
@@ -265,14 +267,6 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	scms := make(map[string]scm.SCM)
 
 	api := e.Group("/api/v1")
-	//Test REST
-	api.GET("/:uid", web.GetUser(db))
-
-	//GraphQL endpoint
-	api.GET("/graphql", func(c echo.Context) error {
-		result := executeQuery(c.QueryParam("query"), schema)
-		return c.JSON(http.StatusOK, result)
-	})
 	api.Use(auth.AccessControl(db, scms))
 
 	var providers []string
@@ -283,6 +277,14 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	}
 	api.GET("/providers", func(c echo.Context) error {
 		return c.JSONPretty(http.StatusOK, &providers, "\t")
+	})
+
+	//GrahQL endpoint
+	graphqlEndpoint := api.Group("/graphql")
+
+	graphqlEndpoint.GET("", func(c echo.Context) error {
+		result := executeQuery(c.QueryParam("query"), schema)
+		return c.JSON(http.StatusOK, result)
 	})
 
 	api.GET("/user", web.GetSelf())
