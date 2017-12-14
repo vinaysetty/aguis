@@ -11,7 +11,7 @@ import (
 
 //Query - GraphQL query structure
 func Query(db database.Database) *graphql.Object {
-	var queryType = graphql.NewObject(graphql.ObjectConfig{
+	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
 			"user": &graphql.Field{
@@ -64,5 +64,4 @@ func Query(db database.Database) *graphql.Object {
 			},
 		},
 	})
-	return queryType
 }
