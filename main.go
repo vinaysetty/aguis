@@ -9,18 +9,16 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/autograde/aguis/ci"
 	"github.com/autograde/aguis/database"
 	"github.com/autograde/aguis/logger"
-	"github.com/autograde/aguis/models"
 	"github.com/autograde/aguis/scm"
 	"github.com/autograde/aguis/web"
 	"github.com/autograde/aguis/web/auth"
-	"github.com/autograde/aguis/web/graphql-api/objects"
+	"github.com/autograde/aguis/web/graphqlapi"
 	"github.com/gorilla/sessions"
 	"github.com/graphql-go/graphql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -233,60 +231,7 @@ func registerAuth(e *echo.Echo, db database.Database) {
 
 func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *web.BaseHookOptions) {
 
-	//GraphQL query structure
-	var queryType = graphql.NewObject(graphql.ObjectConfig{
-		Name: "Query",
-		Fields: graphql.Fields{
-			"user": &graphql.Field{
-				Type: objects.UserType,
-				Args: graphql.FieldConfigArgument{
-					"id": &graphql.ArgumentConfig{
-						Type: graphql.String,
-					},
-				},
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if id, ok := p.Args["id"].(string); ok {
-						i, _ := strconv.ParseUint(id, 10, 64)
-						user, err := db.GetUser(i)
-						if err != nil {
-							return err, nil
-						}
-						return user, nil
-					}
-					return nil, nil
-				},
-			},
-			"allUsers": &graphql.Field{
-				Type: graphql.NewList(objects.UserType),
-				Args: graphql.FieldConfigArgument{
-					"first": &graphql.ArgumentConfig{
-						Type:         graphql.Int,
-						DefaultValue: 0,
-					},
-				},
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if first, ok := p.Args["first"].(int); ok {
-						users, err := db.GetUsers()
-						if err != nil {
-							return err, nil
-						}
-						if first != 0 {
-							var u []*models.User
-							if first > len(users) {
-								first = len(users)
-							}
-							for i := 0; i < first; i++ {
-								u = append(u, users[i])
-							}
-							return u, nil
-						}
-						return users, nil
-					}
-					return nil, nil
-				},
-			},
-		},
-	})
+	var queryType = graphqlapi.Query(db)
 
 	//GraphQL schema
 	var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
