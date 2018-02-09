@@ -8,6 +8,9 @@ func Mutation(db database.Database) *gql.Object {
 		Fields: gql.Fields{
 			"newCourse": &gql.Field{
 				Type: objects.CourseType,
+				Args: gql.ArgumentConfig{
+					Type: // Input object goes here
+				}
 			},
 		},
 	})
