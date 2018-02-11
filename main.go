@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"mime"
 	"net/http"
 	"os"
@@ -18,9 +17,7 @@ import (
 	"github.com/autograde/aguis/scm"
 	"github.com/autograde/aguis/web"
 	"github.com/autograde/aguis/web/auth"
-	"github.com/autograde/aguis/web/graphqlapi"
 	"github.com/gorilla/sessions"
-	"github.com/graphql-go/graphql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
@@ -231,13 +228,6 @@ func registerAuth(e *echo.Echo, db database.Database) {
 
 func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *web.BaseHookOptions) {
 
-	var queryType = graphqlapi.Query(db)
-
-	//GraphQL schema
-	var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
-		Query: queryType,
-	})
-
 	// Source code management clients indexed by access token.
 	scms := make(map[string]scm.SCM)
 
@@ -255,12 +245,7 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	})
 
 	//GrahQL endpoint
-	graphqlEndpoint := api.Group("/graphql")
-
-	graphqlEndpoint.GET("", func(c echo.Context) error {
-		result := executeQuery(c.QueryParam("query"), schema)
-		return c.JSON(http.StatusOK, result)
-	})
+	//graphqlEndpoint := api.Group("/graphql")
 
 	api.GET("/user", web.GetSelf())
 
@@ -300,17 +285,6 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	groups.DELETE("/:gid", web.DeleteGroup(db))
 
 	api.POST("/directories", web.ListDirectories())
-}
-
-func executeQuery(query string, schema graphql.Schema) *graphql.Result {
-	result := graphql.Do(graphql.Params{
-		Schema:        schema,
-		RequestString: query,
-	})
-	if len(result.Errors) > 0 {
-		fmt.Printf("wrong result, unexpected errors: %v", result.Errors)
-	}
-	return result
 }
 
 func registerFrontend(e *echo.Echo, entryPoint, public string) {
