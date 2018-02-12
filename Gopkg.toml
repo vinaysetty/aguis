@@ -31,3 +31,6 @@ ignored = ["github.com/Sirupsen/logrus"]
 [[override]]
   branch = "master"
   name = "github.com/docker/go-connections"
+[[constraint]]
+  branch = "master"
+  name = "github.com/vektah/gqlgen"
