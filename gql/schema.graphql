@@ -1,0 +1,16 @@
+schema {
+    query: Query
+}
+
+type Query {
+    user(id: ID!): User
+}
+
+type User{
+    ID: ID
+    IsAdmin: Boolean
+    Name: String
+    StudnetID: String
+    Email: String
+    AvatarURL: String
+}
