@@ -255,7 +255,7 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	})
 
 	//GrahQL endpoint
-	graphqlEndpoint := api.Group("/graphql")
+	graphqlEndpoint := e.Group("/graphql")
 
 	graphqlEndpoint.GET("", func(c echo.Context) error {
 		result := executeQuery(c.QueryParam("query"), schema)
