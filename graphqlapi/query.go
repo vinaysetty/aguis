@@ -81,6 +81,35 @@ func Query(db database.Database) *graphql.Object {
 					return nil, nil
 				},
 			},
+			"Courses": &graphql.Field{
+				Type: graphql.NewList(objects.CourseType),
+				Args: graphql.FieldConfigArgument{
+					"first": &graphql.ArgumentConfig{
+						Type:         graphql.Int,
+						DefaultValue: 0,
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if first, ok := p.Args["first"].(int); ok {
+						users, err := db.GetCourses()
+						if err != nil {
+							return err, nil
+						}
+						if first != 0 {
+							var u []*models.Course
+							if first > len(users) {
+								first = len(users)
+							}
+							for i := 0; i < first; i++ {
+								u = append(u, users[i])
+							}
+							return u, nil
+						}
+						return users, nil
+					}
+					return nil, nil
+				},
+			},
 		},
 	})
 }
