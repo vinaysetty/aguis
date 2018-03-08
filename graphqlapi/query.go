@@ -62,6 +62,25 @@ func Query(db database.Database) *graphql.Object {
 					return nil, nil
 				},
 			},
+			"Course": &graphql.Field{
+				Type: objects.CourseType,
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if id, ok := p.Args["id"].(string); ok {
+						i, _ := strconv.ParseUint(id, 10, 64)
+						user, err := db.GetCourse(i)
+						if err != nil {
+							return err, nil
+						}
+						return user, nil
+					}
+					return nil, nil
+				},
+			},
 		},
 	})
 }
