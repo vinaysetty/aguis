@@ -14,7 +14,7 @@ func Query(db database.Database) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
-			"user": &graphql.Field{
+			"User": &graphql.Field{
 				Type: objects.UserType,
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
@@ -33,7 +33,7 @@ func Query(db database.Database) *graphql.Object {
 					return nil, nil
 				},
 			},
-			"allUsers": &graphql.Field{
+			"Users": &graphql.Field{
 				Type: graphql.NewList(objects.UserType),
 				Args: graphql.FieldConfigArgument{
 					"first": &graphql.ArgumentConfig{
