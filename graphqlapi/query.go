@@ -4,8 +4,8 @@ import (
 	"strconv"
 
 	"github.com/autograde/aguis/database"
+	"github.com/autograde/aguis/graphqlapi/objects"
 	"github.com/autograde/aguis/models"
-	"github.com/autograde/aguis/web/graphqlapi/objects"
 	"github.com/graphql-go/graphql"
 )
 
