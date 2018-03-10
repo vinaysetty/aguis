@@ -14,11 +14,11 @@ import (
 
 	"github.com/autograde/aguis/ci"
 	"github.com/autograde/aguis/database"
+	"github.com/autograde/aguis/graphqlapi"
 	"github.com/autograde/aguis/logger"
 	"github.com/autograde/aguis/scm"
 	"github.com/autograde/aguis/web"
 	"github.com/autograde/aguis/web/auth"
-	"github.com/autograde/aguis/web/graphqlapi"
 	"github.com/gorilla/sessions"
 	"github.com/graphql-go/graphql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
