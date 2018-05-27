@@ -16,7 +16,6 @@ import (
 	"github.com/autograde/aguis/database"
 	"github.com/autograde/aguis/graphqlapi"
 	"github.com/autograde/aguis/logger"
-	"github.com/autograde/aguis/scm"
 	"github.com/autograde/aguis/web"
 	"github.com/autograde/aguis/web/auth"
 	"github.com/gorilla/sessions"
@@ -232,17 +231,19 @@ func registerAuth(e *echo.Echo, db database.Database) {
 func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *web.BaseHookOptions) {
 
 	var queryType = graphqlapi.Query(db)
+	var mutationType = graphqlapi.Mutation(l, db)
 
 	//GraphQL schema
 	var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
-		Query: queryType,
+		Query:    queryType,
+		Mutation: mutationType,
 	})
 
 	// Source code management clients indexed by access token.
-	scms := make(map[string]scm.SCM)
+	//scms := make(map[string]scm.SCM)
 
 	api := e.Group("/api/v1")
-	api.Use(auth.AccessControl(db, scms))
+	//api.Use(auth.AccessControl(db, scms))
 
 	var providers []string
 	for _, provider := range goth.GetProviders() {

@@ -14,7 +14,7 @@ func Query(db database.Database) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
-			"User": &graphql.Field{
+			"user": &graphql.Field{
 				Type: objects.UserType,
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
@@ -33,7 +33,7 @@ func Query(db database.Database) *graphql.Object {
 					return nil, nil
 				},
 			},
-			"Users": &graphql.Field{
+			"users": &graphql.Field{
 				Type: graphql.NewList(objects.UserType),
 				Args: graphql.FieldConfigArgument{
 					"first": &graphql.ArgumentConfig{
@@ -62,7 +62,7 @@ func Query(db database.Database) *graphql.Object {
 					return nil, nil
 				},
 			},
-			"Course": &graphql.Field{
+			"course": &graphql.Field{
 				Type: objects.CourseType,
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
@@ -74,14 +74,14 @@ func Query(db database.Database) *graphql.Object {
 						i, _ := strconv.ParseUint(id, 10, 64)
 						user, err := db.GetCourse(i)
 						if err != nil {
-							return err, nil
+							return nil, err
 						}
 						return user, nil
 					}
 					return nil, nil
 				},
 			},
-			"Courses": &graphql.Field{
+			"courses": &graphql.Field{
 				Type: graphql.NewList(objects.CourseType),
 				Args: graphql.FieldConfigArgument{
 					"first": &graphql.ArgumentConfig{
@@ -110,8 +110,8 @@ func Query(db database.Database) *graphql.Object {
 					return nil, nil
 				},
 			},
-			"Assigments": &graphql.Field{
-				Type: graphql.NewList(objects.CourseType),
+			"assigments": &graphql.Field{
+				Type: graphql.NewList(objects.AssignmentType),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -122,7 +122,7 @@ func Query(db database.Database) *graphql.Object {
 						i, _ := strconv.ParseUint(id, 10, 64)
 						assigments, err := db.GetAssignmentsByCourse(i)
 						if err != nil {
-							return err, nil
+							return nil, err
 						}
 						return assigments, nil
 					}
