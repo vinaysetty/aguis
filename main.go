@@ -18,9 +18,9 @@ import (
 
 func main() {
 	var (
-		grpcAddr = flag.String("grpc.addr", ":8090", "gRPC listen address")
+		grpcAddr        = flag.String("grpc.addr", ":8090", "gRPC listen address")
 		dbFile          = flag.String("database.file", tempFile("ag.db"), "database file")
-		enableTLS       = flag.Bool("enable_tls", true, "Use TLS - required for HTTP2.")
+		enableTLS       = flag.Bool("enable_tls", false, "Use TLS - required for HTTP2.")
 		tlsCertFilePath = flag.String("tls_cert_file", "misc/localhost.crt", "Path to the CRT/PEM file.")
 		tlsKeyFilePath  = flag.String("tls_key_file", "misc/localhost.key", "Path to the private key file.")
 
