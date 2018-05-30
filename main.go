@@ -244,6 +244,9 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 
 	api := e.Group("/api/v1")
 	//api.Use(auth.AccessControl(db, scms))
+	test := e.Group("/test")
+
+	test.Static("", "test/")
 
 	var providers []string
 	for _, provider := range goth.GetProviders() {

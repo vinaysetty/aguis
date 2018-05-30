@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+
+        function getAllUsers() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 302) {
+                        /* parse JSON response */
+                        var result = JSON.parse(xhr.responseText);
+                        console.log("Result;", result)
+                    }
+                };
+                /* send the request using GET */
+                xhr.open("GET", "/api/v1/users", true);
+                xhr.send(null);
+        }
+        var i;
+        function test() {
+            for (i = 0; i < 100; i++) { 
+                var t = setTimeout(function(){
+                    getAllUsers()
+                }, i*1000);
+            }
+        }
+        test();
+        </script>
+    </head>
+</html>
