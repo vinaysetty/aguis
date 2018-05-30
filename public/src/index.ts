@@ -5,7 +5,7 @@ import {Users, Void} from "./../_proto/ag_service_pb";
 import {AutograderService} from "./../_proto/ag_service_pb_service";
 
 declare const USE_TLS: boolean;
-const host = USE_TLS ? "https://ec2-35-176-140-100.eu-west-2.compute.amazonaws.com/:8091" : "http://ec2-35-176-140-100.eu-west-2.compute.amazonaws.com/:8090";
+const host = USE_TLS ? "https://ec2-35-176-140-100.eu-west-2.compute.amazonaws.com:8091" : "http://ec2-35-176-140-100.eu-west-2.compute.amazonaws.com:8090";
 
 export interface IGrpcResult<T> {
   statusCode: number;
