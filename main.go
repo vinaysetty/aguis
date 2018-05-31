@@ -269,6 +269,7 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	//GrahQL endpoint
 	graphqlEndpoint := e.Group("/graphql")
 
+	graphqlEndpoint.POST("", echo.WrapHandler(h))
 	graphqlEndpoint.GET("", echo.WrapHandler(h))
 
 	api.GET("/user", web.GetSelf())
