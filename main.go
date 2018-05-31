@@ -20,6 +20,7 @@ import (
 	"github.com/autograde/aguis/web/auth"
 	"github.com/gorilla/sessions"
 	"github.com/graphql-go/graphql"
+	"github.com/graphql-go/handler"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
@@ -239,6 +240,13 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 		Mutation: mutationType,
 	})
 
+	//GraphQL HTTP.handler
+	h := handler.New(&handler.Config{
+		Schema:   &schema,
+		Pretty:   true,
+		GraphiQL: true,
+	})
+
 	// Source code management clients indexed by access token.
 	//scms := make(map[string]scm.SCM)
 
@@ -261,10 +269,7 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	//GrahQL endpoint
 	graphqlEndpoint := e.Group("/graphql")
 
-	graphqlEndpoint.GET("", func(c echo.Context) error {
-		result := executeQuery(c.QueryParam("query"), schema)
-		return c.JSON(http.StatusOK, result)
-	})
+	graphqlEndpoint.GET("", echo.WrapHandler(h))
 
 	api.GET("/user", web.GetSelf())
 
