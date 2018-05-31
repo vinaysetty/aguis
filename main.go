@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"mime"
 	"net/http"
 	"os"
@@ -272,17 +271,6 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	graphqlEndpoint.POST("", echo.WrapHandler(h))
 	graphqlEndpoint.GET("", echo.WrapHandler(h))
 
-}
-
-func executeQuery(query string, schema graphql.Schema) *graphql.Result {
-	result := graphql.Do(graphql.Params{
-		Schema:        schema,
-		RequestString: query,
-	})
-	if len(result.Errors) > 0 {
-		fmt.Printf("wrong result, unexpected errors: %v", result.Errors)
-	}
-	return result
 }
 
 func registerFrontend(e *echo.Echo, entryPoint, public string) {
