@@ -272,44 +272,6 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	graphqlEndpoint.POST("", echo.WrapHandler(h))
 	graphqlEndpoint.GET("", echo.WrapHandler(h))
 
-	api.GET("/user", web.GetSelf())
-
-	users := api.Group("/users")
-	users.GET("", web.GetUsers(db))
-	users.GET("/:uid", web.GetUser(db))
-	users.PATCH("/:uid", web.PatchUser(db))
-	users.GET("/:uid/courses", web.ListCoursesWithEnrollment(db))
-	users.GET("/:uid/courses/:cid/group", web.GetGroupByUserAndCourse(db))
-
-	courses := api.Group("/courses")
-	courses.GET("", web.ListCourses(db))
-	courses.POST("", web.NewCourse(l, db, bh))
-	courses.GET("/:cid", web.GetCourse(db))
-
-	courses.POST("/:cid/refresh", web.RefreshCourse(l, db))
-	// TODO: Pass in webhook URLs and secrets for each registered provider.
-	// TODO: Check if webhook exists and if not create a new one.
-	courses.PUT("/:cid", web.UpdateCourse(db))
-	courses.GET("/:cid/users", web.GetEnrollmentsByCourse(db))
-	// TODO: Check if user is a member of a course, returns 404 or enrollment status.
-	courses.GET("/:cid/users/:uid", echo.NotFoundHandler)
-	courses.GET("/:cid/users/:uid/submissions", web.ListSubmissions(db))
-	courses.POST("/:cid/users/:uid", web.CreateEnrollment(db))
-	courses.PATCH("/:cid/users/:uid", web.UpdateEnrollment(db))
-	courses.GET("/:cid/assignments", web.ListAssignments(db))
-	// TODO: Endpoints needs to be fixed.
-	courses.GET("/:cid/assignments/:aid/submission", web.GetSubmission(db))
-	courses.GET("/:cid/submissions", web.ListSubmissions(db))
-	courses.POST("/:cid/groups", web.NewGroup(db))
-	courses.PUT("/:cid/groups/:gid", web.UpdateGroup(db))
-	courses.GET("/:cid/groups", web.GetGroups(db))
-
-	groups := api.Group("/groups")
-	groups.GET("/:gid", web.GetGroup(db))
-	groups.PATCH("/:gid", web.PatchGroup(db))
-	groups.DELETE("/:gid", web.DeleteGroup(db))
-
-	api.POST("/directories", web.ListDirectories())
 }
 
 func executeQuery(query string, schema graphql.Schema) *graphql.Result {
