@@ -12,10 +12,12 @@ import (
 //Query - GraphQL query structure
 func Query(db database.Database) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
-		Name: "Query",
+		Name:        "Query",
+		Description: "Query functions for Autograder",
 		Fields: graphql.Fields{
 			"user": &graphql.Field{
-				Type: objects.UserType,
+				Description: "Query a user. Input a user id and spesify return fields from the User type",
+				Type:        objects.UserType,
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -34,11 +36,11 @@ func Query(db database.Database) *graphql.Object {
 				},
 			},
 			"users": &graphql.Field{
-				Type: graphql.NewList(objects.UserType),
+				Description: "Return all users registered. Use input parameter first to spesify how many users.",
+				Type:        graphql.NewList(objects.UserType),
 				Args: graphql.FieldConfigArgument{
 					"first": &graphql.ArgumentConfig{
-						Type:         graphql.Int,
-						DefaultValue: 0,
+						Type: graphql.Int,
 					},
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
@@ -59,11 +61,16 @@ func Query(db database.Database) *graphql.Object {
 						}
 						return users, nil
 					}
-					return nil, nil
+					users, err := db.GetUsers()
+					if err != nil {
+						return err, nil
+					}
+					return users, nil
 				},
 			},
 			"course": &graphql.Field{
-				Type: objects.CourseType,
+				Description: "Retrive data from a spesific course.",
+				Type:        objects.CourseType,
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -82,36 +89,41 @@ func Query(db database.Database) *graphql.Object {
 				},
 			},
 			"courses": &graphql.Field{
-				Type: graphql.NewList(objects.CourseType),
+				Description: "Return all courses registered. Use input parameter first to spesify how many courses.",
+				Type:        graphql.NewList(objects.CourseType),
 				Args: graphql.FieldConfigArgument{
 					"first": &graphql.ArgumentConfig{
-						Type:         graphql.Int,
-						DefaultValue: 0,
+						Type: graphql.Int,
 					},
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if first, ok := p.Args["first"].(int); ok {
-						users, err := db.GetCourses()
+						courses, err := db.GetCourses()
 						if err != nil {
 							return err, nil
 						}
 						if first != 0 {
-							var u []*models.Course
-							if first > len(users) {
-								first = len(users)
+							var c []*models.Course
+							if first > len(courses) {
+								first = len(courses)
 							}
 							for i := 0; i < first; i++ {
-								u = append(u, users[i])
+								c = append(c, courses[i])
 							}
-							return u, nil
+							return c, nil
 						}
-						return users, nil
+						return courses, nil
 					}
-					return nil, nil
+					courses, err := db.GetCourses()
+					if err != nil {
+						return err, nil
+					}
+					return courses, nil
 				},
 			},
 			"assigments": &graphql.Field{
-				Type: graphql.NewList(objects.AssignmentType),
+				Description: "Retrive assigments from a spesific course.",
+				Type:        graphql.NewList(objects.AssignmentType),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),

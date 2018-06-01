@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/autograde/aguis/ci"
@@ -230,6 +229,7 @@ func registerAuth(e *echo.Echo, db database.Database) {
 
 func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *web.BaseHookOptions) {
 
+	//Define GraphQL root types
 	var queryType = graphqlapi.Query(db)
 	var mutationType = graphqlapi.Mutation(l, db)
 
@@ -239,37 +239,22 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 		Mutation: mutationType,
 	})
 
-	//GraphQL HTTP.handler
+	//GraphQL HTTP.handler whit GraphiQL
 	h := handler.New(&handler.Config{
 		Schema:   &schema,
 		Pretty:   true,
 		GraphiQL: true,
 	})
 
-	// Source code management clients indexed by access token.
-	//scms := make(map[string]scm.SCM)
-
-	api := e.Group("/api/v1")
-	//api.Use(auth.AccessControl(db, scms))
+	//Endpoint for test scripts
 	test := e.Group("/test")
-
 	test.Static("", "test/")
 
-	var providers []string
-	for _, provider := range goth.GetProviders() {
-		if !strings.HasSuffix(provider.Name(), auth.TeacherSuffix) {
-			providers = append(providers, provider.Name())
-		}
-	}
-	api.GET("/providers", func(c echo.Context) error {
-		return c.JSONPretty(http.StatusOK, &providers, "\t")
-	})
+	//GrahQL endpoints
+	gql := e.Group("/graphql")
 
-	//GrahQL endpoint
-	graphqlEndpoint := e.Group("/graphql")
-
-	graphqlEndpoint.POST("", echo.WrapHandler(h))
-	graphqlEndpoint.GET("", echo.WrapHandler(h))
+	gql.POST("", echo.WrapHandler(h))
+	gql.GET("", echo.WrapHandler(h))
 
 }
 
