@@ -13,7 +13,7 @@
                     }
                 };
                 /* send the request using GET */
-                xhr.open("GET", "/graphql?query={users{id,isAdmin,email,avatarURL}}", true);
+                xhr.open("GET", "/graphql?query={users{avatarURL,email,id,isAdmin,name,studentID,enrollments{courseID,groupID,id,status,userID}}}", true);
                 xhr.send(null);
         }
         var i;
