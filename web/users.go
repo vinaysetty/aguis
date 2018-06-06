@@ -57,7 +57,7 @@ func GetUsers(db database.Database) echo.HandlerFunc {
 			}
 			return err
 		}
-		return c.JSONPretty(http.StatusFound, users, "\t")
+		return c.JSON(http.StatusFound, users)
 	}
 }
 
