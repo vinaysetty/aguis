@@ -256,6 +256,10 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	gql.POST("", echo.WrapHandler(h))
 	gql.GET("", echo.WrapHandler(h))
 
+	//Test REST
+	users := e.Group("/users")
+	users.GET("", web.GetUsers(db))
+
 }
 
 func registerFrontend(e *echo.Echo, entryPoint, public string) {
