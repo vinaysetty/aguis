@@ -242,7 +242,7 @@ func registerAPI(l logrus.FieldLogger, e *echo.Echo, db database.Database, bh *w
 	//GraphQL HTTP.handler whit GraphiQL
 	h := handler.New(&handler.Config{
 		Schema:   &schema,
-		Pretty:   true,
+		Pretty:   false,
 		GraphiQL: true,
 	})
 
