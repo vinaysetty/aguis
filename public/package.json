@@ -30,7 +30,7 @@
     "source-map-loader": "^0.2.2",
     "ts-protoc-gen": "0.3.2",
     "typescript": "^2.5.3",
-    "webpack": "^2.2.1",
+    "webpack": "^2.7.0",
     "webpack-dev-server": "^2.9.2"
   },
   "repository": {

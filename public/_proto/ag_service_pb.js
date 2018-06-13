@@ -265,7 +265,7 @@ proto.ag.User.prototype.getId = function() {
 
 /** @param {number} value */
 proto.ag.User.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -282,7 +282,7 @@ proto.ag.User.prototype.getIsadmin = function() {
 
 /** @param {boolean} value */
 proto.ag.User.prototype.setIsadmin = function(value) {
-  jspb.Message.setProto3BooleanField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -297,7 +297,7 @@ proto.ag.User.prototype.getName = function() {
 
 /** @param {string} value */
 proto.ag.User.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -312,7 +312,7 @@ proto.ag.User.prototype.getStudentid = function() {
 
 /** @param {string} value */
 proto.ag.User.prototype.setStudentid = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -327,7 +327,7 @@ proto.ag.User.prototype.getEmail = function() {
 
 /** @param {string} value */
 proto.ag.User.prototype.setEmail = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  jspb.Message.setField(this, 5, value);
 };
 
 
@@ -342,7 +342,7 @@ proto.ag.User.prototype.getAvatarurl = function() {
 
 /** @param {string} value */
 proto.ag.User.prototype.setAvatarurl = function(value) {
-  jspb.Message.setProto3StringField(this, 6, value);
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -594,7 +594,7 @@ proto.ag.RemoteIdentity.prototype.getId = function() {
 
 /** @param {number} value */
 proto.ag.RemoteIdentity.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -609,7 +609,7 @@ proto.ag.RemoteIdentity.prototype.getProvider = function() {
 
 /** @param {string} value */
 proto.ag.RemoteIdentity.prototype.setProvider = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -624,7 +624,7 @@ proto.ag.RemoteIdentity.prototype.getRemoteid = function() {
 
 /** @param {number} value */
 proto.ag.RemoteIdentity.prototype.setRemoteid = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -639,7 +639,7 @@ proto.ag.RemoteIdentity.prototype.getAccesstoken = function() {
 
 /** @param {string} value */
 proto.ag.RemoteIdentity.prototype.setAccesstoken = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -654,7 +654,7 @@ proto.ag.RemoteIdentity.prototype.getUserid = function() {
 
 /** @param {number} value */
 proto.ag.RemoteIdentity.prototype.setUserid = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  jspb.Message.setField(this, 5, value);
 };
 
 
@@ -1052,7 +1052,7 @@ proto.ag.Assignment.prototype.getId = function() {
 
 /** @param {number} value */
 proto.ag.Assignment.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -1067,7 +1067,7 @@ proto.ag.Assignment.prototype.getCourseid = function() {
 
 /** @param {number} value */
 proto.ag.Assignment.prototype.setCourseid = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -1082,7 +1082,7 @@ proto.ag.Assignment.prototype.getName = function() {
 
 /** @param {string} value */
 proto.ag.Assignment.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -1097,7 +1097,7 @@ proto.ag.Assignment.prototype.getLanguage = function() {
 
 /** @param {string} value */
 proto.ag.Assignment.prototype.setLanguage = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -1144,7 +1144,7 @@ proto.ag.Assignment.prototype.getAutoapprove = function() {
 
 /** @param {boolean} value */
 proto.ag.Assignment.prototype.setAutoapprove = function(value) {
-  jspb.Message.setProto3BooleanField(this, 6, value);
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -1159,7 +1159,7 @@ proto.ag.Assignment.prototype.getOrder = function() {
 
 /** @param {number} value */
 proto.ag.Assignment.prototype.setOrder = function(value) {
-  jspb.Message.setProto3IntField(this, 7, value);
+  jspb.Message.setField(this, 7, value);
 };
 
 
@@ -1415,7 +1415,7 @@ proto.ag.Submission.prototype.getId = function() {
 
 /** @param {number} value */
 proto.ag.Submission.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -1430,7 +1430,7 @@ proto.ag.Submission.prototype.getAssignmentid = function() {
 
 /** @param {number} value */
 proto.ag.Submission.prototype.setAssignmentid = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -1445,7 +1445,7 @@ proto.ag.Submission.prototype.getUserid = function() {
 
 /** @param {number} value */
 proto.ag.Submission.prototype.setUserid = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -1460,7 +1460,7 @@ proto.ag.Submission.prototype.getGroupid = function() {
 
 /** @param {number} value */
 proto.ag.Submission.prototype.setGroupid = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -1475,7 +1475,7 @@ proto.ag.Submission.prototype.getScore = function() {
 
 /** @param {number} value */
 proto.ag.Submission.prototype.setScore = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  jspb.Message.setField(this, 5, value);
 };
 
 
@@ -1490,7 +1490,7 @@ proto.ag.Submission.prototype.getScoreobjects = function() {
 
 /** @param {string} value */
 proto.ag.Submission.prototype.setScoreobjects = function(value) {
-  jspb.Message.setProto3StringField(this, 6, value);
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -1505,7 +1505,7 @@ proto.ag.Submission.prototype.getBuildinfo = function() {
 
 /** @param {string} value */
 proto.ag.Submission.prototype.setBuildinfo = function(value) {
-  jspb.Message.setProto3StringField(this, 7, value);
+  jspb.Message.setField(this, 7, value);
 };
 
 
@@ -1520,7 +1520,7 @@ proto.ag.Submission.prototype.getCommithash = function() {
 
 /** @param {string} value */
 proto.ag.Submission.prototype.setCommithash = function(value) {
-  jspb.Message.setProto3StringField(this, 8, value);
+  jspb.Message.setField(this, 8, value);
 };
 
 
@@ -1903,7 +1903,7 @@ proto.ag.Group.prototype.getId = function() {
 
 /** @param {number} value */
 proto.ag.Group.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -1918,7 +1918,7 @@ proto.ag.Group.prototype.getName = function() {
 
 /** @param {string} value */
 proto.ag.Group.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -1933,7 +1933,7 @@ proto.ag.Group.prototype.getCourseid = function() {
 
 /** @param {number} value */
 proto.ag.Group.prototype.setCourseid = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -1948,7 +1948,7 @@ proto.ag.Group.prototype.getStatus = function() {
 
 /** @param {!proto.ag.Enrollment.Status} value */
 proto.ag.Group.prototype.setStatus = function(value) {
-  jspb.Message.setProto3EnumField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -2288,7 +2288,7 @@ proto.ag.Course.prototype.getId = function() {
 
 /** @param {number} value */
 proto.ag.Course.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -2303,7 +2303,7 @@ proto.ag.Course.prototype.getName = function() {
 
 /** @param {string} value */
 proto.ag.Course.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -2318,7 +2318,7 @@ proto.ag.Course.prototype.getCode = function() {
 
 /** @param {string} value */
 proto.ag.Course.prototype.setCode = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -2333,7 +2333,7 @@ proto.ag.Course.prototype.getYear = function() {
 
 /** @param {number} value */
 proto.ag.Course.prototype.setYear = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -2348,7 +2348,7 @@ proto.ag.Course.prototype.getTag = function() {
 
 /** @param {string} value */
 proto.ag.Course.prototype.setTag = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  jspb.Message.setField(this, 5, value);
 };
 
 
@@ -2363,7 +2363,7 @@ proto.ag.Course.prototype.getProvider = function() {
 
 /** @param {string} value */
 proto.ag.Course.prototype.setProvider = function(value) {
-  jspb.Message.setProto3StringField(this, 6, value);
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -2378,7 +2378,7 @@ proto.ag.Course.prototype.getDirectoryid = function() {
 
 /** @param {number} value */
 proto.ag.Course.prototype.setDirectoryid = function(value) {
-  jspb.Message.setProto3IntField(this, 7, value);
+  jspb.Message.setField(this, 7, value);
 };
 
 
@@ -2393,7 +2393,7 @@ proto.ag.Course.prototype.getEnrolled = function() {
 
 /** @param {!proto.ag.Enrollment.Status} value */
 proto.ag.Course.prototype.setEnrolled = function(value) {
-  jspb.Message.setProto3EnumField(this, 8, value);
+  jspb.Message.setField(this, 8, value);
 };
 
 
@@ -2897,7 +2897,7 @@ proto.ag.Enrollment.prototype.getId = function() {
 
 /** @param {number} value */
 proto.ag.Enrollment.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -2912,7 +2912,7 @@ proto.ag.Enrollment.prototype.getCourseid = function() {
 
 /** @param {number} value */
 proto.ag.Enrollment.prototype.setCourseid = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -2927,7 +2927,7 @@ proto.ag.Enrollment.prototype.getUserid = function() {
 
 /** @param {number} value */
 proto.ag.Enrollment.prototype.setUserid = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -2942,7 +2942,7 @@ proto.ag.Enrollment.prototype.getGroupid = function() {
 
 /** @param {number} value */
 proto.ag.Enrollment.prototype.setGroupid = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  jspb.Message.setField(this, 4, value);
 };
 
 
@@ -3047,7 +3047,7 @@ proto.ag.Enrollment.prototype.getStatus = function() {
 
 /** @param {!proto.ag.Enrollment.Status} value */
 proto.ag.Enrollment.prototype.setStatus = function(value) {
-  jspb.Message.setProto3EnumField(this, 8, value);
+  jspb.Message.setField(this, 8, value);
 };
 
 
@@ -3213,7 +3213,7 @@ proto.ag.EnrollmentRequest.prototype.getUserid = function() {
 
 /** @param {number} value */
 proto.ag.EnrollmentRequest.prototype.setUserid = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -3228,7 +3228,7 @@ proto.ag.EnrollmentRequest.prototype.getCourseid = function() {
 
 /** @param {number} value */
 proto.ag.EnrollmentRequest.prototype.setCourseid = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -3243,7 +3243,7 @@ proto.ag.EnrollmentRequest.prototype.getEnrolled = function() {
 
 /** @param {!proto.ag.Enrollment.Status} value */
 proto.ag.EnrollmentRequest.prototype.setEnrolled = function(value) {
-  jspb.Message.setProto3EnumField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -3553,7 +3553,7 @@ proto.ag.RecordRequest.prototype.getId = function() {
 
 /** @param {number} value */
 proto.ag.RecordRequest.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -3714,7 +3714,7 @@ proto.ag.RecordWithStatusRequest.prototype.getId = function() {
 
 /** @param {number} value */
 proto.ag.RecordWithStatusRequest.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -4001,7 +4001,7 @@ proto.ag.StatusCode.prototype.getStatuscode = function() {
 
 /** @param {number} value */
 proto.ag.StatusCode.prototype.setStatuscode = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 

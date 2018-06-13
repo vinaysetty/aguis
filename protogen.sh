@@ -22,3 +22,11 @@ protoc \
   --gogo_out=plugins=grpc:./ag \
   --ts_out=service=true:./public/_proto \
   ./ag/ag_service.proto
+
+protoc \
+  --plugin=protoc-gen-ts=./public/node_modules/.bin/protoc-gen-ts \
+  -I ./ag \
+  -I $GOPATH/src \
+  --js_out=import_style=commonjs,binary:./public/_proto \
+  --ts_out=service=true:./public/_proto \
+  ./ag/ag_service.proto
