@@ -12,7 +12,7 @@ var goog = jspb;
 var global = Function('return this')();
 
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
-var github_com_gogo_protobuf_gogoproto_gogo_pb = require('./github.com/gogo/protobuf/gogoproto/gogo_pb.js');
+//var github_com_gogo_protobuf_gogoproto_gogo_pb = require('./github.com/gogo/protobuf/gogoproto/gogo_pb.js');
 goog.exportSymbol('proto.ag.Assignment', null, global);
 goog.exportSymbol('proto.ag.Assignments', null, global);
 goog.exportSymbol('proto.ag.Course', null, global);
