@@ -42,14 +42,12 @@ func registerFrontend(e *echo.Echo, entryPoint, public string) {
 }
 
 func runWebServer(l logrus.FieldLogger, e *echo.Echo, httpAddr string) {
-	go func() {
-		srvErr := e.Start(httpAddr)
-		if srvErr == http.ErrServerClosed {
-			l.Warn("shutting down the server")
-			return
-		}
-		l.WithError(srvErr).Fatal("could not start server")
-	}()
+	srvErr := e.Start(httpAddr)
+	if srvErr == http.ErrServerClosed {
+		l.Warn("shutting down the server")
+		return
+	}
+	l.WithError(srvErr).Fatal("could not start server")
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
